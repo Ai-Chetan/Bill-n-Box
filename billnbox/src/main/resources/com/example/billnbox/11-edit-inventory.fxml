@@ -20,6 +20,6 @@
          </image>
       </ImageView>
       <Button layoutX="14.0" layoutY="355.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="115.0" style="-fx-background-color: white;" text="Order New Stock ?" />
-      <Button layoutX="471.0" layoutY="355.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="115.0" style="-fx-background-color: white;" text="Save" />
+      <Button layoutX="471.0" layoutY="355.0" mnemonicParsing="false" onAction="#backToViewInventory" prefHeight="31.0" prefWidth="115.0" style="-fx-background-color: white;" text="Save" />
    </children>
 </AnchorPane>

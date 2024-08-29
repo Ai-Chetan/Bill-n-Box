@@ -40,10 +40,10 @@ public class Controller {
     }
 
     @FXML
-    private void handleLogoutButtonAction(ActionEvent event) {
+    private void conFirmation(ActionEvent event) {
         try {
             // Load the dashboard FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("1-login-page.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("14-logout-confirmation.fxml"));
             Parent root = loader.load();
 
             // Get the current stage
@@ -245,32 +245,14 @@ public class Controller {
         }
     }
 
-    public void editInventory(javafx.scene.input.MouseEvent mouseEvent) {
+    public void editInventory(ActionEvent event) {
         try {
             // Load the dashboard FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("11-edit-inventory.fxml"));
             Parent root = loader.load();
 
             // Get the current stage
-            Stage stage = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
-
-            // Set the scene to the dashboard
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addNewProduct(javafx.scene.input.MouseEvent mouseEvent) {
-        try {
-            // Load the dashboard FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("12-add-new-product.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) ((javafx.scene.Node) mouseEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
 
             // Set the scene to the dashboard
             Scene scene = new Scene(root);
@@ -320,6 +302,25 @@ public class Controller {
     }
 
     @FXML
+    private void addNewProd(ActionEvent event) {
+        try {
+            // Load the dashboard FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("12-add-new-product.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+
+            // Set the scene to the dashboard
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void backToDashboard(ActionEvent event) {
         try {
             // Load the dashboard FXML
@@ -343,6 +344,25 @@ public class Controller {
         try {
             // Load the dashboard FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("10-view-inventory.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+
+            // Set the scene to the dashboard
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogoutButtonAction(ActionEvent event) {
+        try {
+            // Load the dashboard FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("1-login-page.fxml"));
             Parent root = loader.load();
 
             // Get the current stage

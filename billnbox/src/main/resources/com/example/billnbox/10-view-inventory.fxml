@@ -19,7 +19,7 @@
             <Image url="@inventory-data-table.jpeg" />
          </image>
       </ImageView>
-      <Button layoutX="14.0" layoutY="355.0" mnemonicParsing="false" onAction="#addNewProduct" prefHeight="31.0" prefWidth="115.0" style="-fx-background-color: white;" text="Add New Product" />
+      <Button layoutX="14.0" layoutY="355.0" mnemonicParsing="false" onAction="#addNewProd" prefHeight="31.0" prefWidth="115.0" style="-fx-background-color: white;" text="Add New Product" />
       <Button layoutX="471.0" layoutY="355.0" mnemonicParsing="false" onAction="#editInventory" prefHeight="31.0" prefWidth="115.0" style="-fx-background-color: white;" text="Edit" />
    </children>
 </AnchorPane>
