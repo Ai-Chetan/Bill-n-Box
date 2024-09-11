@@ -1,4 +1,8 @@
-.heading {
-    -fx-background-color: white;
-    -fx-border-color: black;
+.table-view .column-header .label {
+    -fx-padding: 10px 0 10px 0;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:empty {
+    visibility: hidden;
 }

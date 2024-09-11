@@ -1,87 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #e4c8aa;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.Controller">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #e4c8aa;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.LoginController">
    <children>
-      <Pane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: F0F4EF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Text layoutX="39.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log In">
-               <font>
-                  <Font name="Segoe UI Bold" size="18.0" />
-               </font>
-            </Text>
-            <Label layoutX="39.0" layoutY="76.0" text="Username :">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <TextField layoutX="39.0" layoutY="102.0" prefHeight="27.0" prefWidth="208.0" promptText="Enter your Username" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" />
-            <Label layoutX="40.0" layoutY="147.0" text="Password :">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <PasswordField layoutX="39.0" layoutY="173.0" prefHeight="20.0" prefWidth="208.0" promptText="Enter Passsword" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;" />
-            <Button layoutX="39.0" layoutY="227.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLoginButtonAction" prefHeight="33.0" prefWidth="208.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Log In" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Segoe UI Bold" size="16.0" />
-               </font>
-            </Button>
-            <Label layoutX="39.0" layoutY="200.0" onMouseClicked="#forgotPassword" style="-fx-underline: true;" text="Forgot Password">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Text layoutX="73.0" layoutY="303.0" strokeType="OUTSIDE" strokeWidth="0.0" text="---------- OR ----------">
-               <font>
-                  <Font size="14.0" />
-               </font></Text>
-            <Button layoutX="39.0" layoutY="322.0" mnemonicParsing="false" onAction="#registerButton" prefHeight="33.0" prefWidth="208.0" style="-fx-background-radius: 5; -fx-background-color: #0C1820; -fx-border-color: Black; -fx-border-radius: 5;" text="Register" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Segoe UI Bold" size="16.0" />
-               </font>
-            </Button>
-            <Text layoutX="84.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New User ? Register Here !">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Text>
-         </children>
-      </Pane>
-      <ImageView fitHeight="385.0" fitWidth="235.0" layoutX="14.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="83.0">
+      <ImageView fitHeight="534.0" fitWidth="390.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@login-img-final.png" />
          </image>
+         <StackPane.margin>
+            <Insets right="800.0" top="100.0" />
+         </StackPane.margin>
       </ImageView>
-      <Text layoutX="47.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Making the process of Billing and Inventory Management Easy and Convenient " textAlignment="CENTER" wrappingWidth="170.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Making the process of Billing and Inventory Management Easy and Convenient " textAlignment="CENTER" wrappingWidth="274.5333557128906">
          <font>
-            <Font name="Segoe UI" size="12.0" />
+            <Font name="Segoe UI" size="19.0" />
          </font>
+         <StackPane.margin>
+            <Insets bottom="340.0" right="800.0" top="50.0" />
+         </StackPane.margin>
       </Text>
-      <ImageView fitHeight="66.0" fitWidth="53.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="111.0" fitWidth="104.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@bill-n-box.png" />
          </image>
+         <StackPane.margin>
+            <Insets bottom="560.0" right="1180.0" />
+         </StackPane.margin>
       </ImageView>
-      <Text layoutX="78.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bill n Box">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bill n Box" wrappingWidth="236.59594726562494">
          <font>
-            <Font name="Segoe UI Bold" size="31.0" />
+            <Font name="Segoe UI Bold" size="52.0" />
          </font>
+         <StackPane.margin>
+            <Insets bottom="580.0" right="830.0" />
+         </StackPane.margin>
       </Text>
-      <Text layoutX="78.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Billing and Inventory Management System" wrappingWidth="194.572265625">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Billing and Inventory Management System" wrappingWidth="320.4389343261719">
          <font>
-            <Font name="Segoe UI" size="10.0" />
+            <Font name="Segoe UI" size="15.0" />
          </font>
+         <StackPane.margin>
+            <Insets bottom="500.0" right="740.0" />
+         </StackPane.margin>
       </Text>
+      <AnchorPane prefHeight="700.0" prefWidth="780.0" style="-fx-background-color: #d2d3ce;" StackPane.alignment="CENTER_RIGHT">
+         <StackPane.margin>
+            <Insets left="550.0" />
+         </StackPane.margin>
+      </AnchorPane>
+      <ImageView fitHeight="700.0" fitWidth="750.0" opacity="0.9" pickOnBounds="true" smooth="false">
+         <image>
+            <Image url="@login-bg.jpg" />
+         </image>
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+         <StackPane.margin>
+            <Insets left="550.0" />
+         </StackPane.margin>
+      </ImageView>
+      <AnchorPane cacheShape="false" centerShape="false" opacity="0.95" pickOnBounds="false" prefHeight="529.0" prefWidth="445.0" scaleShape="false" style="-fx-background-color: #e4c8aa; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+         <children>
+            <AnchorPane fx:id="adminpane" layoutX="99.0" layoutY="392.0" prefHeight="140.0" prefWidth="259.0">
+               <children>
+                  <Text layoutX="69.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="---------- OR ----------">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Button contentDisplay="RIGHT" layoutX="17.0" layoutY="76.0" mnemonicParsing="false" onAction="#ResisterButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-radius: 5; -fx-background-color: #0C1820; -fx-border-color: Black; -fx-border-radius: 5;" text="Register    " textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Segoe UI Bold" size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@register.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Text layoutX="79.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New User ? Register Here !">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+            <Text layoutX="81.0" layoutY="75.373046875" strokeType="OUTSIDE" strokeWidth="0.0" text="Log-In As">
+               <font>
+                  <Font name="Segoe UI Bold" size="30.0" />
+               </font>
+            </Text>
+            <Label layoutX="117.0" layoutY="141.0" text="Username :">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="usernameField" layoutX="117.0" layoutY="174.0" prefHeight="40.0" prefWidth="225.0" promptText="Enter your Username" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
+            <Label layoutX="117.0" layoutY="233.0" text="Password :">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <PasswordField fx:id="passwordField" layoutX="117.0" layoutY="265.0" prefHeight="40.0" prefWidth="225.0" promptText="Enter Passsword" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </PasswordField>
+            <Button alignment="CENTER" contentDisplay="RIGHT" layoutX="117.0" layoutY="358.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#LogInButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Log In    " textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@login.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="254.0" layoutY="310.0" onMouseClicked="#ForgotPasswordText" style="-fx-underline: true;" text="Forgot Password">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Label>
+            <RadioButton fx:id="loginradiobtn1" layoutX="231.0" layoutY="45.0" mnemonicParsing="false" text="Owner">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="LoginAsAdminOrEmployee" />
+               </toggleGroup>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </RadioButton>
+            <RadioButton fx:id="loginradiobtn2" layoutX="231.0" layoutY="75.0" mnemonicParsing="false" text="Employee" toggleGroup="$LoginAsAdminOrEmployee">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </RadioButton>
+            <Label fx:id="loginErrorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="117.0" layoutY="338.0" prefHeight="17.0" prefWidth="225.0" text="Username or Password is Incorrect" textFill="#ae2424" />
+         </children>
+         <StackPane.margin>
+            <Insets bottom="75.0" left="725.0" right="130.0" top="75.0" />
+         </StackPane.margin>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>
