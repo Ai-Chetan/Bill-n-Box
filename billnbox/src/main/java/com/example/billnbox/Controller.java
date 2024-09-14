@@ -11,65 +11,6 @@ import java.io.IOException;
 
 public class Controller {
 
-    private Stage alertStage;
-
-    @FXML
-    private void RegistrationNext1(ActionEvent event) {
-        try {
-            // Load the dashboard FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("3-registration-page-2.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-
-            // Set the scene to the dashboard
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void RegistrationNext2(ActionEvent event) {
-        try {
-            // Load the dashboard FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("4-registration-page-3.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-
-            // Set the scene to the dashboard
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void RegistrationBack2(ActionEvent event) {
-        try {
-            // Load the dashboard FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("2-registration-page-1.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-
-            // Set the scene to the dashboard
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @FXML
     private void LogInButton(ActionEvent event) {
         // Perform login validation

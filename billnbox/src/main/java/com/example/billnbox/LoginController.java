@@ -46,7 +46,7 @@ public class LoginController {
     // Database credentials
     private String url = "jdbc:mysql://localhost:3307/BillNBoxDB";
     private String user = "root";
-    private String dbPassword = "rootroot";
+    private String dbPassword = "root!123";
 
     public void initialize() {
         // Initially hide the admin pane
@@ -110,7 +110,7 @@ public class LoginController {
 
     // Method to verify username and password from the database
     private boolean verifyLogin(String username, String password) {
-        String sql = "SELECT * FROM RegisteredUsers WHERE Username = ? AND Password = ?";
+        String sql = "SELECT * FROM Owner WHERE Username = ? AND Password = ?";
         try (Connection conn = DriverManager.getConnection(url, user, dbPassword);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 

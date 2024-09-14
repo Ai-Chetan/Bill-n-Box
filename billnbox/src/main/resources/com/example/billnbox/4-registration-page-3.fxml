@@ -49,7 +49,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="Registering" layoutX="503.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#Register" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="REGISTER" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="Registering" layoutX="503.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRegister" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="REGISTER" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -62,7 +62,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="RegisterUsername" layoutX="370.0" layoutY="114.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Username for Login" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="usernameField" layoutX="370.0" layoutY="114.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Username for Login" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -75,7 +75,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <PasswordField layoutX="370.0" layoutY="207.0" prefHeight="42.0" prefWidth="359.0" promptText="Create a Strong Password" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <PasswordField fx:id="passwordField" layoutX="370.0" layoutY="207.0" prefHeight="42.0" prefWidth="359.0" promptText="Create a Strong Password" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -88,7 +88,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <PasswordField fx:id="RegisterPassword" layoutX="370.0" layoutY="297.0" prefHeight="42.0" prefWidth="359.0" promptText="Confirm Create Password Again" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <PasswordField fx:id="confirmpasswordField" layoutX="370.0" layoutY="297.0" prefHeight="42.0" prefWidth="359.0" promptText="Confirm Create Password Again" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>

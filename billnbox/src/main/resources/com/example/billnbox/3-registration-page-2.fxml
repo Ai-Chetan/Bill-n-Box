@@ -16,9 +16,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #d6cec3;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.Controller">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #d6cec3;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.RegistrationController">
    <children>
-      <ImageView fx:id="image1" fitHeight="700.0" fitWidth="1300.0" nodeOrientation="INHERIT" opacity="0.9" pickOnBounds="true" smooth="false" style="-fx-alignment: center;">
+      <ImageView fitHeight="700.0" fitWidth="1300.0" nodeOrientation="INHERIT" opacity="0.9" pickOnBounds="true" smooth="false" style="-fx-alignment: center;">
          <image>
             <Image url="@app-bg.jpg" />
          </image>
@@ -31,7 +31,7 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="486.0" prefWidth="921.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TextArea layoutX="370.0" layoutY="207.0" prefHeight="160.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+            <TextArea fx:id="shopaddressField" layoutX="370.0" layoutY="207.0" prefHeight="160.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -70,7 +70,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField layoutX="370.0" layoutY="114.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter the Shop Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="shopnameField" layoutX="370.0" layoutY="114.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter the Shop Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>

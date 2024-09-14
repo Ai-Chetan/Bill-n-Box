@@ -4,6 +4,7 @@ module com.example.billnbox {
     requires java.desktop;
     requires java.sql;
     requires transitive itextpdf;
+    requires java.compiler;
 
 
     opens com.example.billnbox to javafx.fxml;
