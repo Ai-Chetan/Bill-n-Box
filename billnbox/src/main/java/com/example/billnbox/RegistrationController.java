@@ -36,13 +36,9 @@ public class RegistrationController {
     // Database connection details
     public static class DatabaseConnector {
 
-        private static final String DB_URL = "jdbc:mysql://localhost:3307/BillNBoxDB";
-        private static final String DB_USER = "root";
-        private static final String DB_PASSWORD = "root!123";
-
         public static void storeUser(String username, String password, String name, String email, String mobno, String shopname, String shopaddress) {
             String insertSQL = "INSERT INTO Owner (Username, Password, Name, EmailID, PhoneNo, ShopName, ShopAddress) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
                  PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
                 pstmt.setString(1, username);
                 pstmt.setString(2, password);
@@ -78,6 +74,9 @@ public class RegistrationController {
         EmailID = emailField.getText();
         MobileNumber = mobnoField.getText();
 
+        if (Name.isEmpty() || EmailID.isEmpty() || MobileNumber.isEmpty()) {
+            showError("Fields cannot be Empty");
+        }
         // Pass data to next controller
         if (validateFields(Name, EmailID, MobileNumber)) {
             navigateToPageWithData(event, "3-registration-page-2.fxml");
@@ -89,6 +88,10 @@ public class RegistrationController {
     private void RegistrationNext2(ActionEvent event) {
         ShopName = shopnameField.getText();
         ShopAddress = shopaddressField.getText();
+
+        if (ShopName.isEmpty() || ShopAddress.isEmpty()) {
+            showError("Fields cannot be Empty");
+        }
 
         if (validateFields(ShopName, ShopAddress)) {
             navigateToPageWithData(event, "4-registration-page-3.fxml");

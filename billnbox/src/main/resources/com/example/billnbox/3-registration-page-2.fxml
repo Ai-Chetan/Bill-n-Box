@@ -31,7 +31,7 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="486.0" prefWidth="921.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TextArea fx:id="shopaddressField" layoutX="370.0" layoutY="207.0" prefHeight="160.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+            <TextArea fx:id="shopaddressField" layoutX="370.0" layoutY="207.0" prefHeight="130.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -104,6 +104,7 @@
                </image>
             </ImageView>
             <Text layoutX="782.0" layoutY="-46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" />
+            <Label fx:id="emptyFields" alignment="CENTER" layoutX="170.0" layoutY="361.0" prefHeight="17.0" prefWidth="558.0" text="Fields cannot be Empty" textFill="RED" />
          </children>
          <StackPane.margin>
             <Insets bottom="50.0" left="300.0" right="300.0" top="150.0" />

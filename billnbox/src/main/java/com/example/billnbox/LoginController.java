@@ -23,16 +23,16 @@ import java.sql.SQLException;
 public class LoginController {
 
     @FXML
-    private RadioButton loginradiobtn1;
+    private RadioButton loginradiobtn1; // Owner radio button
 
     @FXML
-    private RadioButton loginradiobtn2;
+    private RadioButton loginradiobtn2; // Employee radio button
 
     @FXML
-    private AnchorPane adminpane;
+    private AnchorPane registerpane;
 
     @FXML
-    private ToggleGroup LoginAsAdminOrEmployee;
+    private ToggleGroup LoginAsOwnerOrEmployee;
 
     @FXML
     private TextField usernameField;
@@ -43,27 +43,21 @@ public class LoginController {
     @FXML
     private Label loginErrorLabel;
 
-    // Database credentials
-    private String url = "jdbc:mysql://localhost:3307/BillNBoxDB";
-    private String user = "root";
-    private String dbPassword = "root!123";
-
     public void initialize() {
         // Initially hide the admin pane
-        adminpane.setVisible(false);
+        registerpane.setVisible(false);
         loginErrorLabel.setVisible(false);
 
         // Add a listener to detect changes in the radio buttons
-        LoginAsAdminOrEmployee.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (LoginAsAdminOrEmployee.getSelectedToggle() != null) {
-                RadioButton selectedRadioButton = (RadioButton) LoginAsAdminOrEmployee.getSelectedToggle();
-                String selectedText = selectedRadioButton.getText();
+        LoginAsOwnerOrEmployee.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (LoginAsOwnerOrEmployee.getSelectedToggle() != null) {
+                RadioButton selectedRadioButton = (RadioButton) LoginAsOwnerOrEmployee.getSelectedToggle();
 
                 // Change content based on selected radio button
                 if (selectedRadioButton == loginradiobtn1) {
-                    adminpane.setVisible(true);
+                    registerpane.setVisible(true);
                 } else if (selectedRadioButton == loginradiobtn2) {
-                    adminpane.setVisible(false);
+                    registerpane.setVisible(false);
                 }
             }
         });
@@ -77,13 +71,29 @@ public class LoginController {
 
         // Check if fields are empty
         if (username.isEmpty() || password.isEmpty()) {
-            loginErrorLabel.setText("Fields cannot be empty.");
+            loginErrorLabel.setText("Username and Password Fields cannot be Empty.");
             loginErrorLabel.setVisible(true);
             return;
         }
 
-        // Perform login validation by checking with the database
-        boolean isValidLogin = verifyLogin(username, password);
+        // Determine if the user is logging in as Owner or Employee
+        RadioButton selectedRadioButton = (RadioButton) LoginAsOwnerOrEmployee.getSelectedToggle();
+        boolean isValidLogin = false;
+
+        if (selectedRadioButton != null) {
+            if (selectedRadioButton == loginradiobtn1) {
+                // Owner login
+                isValidLogin = verifyLogin(username, password, "Owner");
+            } else if (selectedRadioButton == loginradiobtn2) {
+                // Employee login
+                isValidLogin = verifyLogin(username, password, "Employee");
+            }
+        } else {
+            // No radio button selected
+            loginErrorLabel.setText("Please select whether you are logging in as Owner or Employee.");
+            loginErrorLabel.setVisible(true);
+            return;
+        }
 
         if (isValidLogin) {
             try {
@@ -108,10 +118,16 @@ public class LoginController {
         }
     }
 
-    // Method to verify username and password from the database
-    private boolean verifyLogin(String username, String password) {
-        String sql = "SELECT * FROM Owner WHERE Username = ? AND Password = ?";
-        try (Connection conn = DriverManager.getConnection(url, user, dbPassword);
+    // Method to verify username and password from the respective table in the database
+    private boolean verifyLogin(String username, String password, String userType) {
+        String sql;
+        if (userType.equals("Owner")) {
+            sql = "SELECT * FROM Owner WHERE Username = ? AND Password = ?";
+        } else {
+            sql = "SELECT * FROM Employee WHERE Username = ? AND Password = ?";
+        }
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
@@ -119,7 +135,7 @@ public class LoginController {
 
             ResultSet resultSet = pstmt.executeQuery();
 
-            // Check if user exists
+            // Check if user exists in the respective table
             if (resultSet.next()) {
                 // Username and password are correct
                 return true;

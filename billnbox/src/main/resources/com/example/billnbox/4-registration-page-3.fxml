@@ -117,7 +117,7 @@
                </image>
             </ImageView>
             <Text layoutX="782.0" layoutY="-46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" />
-            <Label fx:id="emptyFields" alignment="CENTER" layoutX="170.0" layoutY="361.0" prefHeight="17.0" prefWidth="558.0" text="Username and Password Fields cannot be empty" />
+            <Label fx:id="emptyFields" alignment="CENTER" layoutX="170.0" layoutY="361.0" prefHeight="17.0" prefWidth="558.0" text="Username and Password Fields cannot be empty" textFill="RED" />
          </children>
          <StackPane.margin>
             <Insets bottom="50.0" left="300.0" right="300.0" top="150.0" />
