@@ -43,6 +43,8 @@ public class LoginController {
     @FXML
     private Label loginErrorLabel;
 
+    private String username;
+
     public void initialize() {
         // Initially hide the admin pane
         registerpane.setVisible(false);
@@ -66,7 +68,7 @@ public class LoginController {
     @FXML
     private void LogInButton(ActionEvent event) {
         // Get the username and password from the fields
-        String username = usernameField.getText();
+        username = usernameField.getText();
         String password = passwordField.getText();
 
         // Check if fields are empty
@@ -96,6 +98,8 @@ public class LoginController {
         }
 
         if (isValidLogin) {
+            // Set username in SessionManager
+            SessionManager.getInstance().setUsername(username);
             try {
                 // Load the dashboard FXML
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("8-dashboard.fxml"));

@@ -131,6 +131,8 @@ public class RegistrationController {
         } else if (Username.isEmpty() || Password.isEmpty()) {
             showError("Username and Password Fields cannot be Empty");
         } else {
+            // Set username in SessionManager
+            SessionManager.getInstance().setUsername(Username);
             DatabaseConnector.storeUser(Username, Password, Name, EmailID, MobileNumber, ShopName, ShopAddress);
             navigateToPage(event, "5-registration-successful.fxml");
         }

@@ -116,7 +116,7 @@
             <Insets right="1060.0" top="400.0" />
          </StackPane.margin>
       </Line>
-      <Button mnemonicParsing="false" onAction="#changepassButton" prefHeight="41.0" prefWidth="198.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: Black; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;" text="Change Passwrod">
+      <Button mnemonicParsing="false" onAction="#changepassButton" prefHeight="41.0" prefWidth="198.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: Black; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;" text="Change Password">
          <font>
             <Font size="18.0" />
          </font>
