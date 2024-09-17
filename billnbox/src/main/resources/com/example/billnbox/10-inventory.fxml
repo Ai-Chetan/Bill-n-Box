@@ -30,7 +30,7 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="tableView" layoutX="34.0" layoutY="34.0" prefHeight="410.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black;">
+            <TableView fx:id="tableView" layoutX="34.0" layoutY="34.0" prefHeight="410.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
               <columns>
                 <TableColumn fx:id="srNoColumn" prefWidth="64.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
                   <TableColumn fx:id="productNameColumn" prefWidth="134.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Product Name" />
@@ -45,23 +45,47 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button layoutX="34.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#BackToDashboard" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back To Dashboard" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Segoe UI Bold" size="18.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button fx:id="inventoryBtn" layoutX="636.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Edit Inventory" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Segoe UI Bold" size="18.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
             <Label fx:id="statusLabel" alignment="CENTER" layoutX="256.0" layoutY="457.0" prefHeight="17.0" prefWidth="381.0" />
+            <Button fx:id="addNewProductButton" layoutX="34.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addNewProduct" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add New Product" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="backToDashboard" layoutX="34.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#BackToDashboard" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back To Dashboard" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="deleteButton" layoutX="323.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteSelectedProduct" prefHeight="40.0" prefWidth="88.0" style="-fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" stylesheets="@style.css" text="Delete" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="inventoryBtn" layoutX="671.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Edit Inventory" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="discardButton" layoutX="497.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#discardButtonAction" prefHeight="40.0" prefWidth="167.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Discard Changes" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
          <StackPane.margin>
             <Insets bottom="50.0" left="200.0" right="200.0" top="100.0" />
