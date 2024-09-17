@@ -5,4 +5,29 @@
 
 .table-row-cell:empty {
     visibility: hidden;
+    -fx-opacity: 0; /* Make empty rows fully transparent */
+    -fx-pref-height: 0; /* Set the height to 0 to collapse the row */
+    -fx-border-width: 0; /* Hide borders for empty rows */
+}
+
+.table-cell:empty {
+    -fx-opacity: 0; /* Make empty cells fully transparent */
+    -fx-border-width: 0; /* Hide borders for empty cells */
+}
+
+#deleteButton {
+    -fx-background-color: #0C1820; /* Initial red background */
+    -fx-text-fill: #ffffff;          /* Initial white text color */
+}
+
+#deleteButton:hover {
+    -fx-background-color: #ff0000; /* Red background on hover */
+    -fx-text-fill: #000000;          /* Black text color on hover */
+}
+
+#mfgDate {
+    -fx-font-size: 15px;
+}
+#expDate {
+    -fx-font-size: 15px;
 }

@@ -170,254 +170,133 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome Username !">
-         <font>
-            <Font name="Arial Black" size="36.0" />
-         </font>
-         <StackPane.margin>
-            <Insets bottom="600.0" left="-300.0" />
-         </StackPane.margin>
-      </Text>
       <Pane prefHeight="310.0" prefWidth="399.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <StackPane.margin>
-            <Insets bottom="300.0" left="360.0" right="550.0" top="90.0" />
+            <Insets bottom="350.0" left="365.0" right="555.0" top="50.0" />
          </StackPane.margin>
          <children>
-            <Text layoutX="50.0" layoutY="90.0" smooth="false" stroke="#ff5a5a" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Sold : " wrappingWidth="189.169921875">
+            <Text layoutX="84.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Today's Summary">
+               <font>
+                  <Font name="Arial Black" size="24.0" />
+               </font>
+            </Text>
+            <Text layoutX="96.0" layoutY="85.0" smooth="false" stroke="#ff5a5a" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Sold : " wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font></Text>
-            <Text layoutX="83.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Today's Summary">
-               <font>
-                  <Font name="Arial Black" size="24.0" />
-               </font>
-            </Text>
-            <Text layoutX="50.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Purchased : ">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="50.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spendings :">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="50.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings : ">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label layoutX="200.0" layoutY="70.0" text="100">
+            <Label layoutX="246.0" layoutY="62.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="148.0" layoutY="235.0" text="100">
+            <Text layoutX="46.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Purchased : ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Label layoutX="246.0" layoutY="227.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="167.0" layoutY="180.0" text="100">
+            <Text layoutX="126.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spendings :">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Label layoutX="246.0" layoutY="116.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="246.0" layoutY="124.0" text="100">
+            <Text layoutX="143.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings : ">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Label layoutX="246.0" layoutY="172.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
          </children>
-      </Pane>
-      <Pane fx:id="topsolddaily" prefHeight="310.0" prefWidth="397.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
-         <children>
-            <Text layoutX="38.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Pen d" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="24.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top Sold">
-               <font>
-                  <Font name="Arial Black" size="24.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Notebook">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Fevicol">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Staple Pins">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5. Book Cover">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-
-         </children>
-         <StackPane.margin>
-            <Insets bottom="300.0" left="800.0" right="100.0" top="90.0" />
-         </StackPane.margin>
-      </Pane>
-      <Pane fx:id="topsoldweekly" prefHeight="310.0" prefWidth="397.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
-         <children>
-            <Text layoutX="38.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Pen w" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="24.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top Sold">
-               <font>
-                  <Font name="Arial Black" size="24.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Notebook">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Fevicol">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Staple Pins">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="38.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5. Book Cover">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="215.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-         </children>
-         <StackPane.margin>
-            <Insets bottom="300.0" left="800.0" right="100.0" top="90.0" />
-         </StackPane.margin>
       </Pane>
       <Pane fx:id="topsoldmonthly" prefHeight="310.0" prefWidth="397.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <Text layoutX="38.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Pen m" wrappingWidth="189.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text layoutX="24.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top Sold">
+            <Text layoutX="50.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top Sold">
                <font>
                   <Font name="Arial Black" size="24.0" />
                </font>
             </Text>
-            <Text layoutX="38.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Notebook">
+            <Text layoutX="55.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Pen" wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="38.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Fevicol">
+            <Text layoutX="55.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Notebook">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="38.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Staple Pins">
+            <Text layoutX="55.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Fevicol">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="38.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5. Book Cover">
+            <Text layoutX="55.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Staple Pins">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="215.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text layoutX="55.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5. Book Cover">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="215.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text layoutX="232.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="215.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text layoutX="232.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="215.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text layoutX="232.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="215.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text layoutX="232.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <ComboBox fx:id="combobox" layoutX="231.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: black;" />
+            <Text layoutX="232.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <ComboBox fx:id="comboBox" layoutX="277.0" layoutY="21.0" prefHeight="29.0" prefWidth="90.0" promptText="Daily" style="-fx-background-color: E4C8AAFF; -fx-border-color: black;" />
          </children>
          <StackPane.margin>
-            <Insets bottom="300.0" left="800.0" right="100.0" top="90.0" />
+            <Insets bottom="350.0" left="805.0" right="105.0" top="50.0" />
          </StackPane.margin>
       </Pane>
-      <BarChart prefHeight="500.0" prefWidth="557.0">
+      <Pane prefHeight="310.0" prefWidth="399.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
+         <StackPane.margin>
+            <Insets bottom="10.0" left="365.0" right="105.0" top="375.0" />
+         </StackPane.margin>
+         <children>
+            <Text layoutX="296.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expenses vs Earnings">
+               <font>
+                  <Font name="Arial" size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <BarChart fx:id="barChart" prefHeight="280.0" prefWidth="837.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -425,7 +304,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
          <StackPane.margin>
-            <Insets left="265.0" right="35.0" top="400.0" />
+            <Insets bottom="15.0" left="375.0" right="135.0" top="415.0" />
          </StackPane.margin>
       </BarChart>
    </children>

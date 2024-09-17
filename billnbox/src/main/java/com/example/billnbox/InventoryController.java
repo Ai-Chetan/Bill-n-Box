@@ -13,6 +13,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -90,15 +92,18 @@ public class InventoryController {
     private TableColumn<Product, Integer> lowQuantityAlertColumn;
 
     @FXML
-    private Button inventoryBtn;
+    private Button inventoryBtn, deleteButton, backToDashboard, addNewProductButton, discardButton;
 
     @FXML
     private Label statusLabel;
+
+    private ObservableList<Product> deletedProducts = FXCollections.observableArrayList();
 
     private boolean isEditing = false;
 
     @FXML
     public void initialize() {
+
         // Set up table columns
         srNoColumn.setCellValueFactory(new PropertyValueFactory<>("srNo"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
@@ -114,6 +119,16 @@ public class InventoryController {
 
         // Load product data from the database
         loadProductData();
+
+        // Disable the delete button initially
+        deleteButton.setDisable(true);
+        deleteButton.setVisible(false);
+        discardButton.setVisible(false);
+        addNewProductButton.setVisible(false);
+        // Add listener to enable/disable the delete button when a row is selected
+        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            deleteButton.setDisable(newSelection == null); // Disable button if no row is selected
+        });
     }
 
     private void makeTableEditable() {
@@ -146,6 +161,9 @@ public class InventoryController {
     }
 
     private void loadProductData() {
+        // Clear existing items in the TableView to prevent duplicates
+        tableView.getItems().clear();
+
         ObservableList<Product> productList = FXCollections.observableArrayList();
 
         String sql = "SELECT SrNo, ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert FROM Product";
@@ -179,29 +197,47 @@ public class InventoryController {
         if (statusLabel != null) {
             statusLabel.setVisible(true);
             statusLabel.setText(message);
+
+            // Automatically hide the label after 3 seconds (3000 milliseconds)
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            pause.setOnFinished(event -> statusLabel.setVisible(false));
+            pause.play();
         }
     }
 
     private void saveProductData() {
         ObservableList<Product> products = tableView.getItems();
-
-        String sql = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ?, LowQuantityAlert = ? WHERE SrNo = ?";
+        String updateSql = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ?, LowQuantityAlert = ? WHERE SrNo = ?";
+        String deleteSql = "DELETE FROM Product WHERE SrNo = ?";  // SQL to delete products
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+             PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
 
+            // Update existing products
             for (Product product : products) {
-                pstmt.setString(1, product.getProductName());
-                pstmt.setString(2, product.getCategory());
-                pstmt.setInt(3, product.getQuantity());
-                pstmt.setDouble(4, product.getPrice());
-                pstmt.setString(5, product.getMfgDate());
-                pstmt.setString(6, product.getExpDate());
-                pstmt.setInt(7, product.getLowQuantityAlert());
-                pstmt.setInt(8, product.getSrNo());
-                pstmt.addBatch();
+                updateStmt.setString(1, product.getProductName());
+                updateStmt.setString(2, product.getCategory());
+                updateStmt.setInt(3, product.getQuantity());
+                updateStmt.setDouble(4, product.getPrice());
+                updateStmt.setString(5, product.getMfgDate());
+                updateStmt.setString(6, product.getExpDate());
+                updateStmt.setInt(7, product.getLowQuantityAlert());
+                updateStmt.setInt(8, product.getSrNo());
+                updateStmt.addBatch();
             }
-            pstmt.executeBatch();
+            updateStmt.executeBatch();
+
+            // Delete marked products
+            for (Product deletedProduct : deletedProducts) {
+                deleteStmt.setInt(1, deletedProduct.getSrNo());
+                deleteStmt.addBatch();
+            }
+            deleteStmt.executeBatch();
+
+            // Clear deleted products list after saving
+            deletedProducts.clear();
+
             showError("Product data saved successfully.");
         } catch (SQLException e) {
             showError("Error saving product data: " + e.getMessage());
@@ -213,15 +249,25 @@ public class InventoryController {
         if (isEditing) {
             // Save the changes to the database
             saveProductData();
-
+            // Hide the delete and add new product buttons
+            deleteButton.setVisible(false);
+            addNewProductButton.setVisible(false);
+            discardButton.setVisible(false);
             // Disable table editing
             makeTableNonEditable();
             // Change button text back to "Edit Inventory"
             inventoryBtn.setText("Edit Inventory");
+            backToDashboard.setVisible(true);
         } else {
             // Enable table editing
             makeTableEditable();
+            // Hide status label
             statusLabel.setVisible(false);
+            // Show the delete and add new product buttons
+            deleteButton.setVisible(true);
+            addNewProductButton.setVisible(true);
+            discardButton.setVisible(true);
+            backToDashboard.setVisible(false);
             // Change button text to "Save Changes"
             inventoryBtn.setText("Save Changes");
         }
@@ -231,9 +277,56 @@ public class InventoryController {
     }
 
     @FXML
+    private void deleteSelectedProduct(ActionEvent event) {
+        Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+
+        if (selectedProduct != null) {
+            // Remove product from TableView but not the database yet
+            tableView.getItems().remove(selectedProduct);
+            deletedProducts.add(selectedProduct);  // Track the deleted product
+
+            showError("Product marked for deletion.");
+        }
+    }
+
+    @FXML
     private void BackToDashboard(ActionEvent event) {
         navigateToPage(event, "8-dashboard.fxml");
     }
+
+    @FXML
+    private void addNewProduct(ActionEvent event) {
+        navigateToPage(event, "10a-add-new-product.fxml");
+    }
+
+    @FXML
+    private void discardButtonAction(ActionEvent event) {
+        // Clear the current table data
+        tableView.getItems().clear();
+
+        // Reload the original data from the database
+        loadProductData();
+
+        // Toggle back to viewing mode (non-editable)
+        isEditing = false;
+        makeTableNonEditable();
+
+        // Hide discard and add new product buttons
+        discardButton.setVisible(false);
+        addNewProductButton.setVisible(false);
+        deleteButton.setVisible(false);
+
+        // Show the BackToDashboard button again
+        backToDashboard.setVisible(true);
+
+        // Change the inventory button text back to "Edit Inventory"
+        inventoryBtn.setText("Edit Inventory");
+
+        // Hide the status label, if any
+        statusLabel.setVisible(false);
+    }
+
+
 
     private void navigateToPage(ActionEvent event, String fxmlFile) {
         try {
