@@ -22,3 +22,23 @@ INSERT INTO Product (ProductName, Category, Quantity, Price, MfgDate, ExpDate, L
 ('Binder Clips', 'Office Supplies', 40, 22.00, '2023-07-01', '2025-07-01', 10),('Paper Clips', 'Office Supplies', 100, 5.00, '2023-07-01', '2025-07-01', 10),('Folders', 'Paper Products', 50, 45.00, '2023-07-01', '2025-07-01', 15),
 ('Tape', 'Adhesives', 30, 30.00, '2023-07-01', '2025-07-01', 5),('File', 'Paper Products', 20, 60.00, '2023-07-01', '2025-07-01', 15);
 select * from Product;
+desc Orders;
+insert into Orders (TotalAmount , IssueDate , CustomerId) values( 435.00 , '2024-07-01' , 157 );
+select * from Orders;
+drop table Orders;
+create table Orders( OrderId int auto_increment primary key, ProductId int, Quantity int);
+alter table Orders add column BillId int;
+insert into Orders Values(223,51,3,225);
+insert into Orders (ProductId,Quantity,BillId) values(67,5,225),(12,6,225),(18,4,225);
+select * from Orders;
+alter table Orders change BillId InvoiceNo int;
+create table Bill( InvoiceNo int auto_increment primary key, BillDate Date, CustomerName varchar(100), TotalPrice Decimal(10,2));
+Insert into Bill values(20240723,'2024-07-23','Kapil Dev',970);
+Insert into Bill(BillDate, CustomerName, TotalPrice) values('2024-07-24', 'Anil Kumar', 1430.70);
+select * from Bill;
+drop table Orders;
+create table Orders(BillId int,ProductId int,Quantity int,TotalPrice int);
+insert into Orders values(20240723,12,4,220),(20240723,15,3,99),(20240723,43,3,30),(20240724,16,3,48),(20240724,43,5,50);
+select * from Orders;
+
+
