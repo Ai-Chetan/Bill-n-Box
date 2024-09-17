@@ -40,5 +40,8 @@ drop table Orders;
 create table Orders(BillId int,ProductId int,Quantity int,TotalPrice int);
 insert into Orders values(20240723,12,4,220),(20240723,15,3,99),(20240723,43,3,30),(20240724,16,3,48),(20240724,43,5,50);
 select * from Orders;
+create table Logs(ActionDate Date,ActionTime Time,Activity varchar(50),PerformedBy varchar(50));
+insert into Logs values('2024-07-15','23:13' ,'Bill Created','Sushil Kumar'),('2024-07-13','12:34','Logged in','Karan Jha');
+select * from Logs;
 
 
