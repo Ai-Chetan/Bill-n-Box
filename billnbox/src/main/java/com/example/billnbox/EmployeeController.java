@@ -113,6 +113,7 @@ public class EmployeeController {
             Stage stage = (Stage) employeeTable.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("12b-employees.fxml")); // Update path if necessary
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
