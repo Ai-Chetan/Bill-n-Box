@@ -32,7 +32,7 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="tableView" layoutX="34.0" layoutY="34.0" prefHeight="213.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
+            <TableView fx:id="tableView" layoutX="36.0" layoutY="74.0" prefHeight="261.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
               <columns>
                   <TableColumn fx:id="productNameColumn" prefWidth="282.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Product Name" />
                   <TableColumn fx:id="quantityColumn" prefWidth="164.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Quantity" />
@@ -43,7 +43,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button layoutX="34.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Discard Bill" textAlignment="CENTER" textFill="WHITE">
+            <Button layoutX="34.0" layoutY="541.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Discard Bill" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -51,7 +51,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="addToInventoryBtn" layoutX="671.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddToInventory" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Show Bill" textAlignment="CENTER" textFill="WHITE">
+            <Button layoutX="672.0" layoutY="541.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGenerateBill" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Generate Bill" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -59,7 +59,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <AnchorPane layoutX="34.0" layoutY="326.0" prefHeight="115.0" prefWidth="829.0" style="-fx-border-color: black; -fx-border-radius: 5;">
+            <AnchorPane layoutX="34.0" layoutY="398.0" prefHeight="115.0" prefWidth="829.0" style="-fx-border-color: black; -fx-border-radius: 5;">
                <children>
                   <Button fx:id="addToBillBtn" layoutX="649.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddToBillButton" prefHeight="34.0" prefWidth="102.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add  to Bill" textAlignment="CENTER" textFill="WHITE">
                      <font>
@@ -94,6 +94,7 @@
                         <Font size="18.0" />
                      </font>
                   </Text>
+                  <ListView fx:id="suggestionList" layoutX="208.0" layoutY="52.0" prefHeight="60.0" prefWidth="181.0" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" stylesheets="@style.css" />
                   <TextField fx:id="price" layoutX="570.0" layoutY="14.0" prefHeight="32.0" prefWidth="181.0" promptText="Enter MRP" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
                      <font>
                         <Font size="16.0" />
@@ -110,21 +111,40 @@
                </children>
             </AnchorPane>
             <Label fx:id="statusLabel" alignment="CENTER" layoutX="226.0" layoutY="474.0" prefHeight="17.0" prefWidth="446.0" AnchorPane.bottomAnchor="50.0" />
-            <Label alignment="CENTER" layoutX="226.0" layoutY="455.0" prefHeight="17.0" prefWidth="446.0" />
-            <ListView fx:id="suggestionList" layoutX="242.0" layoutY="376.0" prefHeight="101.0" prefWidth="181.0" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" stylesheets="@style.css" />
-            <Text layoutX="569.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grand Total :">
+            <Label alignment="CENTER" layoutX="226.0" layoutY="524.0" prefHeight="17.0" prefWidth="446.0" />
+            <Text layoutX="574.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grand Total :">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <TextField fx:id="grandPrice" alignment="CENTER_RIGHT" editable="false" layoutX="677.0" layoutY="268.0" prefHeight="32.0" prefWidth="181.0" promptText="0.00" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
+            <TextField fx:id="grandPrice" alignment="CENTER_RIGHT" editable="false" layoutX="682.0" layoutY="348.0" prefHeight="32.0" prefWidth="181.0" promptText="0.00" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Text layoutX="34.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Name :">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <TextField fx:id="customerName" layoutX="184.0" layoutY="20.0" prefHeight="37.0" prefWidth="251.0" promptText="Enter Customer Name" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Text layoutX="620.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date : ">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <TextField fx:id="date" layoutX="682.0" layoutY="20.0" prefHeight="32.0" prefWidth="181.0" promptText="Date" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
                <font>
                   <Font size="16.0" />
                </font>
             </TextField>
          </children>
          <StackPane.margin>
-            <Insets bottom="50.0" left="200.0" right="200.0" top="100.0" />
+            <Insets bottom="30.0" left="200.0" right="200.0" top="70.0" />
          </StackPane.margin>
       </AnchorPane>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bill">

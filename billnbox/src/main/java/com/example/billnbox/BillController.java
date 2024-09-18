@@ -1,5 +1,8 @@
 package com.example.billnbox;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,6 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class BillController {
+
+    private final String username = SessionManager.getInstance().getUsername(); // Variable to store the username
 
     @FXML
     private TableView<Product> tableView;
@@ -162,21 +169,6 @@ public class BillController {
         public String toString() {
             return name.get();
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Product product = (Product) o;
-            return Double.compare(product.price.get(), price.get()) == 0 &&
-                    quantity.get() == product.quantity.get() &&
-                    name.get().equals(product.name.get());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name.get(), price.get(), quantity.get());
-        }
     }
 
     private List<Product> getSuggestions(String input) {
@@ -219,7 +211,6 @@ public class BillController {
             selectedProduct.setPrice(productPrice);
             selectedProduct.setQuantity(productQuantity);
 
-            // Ensure TableView updates the correct item
             int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {
                 tableView.getItems().set(selectedIndex, selectedProduct);
@@ -273,7 +264,94 @@ public class BillController {
     }
 
     @FXML
-    private void handleAddToInventory(ActionEvent event) {
-        navigateToPage(event, "8-dashboard.fxml");
+    private void handleGenerateBill(ActionEvent event) {
+        String PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
+        String PDF_NAME = "Bill.pdf";
+        Document document = new Document();
+
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(new File(PDF_FILEPATH + PDF_NAME)));
+            document.open();
+
+            Paragraph companyInfo = new Paragraph("Company Name\nAddress Line 1\nAddress Line 2\nContact: 99999 99999\t\tEmail: email@email.com\n\n",
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            companyInfo.setAlignment(Element.ALIGN_CENTER);
+            document.add(companyInfo);
+
+            Paragraph title = new Paragraph("Bill Receipt", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD));
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            Paragraph date = new Paragraph("Bill ID: 2024091001" + "                                     Date: " + java.time.LocalDate.now() + "\n\n",
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            document.add(date);
+
+            Paragraph customerInfo = new Paragraph("Customer Name: \nContact Details: \n\n",
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            document.add(customerInfo);
+
+            PdfPTable table = new PdfPTable(4);
+            table.addCell("Product Name");
+            table.addCell("Quantity");
+            table.addCell("Price per Quantity");
+            table.addCell("Total Price");
+
+            for (Product product : productList) {
+                table.addCell(product.getName());
+                table.addCell(String.valueOf(product.getQuantity()));
+                table.addCell(String.format("$%.2f", product.getPrice()));
+                table.addCell(String.format("$%.2f", product.getQuantity() * product.getPrice()));
+
+                // Update the product stock in the database
+                updateProductStockInDatabase(product);
+            }
+
+            document.add(table);
+
+            Paragraph grandTotal = new Paragraph("Grand Total: " + String.format("$%.2f", calculateTotalAmount()) + "           ",
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            grandTotal.setAlignment(Element.ALIGN_RIGHT);
+            document.add(grandTotal);
+
+            Paragraph footer = new Paragraph("\n\nThank you for your purchase!\nPlease visit us again.",
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC));
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
+
+            System.out.println("Successfully Generated PDF");
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            document.close();
+        }
+    }
+
+    private double calculateTotalAmount() {
+        double total = 0.0;
+        for (Product product : productList) {
+            total += product.getPrice() * product.getQuantity();
+        }
+        return total;
+    }
+
+    private void updateProductStockInDatabase(Product product) {
+        String query = "UPDATE Product SET Quantity = Quantity - ? WHERE ProductName = ?";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, product.getQuantity()); // Deduct the product's quantity
+            stmt.setString(2, product.getName()); // Identify the product by its name
+            int rowsUpdated = stmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Stock updated successfully for product: " + product.getName());
+            } else {
+                System.out.println("Failed to update stock for product: " + product.getName());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

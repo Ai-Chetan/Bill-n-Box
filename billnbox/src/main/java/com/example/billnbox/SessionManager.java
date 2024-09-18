@@ -3,6 +3,8 @@ package com.example.billnbox;
 public class SessionManager {
     private static SessionManager instance;
     private String username;
+    private String shopname;
+    private String shopaddress;
 
     // Private constructor to restrict instantiation
     private SessionManager() { }
@@ -22,5 +24,21 @@ public class SessionManager {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setShopname(String username) {
+        this.shopname = shopname;
+    }
+
+    public String getShopname() {
+        return shopname;
+    }
+
+    public void setShopaddress(String username) {
+        this.shopaddress = shopaddress;
+    }
+
+    public String getShopaddress() {
+        return shopaddress;
     }
 }

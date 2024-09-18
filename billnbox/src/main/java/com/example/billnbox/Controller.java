@@ -16,6 +16,8 @@ import java.io.IOException;
 public class Controller {
 
     private final String username = SessionManager.getInstance().getUsername();
+    private final String shopname = SessionManager.getInstance().getShopname();
+    private final String shopaddress = SessionManager.getInstance().getShopaddress();
 
     @FXML
     private ComboBox<String> comboBox;
