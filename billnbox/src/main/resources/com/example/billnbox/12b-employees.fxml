@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane opacity="0.9" prefHeight="330.0" prefWidth="642.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.Controller">
+<AnchorPane opacity="0.9" prefHeight="330.0" prefWidth="642.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.AddNewEmployee1">
    <children>
       <Label layoutX="43.0" layoutY="43.0" prefHeight="25.0" prefWidth="176.0" text="Employee Name :">
          <font>
             <Font name="Segoe UI Bold" size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="242.0" layoutY="35.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Name of your Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+      <TextField fx:id="employeeName" layoutX="242.0" layoutY="35.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Name of  Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
          <font>
             <Font size="18.0" />
          </font>
@@ -22,7 +22,7 @@
             <Cursor fx:constant="TEXT" />
          </cursor>
       </TextField>
-      <Button layoutX="377.0" layoutY="257.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#employeesButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="nextBtn" layoutX="377.0" layoutY="257.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlenextButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Next" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="18.0" />
          </font>
@@ -30,7 +30,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="45.0" layoutY="257.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#employeesButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Cancel" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="cancelBtn" layoutX="45.0" layoutY="257.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecancelButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Cancel" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="18.0" />
          </font>
@@ -38,12 +38,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label layoutX="43.0" layoutY="110.0" prefHeight="25.0" prefWidth="176.0" text="Username :">
+      <Label layoutX="43.0" layoutY="110.0" prefHeight="25.0" prefWidth="176.0" text="Phone Number :">
          <font>
             <Font name="Segoe UI Bold" size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="242.0" layoutY="102.0" prefHeight="42.0" prefWidth="359.0" promptText="Create an Username" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+      <TextField fx:id="phoneNumber" layoutX="242.0" layoutY="102.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Phone Number of Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
          <font>
             <Font size="18.0" />
          </font>
@@ -51,12 +51,12 @@
             <Cursor fx:constant="TEXT" />
          </cursor>
       </TextField>
-      <Label layoutX="43.0" layoutY="179.0" prefHeight="25.0" prefWidth="176.0" text="Password :">
+      <Label layoutX="43.0" layoutY="179.0" prefHeight="25.0" prefWidth="176.0" text="Email-Id :">
          <font>
             <Font name="Segoe UI Bold" size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="242.0" layoutY="171.0" prefHeight="42.0" prefWidth="359.0" promptText="Create a Password" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+      <TextField fx:id="emailId" layoutX="242.0" layoutY="171.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Email-Id of Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
          <font>
             <Font size="18.0" />
          </font>
