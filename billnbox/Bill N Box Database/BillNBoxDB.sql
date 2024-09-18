@@ -43,5 +43,5 @@ select * from Orders;
 create table Logs(ActionDate Date,ActionTime Time,Activity varchar(50),PerformedBy varchar(50));
 insert into Logs values('2024-07-15','23:13' ,'Bill Created','Sushil Kumar'),('2024-07-13','12:34','Logged in','Karan Jha');
 select * from Logs;
-
+desc Employee;
 

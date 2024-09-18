@@ -36,6 +36,7 @@ public class AddNewEmployee1 {
             controller.setPage1Data(name, email, phone);
             // Set the new scene to the current stage
             stage.setScene(new Scene(root));
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +50,7 @@ public class AddNewEmployee1 {
             Stage stage = (Stage) employeeName.getScene().getWindow();
 
             // Load the Dashboard.fxml file
-            Parent root = FXMLLoader.load(getClass().getResource("8-Dashboard.fxml")); // Update the path if necessary
+            Parent root = FXMLLoader.load(getClass().getResource("12a-employees.fxml")); // Update the path if necessary
 
             // Set the Dashboard scene
             stage.setScene(new Scene(root));

@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 public class AddNewEmployee2 {
 
     @FXML
@@ -34,14 +33,14 @@ public class AddNewEmployee2 {
     @FXML
     private void handleAddButton() {
         String username = this.Username.getText();
-        String Password = this.Password.getText();
+        String password = this.Password.getText();
 
-        // Assuming you have a method to insert the employee into the database
-        boolean isInserted = DatabaseConnection.insertEmployee(name, email, phoneNumber, username,Password);
+        // To insert employee into database
+        boolean isInserted = DatabaseConnection.insertEmployee(name, email, phoneNumber, username, password);
 
         if (isInserted) {
             try {
-                Stage stage = (Stage)Username.getScene().getWindow();
+                Stage stage = (Stage) Username.getScene().getWindow();
                 Parent root = FXMLLoader.load(getClass().getResource("12a-employees.fxml")); // Update the path if necessary
                 stage.setScene(new Scene(root));
             } catch (Exception e) {
@@ -49,6 +48,7 @@ public class AddNewEmployee2 {
             }
         }
     }
+
     @FXML
     private void handleCancelButton() {
         try {
@@ -66,11 +66,12 @@ public class AddNewEmployee2 {
             e.printStackTrace();
         }
     }
-    public class DatabaseConnection {
+
+    public static class DatabaseConnection {
 
         // Method to insert employee data into the database
         public static boolean insertEmployee(String name, String email, String number, String username, String password) {
-            String query = "INSERT INTO employees (name, email, number, username, password) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Employee (Name, EmailID, PhoneNo, Username, Password) VALUES (?, ?, ?, ?, ?)";
 
             try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
                  PreparedStatement preparedStatement = conn.prepareStatement(query)) {
@@ -91,5 +92,3 @@ public class AddNewEmployee2 {
         }
     }
 }
-
-

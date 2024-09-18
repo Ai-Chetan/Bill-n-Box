@@ -1,5 +1,12 @@
 package com.example.billnbox;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -7,9 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.*;
 
@@ -36,6 +40,9 @@ public class EmployeeController {
     @FXML
     private TableColumn<Employee, String> emailColumn;
 
+    @FXML
+    private Button deleteButton;  // Add reference to the delete button
+
     private ObservableList<Employee> employeeList = FXCollections.observableArrayList();
 
     // Initialize the TableView and load employee data
@@ -51,6 +58,11 @@ public class EmployeeController {
 
         // Load employee data from the database
         loadEmployeeData();
+
+        // Add a listener to enable/disable the delete button based on selection
+        employeeTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            deleteButton.setDisable(newSelection == null);
+        });
     }
 
     // Method to load employee data from the database
@@ -113,9 +125,57 @@ public class EmployeeController {
             Stage stage = (Stage) employeeTable.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("12b-employees.fxml")); // Update path if necessary
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // Handle Delete Button
+    @FXML
+    private void handleDeleteButton() {
+        Employee selectedEmployee = employeeTable.getSelectionModel().getSelectedItem();
+        if (selectedEmployee == null) {
+            return;
+        }
+
+        // Show confirmation dialog
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete this employee?");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            deleteEmployee(selectedEmployee);
+        }
+    }
+
+    // Method to delete employee from the database
+    private void deleteEmployee(Employee employee) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            String query = "DELETE FROM Employee WHERE EmpID = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, employee.getSrNo());
+            pstmt.executeUpdate();
+
+            // Remove employee from the TableView
+            employeeList.remove(employee);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
