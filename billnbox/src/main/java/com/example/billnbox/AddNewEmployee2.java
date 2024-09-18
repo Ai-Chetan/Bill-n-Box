@@ -68,22 +68,12 @@ public class AddNewEmployee2 {
     }
     public class DatabaseConnection {
 
-        /*private static final String URL = "jdbc:mysql://localhost:3306/your_database_name";
-        private static final String USER = "your_username";
-        private static final String PASSWORD = "your_password";
-        */
-
-        // Establish connection to the database
-        public static Connection getConnection() throws SQLException {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/BillNBoxDB", "root", "22yash02raj2006");
-        }
-
         // Method to insert employee data into the database
         public static boolean insertEmployee(String name, String email, String number, String username, String password) {
             String query = "INSERT INTO employees (name, email, number, username, password) VALUES (?, ?, ?, ?, ?)";
 
-            try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+                 PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, email);

@@ -1,6 +1,6 @@
 create database BillNBoxDB;
 use BillNBoxDB;
-
+show tables;
 CREATE TABLE Owner (OwnerID INT PRIMARY KEY, Username VARCHAR(20) NOT NULL, Password VARCHAR(20) NOT NULL, Name VARCHAR(20), EmailID VARCHAR(20), PhoneNo VARCHAR(10),ShopName VARCHAR(20), ShopAddress VARCHAR(100));
 insert into Owner values(1001, "Owner", "1234", "Glenn Maxwell", "glenn@gmail.com", "9874561230", "Maxwell's Shop", "14B, Street 3, Melbourne");
 delete from Owner where OwnerID = 1010;

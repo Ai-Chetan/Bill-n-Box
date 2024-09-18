@@ -37,10 +37,10 @@
       </Text>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="inventoryTableView" layoutX="22.0" layoutY="43.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black;">
+            <TableView fx:id="employeeTable" layoutX="22.0" layoutY="43.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black;">
                <columns>
                   <TableColumn fx:id="srNoColumn" prefWidth="81.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
-                  <TableColumn fx:id="employeeNameColumn" prefWidth="176.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
+                  <TableColumn fx:id="nameColumn" prefWidth="176.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
                   <TableColumn fx:id="usernameColumn" minWidth="0.0" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Username" />
                   <TableColumn fx:id="passwordColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Password" />
                   <TableColumn fx:id="phoneColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Phone NO." />

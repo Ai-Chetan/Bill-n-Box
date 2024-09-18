@@ -7,13 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.*;
-
 
 public class EmployeeController {
 
@@ -57,18 +55,24 @@ public class EmployeeController {
 
     // Method to load employee data from the database
     private void loadEmployeeData() {
+        ResultSet rs = null;
+        Connection conn = null;
+        Statement stmt = null;
+
         try {
-            ResultSet rs = DatabaseConnection.getEmployeeData(); // Assume this method gets data from DB
-            int srNo = 1;
+            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            stmt = conn.createStatement();
+            String query = "SELECT EmpID, Username, Password, Name, EmailID, PhoneNo FROM Employee";
+            rs = stmt.executeQuery(query);
 
             while (rs.next()) {
                 employeeList.add(new Employee(
-                        srNo++,
-                        rs.getString("name"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getString("email")
+                        rs.getInt("EmpID"),
+                        rs.getString("Name"),
+                        rs.getString("Username"),
+                        rs.getString("Password"),
+                        rs.getString("PhoneNo"),
+                        rs.getString("EmailID")
                 ));
             }
 
@@ -77,6 +81,15 @@ public class EmployeeController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -105,7 +118,9 @@ public class EmployeeController {
             e.printStackTrace();
         }
     }
-    public class Employee {
+
+    // Employee class
+    public static class Employee {
         private int srNo;
         private String name;
         private String username;
@@ -144,24 +159,6 @@ public class EmployeeController {
 
         public String getEmail() {
             return email;
-        }
-    }
-    public class DatabaseConnection {
-
-        public static ResultSet getEmployeeData() {
-            ResultSet resultSet = null;
-
-            try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeesdb", "root", "22yash02raj2006");
-                Statement stmt = conn.createStatement();
-                String query = "SELECT name, username, password, phone, email FROM Employee";
-                resultSet = stmt.executeQuery(query);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return resultSet;
         }
     }
 }
