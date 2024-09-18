@@ -46,7 +46,6 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Label fx:id="statusLabel" alignment="CENTER" layoutX="256.0" layoutY="457.0" prefHeight="17.0" prefWidth="381.0" />
             <Button fx:id="cancelButton" layoutX="34.0" layoutY="482.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="40.0" prefWidth="192.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Cancel" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
@@ -137,7 +136,7 @@
                   <DatePicker fx:id="expDate" layoutX="593.0" layoutY="66.0" prefHeight="32.0" prefWidth="181.0" promptText="Enter Exp. Date" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" stylesheets="@style.css" />
                </children>
             </AnchorPane>
-            <Label alignment="CENTER" layoutX="226.0" layoutY="474.0" prefHeight="17.0" prefWidth="446.0" />
+            <Label fx:id="statusLabel" alignment="CENTER" layoutX="226.0" layoutY="474.0" prefHeight="17.0" prefWidth="446.0" AnchorPane.bottomAnchor="50.0" />
          </children>
          <StackPane.margin>
             <Insets bottom="50.0" left="200.0" right="200.0" top="100.0" />

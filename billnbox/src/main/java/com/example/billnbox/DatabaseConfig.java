@@ -1,9 +1,9 @@
 package com.example.billnbox;
 
 public class DatabaseConfig {
-    private static final String URL = "jdbc:mysql://localhost:3306/BillNBoxDB";
+    private static final String URL = "jdbc:mysql://localhost:3307/BillNBoxDB";
     private static final String USER = "root";
-    private static final String PASSWORD = "yash22@Ty23S5AfB";
+    private static final String PASSWORD = "root!123";
 
     public static String getUrl() {
         return URL;
