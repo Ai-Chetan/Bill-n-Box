@@ -58,7 +58,15 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="BackBtn" layoutX="26.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="BackBtn" layoutX="26.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="173.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="DeleteBtn" layoutX="246.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="40.0" prefWidth="167.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Delete" textAlignment="CENTER" textFill="WHITE" >
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
