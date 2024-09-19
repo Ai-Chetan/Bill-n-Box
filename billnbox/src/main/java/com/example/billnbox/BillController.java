@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class BillController {
 
     private final String username = SessionManager.getInstance().getUsername(); // Variable to store the username
+    private int billID; // Variable to store the generated Bill ID
 
     @FXML
     private TableView<Product> tableView;
@@ -49,6 +49,8 @@ public class BillController {
 
     private ObservableList<Product> productList;
     private Product selectedProduct;
+
+    int counter = 0;
 
     @FXML
     public void initialize() {
@@ -265,8 +267,9 @@ public class BillController {
 
     @FXML
     private void handleGenerateBill(ActionEvent event) {
+        counter++;
         String PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
-        String PDF_NAME = "Bill.pdf";
+        String PDF_NAME = "Bill" + counter + ".pdf";
         Document document = new Document();
 
         try {
@@ -282,7 +285,7 @@ public class BillController {
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
-            Paragraph date = new Paragraph("Bill ID: 2024091001" + "                                     Date: " + java.time.LocalDate.now() + "\n\n",
+            Paragraph date = new Paragraph("Bill ID: " + billID + "                                     Date: " + java.time.LocalDate.now() + "\n\n",
                     new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
             document.add(date);
 
@@ -325,6 +328,9 @@ public class BillController {
             document.close();
         }
 
+        // Insert data into Bill and Orders tables
+        insertBillAndOrders();
+
         // Show confirmation dialog
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Success");
@@ -362,5 +368,53 @@ public class BillController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void insertBillAndOrders() {
+        String insertBillQuery = "INSERT INTO Bill (EmpID, CustomerName, Amount) VALUES (?, ?, ?)";
+        String insertOrderQuery = "INSERT INTO Orders (BillID, SrNo, ProductName, Quantity, TotalPrice) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement insertBillStmt = conn.prepareStatement(insertBillQuery, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement insertOrderStmt = conn.prepareStatement(insertOrderQuery)) {
+
+            // Insert into Bill table
+            insertBillStmt.setInt(1, getEmployeeID()); // Replace with the correct employee ID
+            insertBillStmt.setString(2, "Customer Name"); // Replace with actual customer name
+            insertBillStmt.setDouble(3, calculateTotalAmount());
+            insertBillStmt.executeUpdate();
+
+            // Get the generated Bill ID
+            ResultSet generatedKeys = insertBillStmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                billID = generatedKeys.getInt(1);
+            }
+
+            // Insert into Orders table
+            for (Product product : productList) {
+                insertOrderStmt.setInt(1, billID);
+                insertOrderStmt.setInt(2, getProductID(product.getName())); // Replace with method to get Product ID
+                insertOrderStmt.setString(3, product.getName());
+                insertOrderStmt.setInt(4, product.getQuantity());
+                insertOrderStmt.setDouble(5, product.getPrice() * product.getQuantity());
+                insertOrderStmt.addBatch();
+            }
+            insertOrderStmt.executeBatch();
+
+            System.out.println("Bill and Orders inserted successfully");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int getEmployeeID() {
+        // Replace with actual implementation to get employee ID based on session or context
+        return 1000; // Example: return a dummy employee ID
+    }
+
+    private int getProductID(String productName) {
+        // Replace with actual implementation to get product ID based on product name
+        return 24; // Example: return a dummy product ID
     }
 }

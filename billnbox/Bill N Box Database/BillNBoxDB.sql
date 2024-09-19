@@ -40,7 +40,8 @@ create table Bill( InvoiceNo int auto_increment primary key, BillDate Date, Cust
 Insert into Bill values(20240723,'2024-07-23','Kapil Dev',970);
 Insert into Bill(BillDate, CustomerName, TotalPrice) values('2024-07-24', 'Anil Kumar', 1430.70);
 select * from Bill;
-drop table Orders;
+drop table Bill;
+
 create table Orders(BillId int,ProductId int,Quantity int,TotalPrice int);
 insert into Orders values(20240723,12,4,220),(20240723,15,3,99),(20240723,43,3,30),(20240724,16,3,48),(20240724,43,5,50);
 select * from Orders;
@@ -48,4 +49,26 @@ create table Logs(ActionDate Date,ActionTime Time,Activity varchar(50),Performed
 insert into Logs values('2024-07-15','23:13' ,'Bill Created','Sushil Kumar'),('2024-07-13','12:34','Logged in','Karan Jha');
 select * from Logs;
 desc Employee;
+
+CREATE TABLE Bill (
+    BillID INT PRIMARY KEY AUTO_INCREMENT,
+    EmpID INT,
+    Time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CustomerName VARCHAR(100),
+    Amount DECIMAL(10, 2),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
+);
+select * from Bill;
+select * from Orders;
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY AUTO_INCREMENT,
+    BillID INT,
+    SrNo INT,
+    ProductName VARCHAR(100),
+    Quantity INT NOT NULL,
+    TotalPrice DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (BillID) REFERENCES Bill(BillID),
+    FOREIGN KEY (SrNo) REFERENCES Product(SrNo)
+);
 
