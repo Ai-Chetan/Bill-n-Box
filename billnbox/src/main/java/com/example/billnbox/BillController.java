@@ -28,6 +28,9 @@ public class BillController {
 
     private final String username = SessionManager.getInstance().getUsername(); // Variable to store the username
 
+
+    @FXML
+    private Label billLabel;
     @FXML
     private TableView<Product> tableView;
     @FXML
@@ -265,7 +268,7 @@ public class BillController {
 
     @FXML
     private void handleGenerateBill(ActionEvent event) {
-        String PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
+        String PDF_FILEPATH = "C:/Users/aarya/Desktop/MINI PROJECT/Bill-n-Box/billnbox/Generated PDFs/";
         String PDF_NAME = "Bill.pdf";
         Document document = new Document();
 
@@ -324,6 +327,9 @@ public class BillController {
         } finally {
             document.close();
         }
+
+        billLabel.setText("Bill Generated Successfully!");
+
     }
 
     private double calculateTotalAmount() {

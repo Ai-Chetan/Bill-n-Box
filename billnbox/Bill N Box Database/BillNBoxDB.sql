@@ -5,11 +5,15 @@ CREATE TABLE Owner (OwnerID INT PRIMARY KEY, Username VARCHAR(20) NOT NULL, Pass
 insert into Owner values(1001, "Owner", "1234", "Glenn Maxwell", "glenn@gmail.com", "9874561230", "Maxwell's Shop", "14B, Street 3, Melbourne");
 delete from Owner where OwnerID = 1010;
 select * from Owner;
+ALTER TABLE Owner
+MODIFY OwnerID INT AUTO_INCREMENT;
+
 
 CREATE TABLE Employee (EmpID INT PRIMARY KEY, Username VARCHAR(20) NOT NULL, Password VARCHAR(20) NOT NULL, Name VARCHAR(20), EmailID VARCHAR(20), PhoneNo VARCHAR(10));
 insert into Employee values(1000, "Employee", "1234", "N Pooran", "nicolas@gmail.com", "8794563245");
 delete from Employee where EmpID = 1001;
 select * from Employee;
+ALTER TABLE Employee MODIFY EmpID INT AUTO_INCREMENT;
 
 CREATE TABLE Product (SrNo INT AUTO_INCREMENT PRIMARY KEY, ProductName VARCHAR(100) NOT NULL, Category VARCHAR(50) NOT NULL, Quantity INT NOT NULL DEFAULT 0, Price DECIMAL(10, 2) NOT NULL, MfgDate DATE, ExpDate DATE, LowQuantityAlert INT DEFAULT 1);
 desc Product;

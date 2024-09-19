@@ -142,6 +142,7 @@
                   <Font size="16.0" />
                </font>
             </TextField>
+            <Label fx:id="billLabel" alignment="CENTER" layoutX="226.0" layoutY="525.0" prefHeight="18.0" prefWidth="446.0" />
          </children>
          <StackPane.margin>
             <Insets bottom="30.0" left="200.0" right="200.0" top="70.0" />
