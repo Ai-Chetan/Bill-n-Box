@@ -30,14 +30,19 @@
     -fx-text-fill: #ffffff;          /* Initial white text color */
 }
 
-#deleteBtn:hover {
-    -fx-background-color: #ff0000; /* Red background on hover */
-    -fx-text-fill: #000000;          /* Black text color on hover */
-}
-
 #mfgDate {
     -fx-font-size: 15px;
 }
 #expDate {
     -fx-font-size: 15px;
+}
+
+#DeleteBtn:hover {
+    -fx-background-color: #ff0000; /* Red background on hover */
+    -fx-text-fill: #000000;          /* Black text color on hover */
+}
+
+#DeleteBtn {
+    -fx-background-color: #0C1820; /* Initial red background */
+    -fx-text-fill: #ffffff;          /* Initial white text color */
 }

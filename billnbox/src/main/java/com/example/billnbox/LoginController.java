@@ -105,6 +105,9 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("8-dashboard.fxml"));
                 Parent root = loader.load();
 
+                Controller controller = loader.getController();
+                controller.initializeDashboard();
+
                 // Get the current stage
                 Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
 

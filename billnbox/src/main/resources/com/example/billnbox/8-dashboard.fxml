@@ -278,7 +278,10 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <ComboBox fx:id="comboBox" layoutX="277.0" layoutY="21.0" prefHeight="29.0" prefWidth="90.0" promptText="Daily" style="-fx-background-color: E4C8AAFF; -fx-border-color: black;" />
+            <ComboBox fx:id="comboBox" layoutX="250.0" layoutY="21.0" prefHeight="29.0" prefWidth="117.0" promptText="Today" style="-fx-background-color: E4C8AAFF; -fx-border-color: black;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ComboBox>
          </children>
          <StackPane.margin>
             <Insets bottom="350.0" left="805.0" right="105.0" top="50.0" />
@@ -289,7 +292,7 @@
             <Insets bottom="10.0" left="365.0" right="105.0" top="375.0" />
          </StackPane.margin>
          <children>
-            <Text layoutX="296.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expenses vs Earnings">
+            <Text layoutX="368.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings">
                <font>
                   <Font name="Arial" size="24.0" />
                </font>

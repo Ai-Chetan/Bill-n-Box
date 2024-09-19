@@ -37,20 +37,20 @@
       </Text>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="employeeTable" layoutX="22.0" layoutY="43.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black;">
+            <TableView fx:id="employeeTable" layoutX="22.0" layoutY="43.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
                <columns>
-                  <TableColumn fx:id="srNoColumn" prefWidth="81.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
-                  <TableColumn fx:id="nameColumn" prefWidth="176.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
-                  <TableColumn fx:id="usernameColumn" minWidth="0.0" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Username" />
-                  <TableColumn fx:id="passwordColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Password" />
-                  <TableColumn fx:id="phoneColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Phone NO." />
-                  <TableColumn fx:id="emailColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Email-Id" />
+                  <TableColumn fx:id="srNoColumn" prefWidth="61.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
+                  <TableColumn fx:id="nameColumn" prefWidth="166.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
+                  <TableColumn fx:id="usernameColumn" minWidth="0.0" prefWidth="118.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Username" />
+                  <TableColumn fx:id="passwordColumn" prefWidth="110.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Password" />
+                  <TableColumn fx:id="phoneColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Phone No." />
+                  <TableColumn fx:id="emailColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Email ID" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button fx:id="addNewEmpBtn" layoutX="451.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddNewEmpButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add New Employee" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="addNewEmpBtn" layoutX="481.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddNewEmpButton" prefHeight="40.0" prefWidth="195.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add New Employee" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -58,7 +58,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="BackBtn" layoutX="26.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="173.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="BackBtn" layoutX="14.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="195.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back to Dashboard" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -66,7 +66,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="DeleteBtn" layoutX="246.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="40.0" prefWidth="167.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Delete" textAlignment="CENTER" textFill="WHITE" >
+            <Button fx:id="DeleteBtn" layoutX="246.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="40.0" prefWidth="84.0" style="-fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" stylesheets="@style.css" text="Delete" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>

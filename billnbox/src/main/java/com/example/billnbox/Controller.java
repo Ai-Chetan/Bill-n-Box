@@ -27,12 +27,9 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        // This method will be triggered for every scene where the controller is used.
-        // Initialize combo box items here if needed across multiple scenes.
-    }
 
-    @FXML
-    private void initializeDashboard() {
+        comboBox.getItems().addAll("Today", "This Week", "This Month", "This Year", "All Time");
+
         // Creating data series for the BarChart
         XYChart.Series<String, Number> series1 = new XYChart.Series<>();
         series1.setName("2023");
@@ -58,18 +55,8 @@ public class Controller {
     }
 
     @FXML
-    private void LogInButton(ActionEvent event) {
-        boolean isValidLogin = true; // Add actual login logic
-        if (isValidLogin) {
-            loadScene(event, "8-dashboard.fxml");
-        } else {
-            System.out.println("Login failed. Please check your credentials.");
-        }
-    }
+    public void initializeDashboard() {
 
-    @FXML
-    private void forgotPasswordSubmit(ActionEvent event) {
-        loadScene(event, "7-forgot-password-2.fxml");
     }
 
     @FXML
@@ -103,23 +90,13 @@ public class Controller {
     }
 
     @FXML
-    private void AddNewEmployee(ActionEvent event) {
-        loadScene(event, "12b-employees.fxml");
-    }
-
-    @FXML
-    private void changePasswordBtn(ActionEvent event) {
-        loadScene(event, "15-change-password-successful.fxml");
+    private void confirmLogout(ActionEvent event) {
+        loadScene(event, "16-logout-confirmation.fxml");
     }
 
     @FXML
     private void LoginPage(ActionEvent event) {
         loadScene(event, "1-login-page.fxml");
-    }
-
-    @FXML
-    private void confirmLogout(ActionEvent event) {
-        loadScene(event, "16-logout-confirmation.fxml");
     }
 
     private void loadScene(ActionEvent event, String fxmlFileName) {
@@ -132,7 +109,7 @@ public class Controller {
             // If loading the dashboard, also initialize BarChart data
             if (fxmlFileName.equals("8-dashboard.fxml")) {
                 Controller controller = loader.getController();
-                controller.initializeDashboard();  // Call method to initialize BarChart
+                controller.initializeDashboard();
             }
 
             stage.setScene(scene);
@@ -140,5 +117,9 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void LogInButton(ActionEvent event) {
+        loadScene(event, "8-dashboard.fxml");
     }
 }
