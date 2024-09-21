@@ -333,7 +333,7 @@ public class BillController {
 
         // Show confirmation dialog
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
+        alert.setTitle("Bill generated successfully");
         alert.setHeaderText(null);
         alert.setContentText("PDF Generated successfully at your given path");
         if (alert.showAndWait().get() == ButtonType.OK) {
