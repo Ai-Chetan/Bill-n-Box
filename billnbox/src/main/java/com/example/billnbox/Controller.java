@@ -8,9 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+
 import java.io.IOException;
 
 public class Controller {
@@ -24,6 +23,9 @@ public class Controller {
 
     @FXML
     private BarChart<String, Number> barChart;
+
+    // Reference to NotificationController
+    private NotificationController notificationController;
 
     @FXML
     public void initialize() {
@@ -54,9 +56,11 @@ public class Controller {
         }
     }
 
+    // Initialize Dashboard method where notification system is started
     @FXML
     public void initializeDashboard() {
-
+        notificationController = new NotificationController();
+        notificationController.StartNotification();  // Start notifications on dashboard load
     }
 
     @FXML
@@ -106,10 +110,10 @@ public class Controller {
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
 
-            // If loading the dashboard, also initialize BarChart data
+            // If loading the dashboard, also initialize BarChart data and notifications
             if (fxmlFileName.equals("8-dashboard.fxml")) {
                 Controller controller = loader.getController();
-                controller.initializeDashboard();
+                controller.initializeDashboard();  // Initialize the dashboard and notifications
             }
 
             stage.setScene(scene);
