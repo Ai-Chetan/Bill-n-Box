@@ -268,7 +268,7 @@ public class BillController {
     @FXML
     private void handleGenerateBill(ActionEvent event) {
         counter++;
-        String PDF_FILEPATH = "C:/Users/Dell/Desktop/SEM 3/MINI PROJECT/Bill-n-Box/billnbox/Generated PDFs/";
+        String PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
         String PDF_NAME = "Bill" + counter + ".pdf";
         Document document = new Document();
 

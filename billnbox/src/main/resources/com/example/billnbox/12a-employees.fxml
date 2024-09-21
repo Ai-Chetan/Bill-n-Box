@@ -37,7 +37,7 @@
       </Text>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="employeeTable" layoutX="22.0" layoutY="43.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
+            <TableView fx:id="employeeTable" layoutX="47.0" layoutY="42.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
                <columns>
                   <TableColumn fx:id="srNoColumn" prefWidth="61.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
                   <TableColumn fx:id="nameColumn" prefWidth="166.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
@@ -50,7 +50,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button fx:id="addNewEmpBtn" layoutX="481.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddNewEmpButton" prefHeight="40.0" prefWidth="195.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add New Employee" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="addNewEmpBtn" layoutX="519.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddNewEmpButton" prefHeight="40.0" prefWidth="195.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Add New Employee" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -58,7 +58,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="BackBtn" layoutX="14.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="195.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back to Dashboard" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="BackBtn" layoutX="37.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="195.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back to Dashboard" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -66,7 +66,15 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="DeleteBtn" layoutX="246.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="40.0" prefWidth="84.0" style="-fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" stylesheets="@style.css" text="Delete" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="DeleteBtn" layoutX="251.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="40.0" prefWidth="84.0" style="-fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" stylesheets="@style.css" text="Delete" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="editButton" layoutX="355.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleeditButton" prefHeight="40.0" prefWidth="142.0" style="-fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: #0C1820;" stylesheets="@style.css" text="Edit" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -76,7 +84,7 @@
             </Button>
          </children>
          <StackPane.margin>
-            <Insets bottom="50.0" left="300.0" right="300.0" top="100.0" />
+            <Insets bottom="50.0" left="275.0" right="275.0" top="100.0" />
          </StackPane.margin>
       </AnchorPane>
    </children>

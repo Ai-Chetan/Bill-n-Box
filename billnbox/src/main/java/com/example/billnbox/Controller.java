@@ -30,7 +30,7 @@ public class Controller {
     @FXML
     public void initialize() {
 
-        comboBox.getItems().addAll("Today", "This Week", "This Month", "This Year", "All Time");
+//        comboBox.getItems().addAll("Today", "This Week", "This Month", "This Year", "All Time");
 
         // Creating data series for the BarChart
         XYChart.Series<String, Number> series1 = new XYChart.Series<>();
