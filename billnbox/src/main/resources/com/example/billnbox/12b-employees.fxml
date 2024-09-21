@@ -1,68 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane opacity="0.9" prefHeight="330.0" prefWidth="642.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.AddNewEmployee1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #d9d6c7;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.AddNewEmployee">
    <children>
-      <Label layoutX="43.0" layoutY="43.0" prefHeight="25.0" prefWidth="176.0" text="Employee Name :">
+      <ImageView fx:id="image1" fitHeight="700.0" fitWidth="1300.0" nodeOrientation="INHERIT" opacity="0.9" pickOnBounds="true" smooth="false" style="-fx-alignment: center;">
+         <image>
+            <Image url="@app-bg.jpg" />
+         </image>
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+         <effect>
+            <Blend />
+         </effect>
+      </ImageView>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Employee">
          <font>
-            <Font name="Segoe UI Bold" size="20.0" />
+            <Font name="Segoe UI Bold" size="35.0" />
          </font>
-      </Label>
-      <TextField fx:id="employeeName" layoutX="242.0" layoutY="35.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Name of  Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
-         <font>
-            <Font size="18.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-      </TextField>
-      <Button fx:id="nextBtn" layoutX="377.0" layoutY="257.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlenextButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Next" textAlignment="CENTER" textFill="WHITE">
-         <font>
-            <Font name="Segoe UI Bold" size="18.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button fx:id="cancelBtn" layoutX="45.0" layoutY="257.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecancelButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Cancel" textAlignment="CENTER" textFill="WHITE">
-         <font>
-            <Font name="Segoe UI Bold" size="18.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Label layoutX="43.0" layoutY="110.0" prefHeight="25.0" prefWidth="176.0" text="Phone Number :">
-         <font>
-            <Font name="Segoe UI Bold" size="20.0" />
-         </font>
-      </Label>
-      <TextField fx:id="phoneNo" layoutX="242.0" layoutY="102.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Phone Number of Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
-         <font>
-            <Font size="18.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-      </TextField>
-      <Label layoutX="43.0" layoutY="179.0" prefHeight="25.0" prefWidth="176.0" text="Email-Id :">
-         <font>
-            <Font name="Segoe UI Bold" size="20.0" />
-         </font>
-      </Label>
-      <TextField fx:id="emailId" layoutX="242.0" layoutY="171.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Email-Id of Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
-         <font>
-            <Font size="18.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-      </TextField>
+         <StackPane.margin>
+            <Insets bottom="625.0" />
+         </StackPane.margin>
+      </Text>
+      <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
+         <children>
+            <Button fx:id="addEmployeeButton" layoutX="410.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleaddEmployeeButton" prefHeight="40.0" prefWidth="225.0" style="-fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: #0C1820;" stylesheets="@style.css" text="Add Employee" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="backButton" layoutX="66.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlebackButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="nextButton" layoutX="411.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlenextButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Next" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ProgressBar fx:id="progBar1" layoutX="74.0" layoutY="27.0" prefHeight="30.0" prefWidth="260.0" style="-fx-background-color: white; -fx-background-radius: 1px; -fx-border-color: black; -fx-border-radius: 1px;" />
+            <ImageView fitHeight="24.0" fitWidth="26.0" layoutX="141.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@personal-info-image.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="179.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Personal Details" />
+            <Button fx:id="cancelButton" layoutX="67.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecancelButton" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Cancel" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ProgressBar fx:id="progBar2" layoutX="365.0" layoutY="27.0" prefHeight="30.0" prefWidth="260.0" progress="0.0" style="-fx-background-color: white; -fx-background-radius: 1px; -fx-border-color: black; -fx-border-radius: 1px;" />
+            <ImageView fitHeight="36.0" fitWidth="43.0" layoutX="447.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@credentials-img.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="498.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" />
+            <Text layoutX="241.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Personal Details">
+               <font>
+                  <Font name="Segoe UI Bold" size="30.0" />
+               </font>
+            </Text>
+            <Label fx:id="employeeNameTag" layoutX="64.0" layoutY="178.0" text="* Employee Name :">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="employeeName" layoutX="278.0" layoutY="169.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter the Name of the Employee" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
+            <Label fx:id="emailIdTag" layoutX="65.0" layoutY="263.0" text="* Email ID:">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="emailId" layoutX="278.0" layoutY="254.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Email ID" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
+            <Label fx:id="phoneNoTag" layoutX="62.0" layoutY="347.0" text="*  Mobile Number:">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="phoneNo" layoutX="278.0" layoutY="338.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter Mobile Number" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
+            <Label fx:id="emptyFields" alignment="CENTER" layoutX="77.0" layoutY="411.0" prefHeight="17.0" prefWidth="558.0" textFill="RED" />
+            <Label fx:id="EmpUsernameTag" layoutX="80.0" layoutY="221.0" text="Username :">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="EmpUsername" layoutX="278.0" layoutY="212.0" prefHeight="42.0" prefWidth="359.0" promptText="Create Username" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
+            <Label fx:id="EmpPasswordTag" layoutX="81.0" layoutY="304.0" text="Password :">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <PasswordField fx:id="EmpPassword" layoutX="278.0" layoutY="296.0" prefHeight="42.0" prefWidth="359.0" promptText="Create Password" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </PasswordField>
+         </children>
+         <StackPane.margin>
+            <Insets bottom="50.0" left="300.0" right="300.0" top="100.0" />
+         </StackPane.margin>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>

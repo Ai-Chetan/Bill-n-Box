@@ -13,7 +13,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.sql.*;
 
@@ -41,9 +44,14 @@ public class EmployeeController {
     private TableColumn<Employee, String> emailColumn;
 
     @FXML
+    private Button editButton;
+
+    @FXML
     private Button deleteButton;  // Add reference to the delete button
 
     private ObservableList<Employee> employeeList = FXCollections.observableArrayList();
+
+    private boolean isEditing = false; // To track the edit state
 
     // Initialize the TableView and load employee data
     @FXML
@@ -115,6 +123,81 @@ public class EmployeeController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // Handle Edit Button
+    @FXML
+    private void handleeditButton() {
+        if (isEditing) {
+            // Save changes to the database
+            saveEmployeeData();
+
+            // Change the button text back to "Edit"
+            editButton.setText("Edit");
+            isEditing = false;
+
+            // Disable table editing
+            employeeTable.setEditable(false);
+        } else {
+            // Enable table editing
+            employeeTable.setEditable(true);
+
+            nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            nameColumn.setOnEditCommit(event -> event.getRowValue().setName(event.getNewValue()));
+
+            usernameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            usernameColumn.setOnEditCommit(event -> event.getRowValue().setUsername(event.getNewValue()));
+
+            passwordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            passwordColumn.setOnEditCommit(event -> event.getRowValue().setPassword(event.getNewValue()));
+
+            phoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            phoneColumn.setOnEditCommit(event -> event.getRowValue().setPhone(event.getNewValue()));
+
+            emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            emailColumn.setOnEditCommit(event -> event.getRowValue().setEmail(event.getNewValue()));
+
+            // Change the button text to "Save Changes"
+            editButton.setText("Save Changes");
+            isEditing = true;
+        }
+    }
+
+    // Save employee data to the database
+    private void saveEmployeeData() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            String updateQuery = "UPDATE Employee SET Name = ?, Username = ?, Password = ?, PhoneNo = ?, EmailID = ? WHERE EmpID = ?";
+
+            pstmt = conn.prepareStatement(updateQuery);
+
+            for (Employee employee : employeeList) {
+                pstmt.setString(1, employee.getName());
+                pstmt.setString(2, employee.getUsername());
+                pstmt.setString(3, employee.getPassword());
+                pstmt.setString(4, employee.getPhone());
+                pstmt.setString(5, employee.getEmail());
+                pstmt.setInt(6, employee.getSrNo());
+
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -205,20 +288,40 @@ public class EmployeeController {
             return name;
         }
 
+        public void setName(String name) {
+            this.name = name;
+        }
+
         public String getUsername() {
             return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public String getPassword() {
             return password;
         }
 
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
         public String getPhone() {
             return phone;
         }
 
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
         public String getEmail() {
             return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
         }
     }
 }
