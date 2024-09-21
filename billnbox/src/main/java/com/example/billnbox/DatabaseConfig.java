@@ -2,7 +2,7 @@ package com.example.billnbox;
 
 public class DatabaseConfig {
     // Add Credentials here!
-    private static final String URL = "";
+    private static final String URL = "f";
     private static final String USER = "";
     private static final String PASSWORD = "";
 
