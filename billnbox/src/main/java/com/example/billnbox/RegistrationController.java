@@ -15,6 +15,7 @@ import java.io.IOException;
 
 public class RegistrationController {
 
+    public static String FilePath;
     private String Name;
     private String EmailID;
     private String MobileNumber;
@@ -25,7 +26,7 @@ public class RegistrationController {
     private String ConfirmPassword;
 
     @FXML
-    private TextField nameField, emailField, mobnoField, shopnameField, usernameField, passwordField, confirmpasswordField;
+    private TextField nameField, emailField, mobnoField, shopnameField, usernameField, passwordField, confirmpasswordField, filePath;
 
     @FXML
     private TextArea shopaddressField;
@@ -88,6 +89,7 @@ public class RegistrationController {
     private void RegistrationNext2(ActionEvent event) {
         ShopName = shopnameField.getText();
         ShopAddress = shopaddressField.getText();
+        FilePath = filePath.getText();
 
         if (ShopName.isEmpty() || ShopAddress.isEmpty()) {
             showError("Fields cannot be Empty");
@@ -96,6 +98,10 @@ public class RegistrationController {
         if (validateFields(ShopName, ShopAddress)) {
             navigateToPageWithData(event, "4-registration-page-3.fxml");
         }
+    }
+
+    public String getFilePath () {
+        return FilePath;
     }
 
     // Navigate to previous pages

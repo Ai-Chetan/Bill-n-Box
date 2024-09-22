@@ -43,6 +43,7 @@ public class LoginController {
     @FXML
     private Label loginErrorLabel;
 
+    public static boolean isOwner;
     private String username;
 
     public void initialize() {
@@ -67,6 +68,13 @@ public class LoginController {
 
     @FXML
     private void LogInButton(ActionEvent event) {
+
+        if (loginradiobtn1.isSelected()) {
+            isOwner = true;
+        } else {
+            isOwner = false;
+        }
+
         // Get the username and password from the fields
         username = usernameField.getText();
         String password = passwordField.getText();
@@ -123,6 +131,10 @@ public class LoginController {
             loginErrorLabel.setText("Invalid credentials, please try again.");
             loginErrorLabel.setVisible(true);
         }
+    }
+
+    public static boolean getIsOwner() {
+        return isOwner;
     }
 
     // Method to verify username and password from the respective table in the database

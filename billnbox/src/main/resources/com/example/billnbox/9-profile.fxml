@@ -43,12 +43,12 @@
                   <Font name="Segoe UI Bold" size="30.0" />
                </font>
             </Text>
-            <Label layoutX="69.0" layoutY="89.0" text="* Name:">
+            <Label layoutX="69.0" layoutY="77.0" text="* Name:">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="nameField" layoutX="269.0" layoutY="82.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter your Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="nameField" layoutX="269.0" layoutY="70.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter your Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -56,12 +56,12 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
-            <Label layoutX="69.0" layoutY="145.0" text="* Email ID:">
+            <Label layoutX="69.0" layoutY="133.0" text="* Email ID:">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="emailField" layoutX="269.0" layoutY="138.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter your Email ID" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="emailField" layoutX="269.0" layoutY="126.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter your Email ID" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -69,12 +69,12 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
-            <Label layoutX="69.0" layoutY="201.0" text="* Mobile Number:">
+            <Label layoutX="69.0" layoutY="189.0" text="* Mobile Number:">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="mobnoField" layoutX="269.0" layoutY="193.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter your Mobile Number" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="mobnoField" layoutX="269.0" layoutY="181.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter your Mobile Number" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -87,12 +87,12 @@
                   <Image url="@personal-info-image.png" />
                </image>
             </ImageView>
-            <Text layoutX="273.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shop Details :">
+            <Text layoutX="273.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shop Details :">
                <font>
                   <Font name="Segoe UI Bold" size="30.0" />
                </font>
             </Text>
-            <ImageView fitHeight="69.0" fitWidth="66.0" layoutX="202.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="69.0" fitWidth="66.0" layoutX="202.0" layoutY="222.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@shop-details-img.png" />
                </image>
@@ -105,7 +105,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <TextArea fx:id="shopaddressField" layoutX="269.0" layoutY="371.0" prefHeight="100.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+            <TextArea fx:id="shopaddressField" layoutX="269.0" layoutY="346.0" prefHeight="67.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -113,12 +113,12 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextArea>
-            <Label layoutX="69.0" layoutY="321.0" text="* Shop Name:">
+            <Label layoutX="69.0" layoutY="296.0" text="* Shop Name:">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="shopnameField" layoutX="269.0" layoutY="314.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter the Shop Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="shopnameField" layoutX="269.0" layoutY="289.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter the Shop Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -126,7 +126,7 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
-            <Label layoutX="69.0" layoutY="378.0" text="* Shop Address:">
+            <Label layoutX="69.0" layoutY="353.0" text="* Shop Address:">
                <font>
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
@@ -139,7 +139,20 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label fx:id="emptyFields" alignment="CENTER" layoutX="73.0" layoutY="477.0" prefHeight="17.0" prefWidth="558.0" text="Fields cannot be Empty" textFill="RED" />
+            <Label fx:id="emptyFields" alignment="CENTER" layoutX="73.0" layoutY="481.0" prefHeight="17.0" prefWidth="558.0" text="Fields cannot be Empty" textFill="RED" />
+            <Label layoutX="69.0" layoutY="438.0" text="File Path :">
+               <font>
+                  <Font name="Segoe UI Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="filePath" layoutX="269.0" layoutY="431.0" prefHeight="42.0" prefWidth="359.0" promptText="Location of Directory to save PDFs" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
          </children>
          <StackPane.margin>
             <Insets bottom="50.0" left="300.0" right="300.0" top="75.0" />

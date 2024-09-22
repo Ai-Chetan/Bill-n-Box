@@ -9,6 +9,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Button; // Import Button class
 
 import java.io.IOException;
 
@@ -24,13 +25,23 @@ public class Controller {
     @FXML
     private BarChart<String, Number> barChart;
 
+    @FXML
+    private Button logButton; // Reference to the Log button
+    @FXML
+    private Button employeesButton; // Reference to the Employees button
+
     // Reference to NotificationController
     private NotificationController notificationController;
 
+    private boolean isOwner = LoginController.getIsOwner(); // To determine if the user is an owner
+
     @FXML
     public void initialize() {
-
-//        comboBox.getItems().addAll("Today", "This Week", "This Month", "This Year", "All Time");
+        // Set visibility of buttons based on ownership
+        if (logButton != null) {
+            logButton.setVisible(isOwner);
+            employeesButton.setVisible(isOwner);
+        }
 
         // Creating data series for the BarChart
         XYChart.Series<String, Number> series1 = new XYChart.Series<>();
@@ -79,13 +90,13 @@ public class Controller {
     }
 
     @FXML
-    private void employeesButton(ActionEvent event) {
-        loadScene(event, "12a-employees.fxml");
+    private void logButton(ActionEvent event) {
+        loadScene(event, "13-log.fxml");
     }
 
     @FXML
-    private void logButton(ActionEvent event) {
-        loadScene(event, "13-log.fxml");
+    private void employeesButton(ActionEvent event) {
+        loadScene(event, "12a-employees.fxml");
     }
 
     @FXML

@@ -19,6 +19,7 @@ import java.sql.SQLException;
 public class ChangePasswordController {
 
     private final String username = SessionManager.getInstance().getUsername();
+    private boolean isOwner = LoginController.getIsOwner();
 
     @FXML
     private PasswordField oldPassword, newPassword, newPasswordConfirmation;
@@ -54,7 +55,12 @@ public class ChangePasswordController {
         System.out.println(username);
 
         // Validate the old password from the database
-        String sql = "SELECT Password FROM Owner WHERE Username = ?";
+        String sql;
+        if (isOwner) {
+            sql = "SELECT Password FROM Owner WHERE Username = ?";
+        } else {
+            sql = "SELECT Password FROM Employee WHERE Username = ?";
+        }
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -83,7 +89,12 @@ public class ChangePasswordController {
 
     // Method to update the password in the database
     private void updatePassword(ActionEvent event, String newPassword) {
-        String updateSQL = "UPDATE Owner SET Password = ? WHERE Username = ?";
+        String updateSQL;
+        if (isOwner) {
+            updateSQL = "UPDATE Owner SET Password = ? WHERE Username = ?";
+        } else {
+            updateSQL = "UPDATE Employee SET Password = ? WHERE Username = ?";
+        }
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {

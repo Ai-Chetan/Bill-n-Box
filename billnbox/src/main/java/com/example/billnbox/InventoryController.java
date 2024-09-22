@@ -100,9 +100,12 @@ public class InventoryController {
     private ObservableList<Product> deletedProducts = FXCollections.observableArrayList();
 
     private boolean isEditing = false;
+    private boolean isOwner; // To determine if the user is an owner
 
     @FXML
     public void initialize() {
+        // Assume we have a method to get isOwner from LoginController
+        isOwner = LoginController.getIsOwner(); // Adjust this based on how you access this value
 
         // Set up table columns
         srNoColumn.setCellValueFactory(new PropertyValueFactory<>("srNo"));
@@ -125,10 +128,19 @@ public class InventoryController {
         deleteButton.setVisible(false);
         discardButton.setVisible(false);
         addNewProductButton.setVisible(false);
+
         // Add listener to enable/disable the delete button when a row is selected
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             deleteButton.setDisable(newSelection == null); // Disable button if no row is selected
         });
+
+        // Restrict editing and deleting if the user is not the owner
+        if (!isOwner) {
+            makeTableNonEditable();
+            deleteButton.setVisible(false);
+            addNewProductButton.setVisible(false);
+            inventoryBtn.setVisible(false); // Disable the edit button as well
+        }
     }
 
     private void makeTableEditable() {
@@ -259,17 +271,19 @@ public class InventoryController {
             inventoryBtn.setText("Edit Inventory");
             backToDashboard.setVisible(true);
         } else {
-            // Enable table editing
-            makeTableEditable();
-            // Hide status label
-            statusLabel.setVisible(false);
-            // Show the delete and add new product buttons
-            deleteButton.setVisible(true);
-            addNewProductButton.setVisible(true);
-            discardButton.setVisible(true);
-            backToDashboard.setVisible(false);
-            // Change button text to "Save Changes"
-            inventoryBtn.setText("Save Changes");
+            // Enable table editing if the user is the owner
+            if (isOwner) {
+                makeTableEditable();
+                // Hide status label
+                statusLabel.setVisible(false);
+                // Show the delete and add new product buttons
+                deleteButton.setVisible(true);
+                addNewProductButton.setVisible(true);
+                discardButton.setVisible(true);
+                backToDashboard.setVisible(false);
+                // Change button text to "Save Changes"
+                inventoryBtn.setText("Save Changes");
+            }
         }
 
         // Toggle the editing state
@@ -278,6 +292,8 @@ public class InventoryController {
 
     @FXML
     private void deleteSelectedProduct(ActionEvent event) {
+        if (!isOwner) return; // Restrict delete action if not an owner
+
         Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
 
         if (selectedProduct != null) {
@@ -325,8 +341,6 @@ public class InventoryController {
         // Hide the status label, if any
         statusLabel.setVisible(false);
     }
-
-
 
     private void navigateToPage(ActionEvent event, String fxmlFile) {
         try {

@@ -93,7 +93,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button mnemonicParsing="false" onAction="#employeesButton" prefHeight="41.0" prefWidth="198.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: Black; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;" text="EMPLOYEES">
+      <Button fx:id="employeesButton" mnemonicParsing="false" onAction="#employeesButton" prefHeight="41.0" prefWidth="198.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: Black; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;" text="EMPLOYEES">
          <font>
             <Font size="18.0" />
          </font>
@@ -152,7 +152,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button mnemonicParsing="false" onAction="#logButton" prefHeight="41.0" prefWidth="198.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: Black; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;" text="    LOG">
+      <Button fx:id="logButton" mnemonicParsing="false" onAction="#logButton" prefHeight="41.0" prefWidth="198.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: Black; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;" text="    LOG">
          <font>
             <Font size="18.0" />
          </font>

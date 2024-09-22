@@ -1,6 +1,7 @@
 package com.example.billnbox;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -16,17 +17,80 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
+import javax.annotation.processing.Generated;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BillController {
 
     private final String username = SessionManager.getInstance().getUsername(); // Variable to store the username
+    private String shopname ;
+    private String shopaddress ;
+    private String email ;
+    private String phoneno ;
     private int billID; // Variable to store the generated Bill ID
+    private boolean isOwner = LoginController.getIsOwner();
+
+    public void getShopInfo() {
+        String ownerId = null;
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+            // Check if the user is an Owner or Employee
+            if (isOwner) {
+                // Directly fetch Owner's info
+                String ownerSql = "SELECT ShopName, ShopAddress, Email, PhoneNumber FROM Owner WHERE Username = ?";
+                try (PreparedStatement ownerStmt = conn.prepareStatement(ownerSql)) {
+                    ownerStmt.setString(1, username);
+                    ResultSet ownerRs = ownerStmt.executeQuery();
+                    if (ownerRs.next()) {
+                        setShopInfo(ownerRs);
+                    } else {
+                        System.out.println("Owner not found.");
+                    }
+                }
+            } else {
+                // Fetch the OwnerID from Employee table
+                String employeeSql = "SELECT OwnerID FROM Employee WHERE Username = ?";
+                try (PreparedStatement employeeStmt = conn.prepareStatement(employeeSql)) {
+                    employeeStmt.setString(1, username);
+                    ResultSet employeeRs = employeeStmt.executeQuery();
+                    if (employeeRs.next()) {
+                        ownerId = employeeRs.getString("OwnerID");
+                    } else {
+                        System.out.println("Employee not found.");
+                        return;
+                    }
+                }
+
+                // Fetch the Owner's info based on OwnerID
+                String ownerSql = "SELECT ShopName, ShopAddress, Email, PhoneNumber FROM Owner WHERE OwnerID = ?";
+                try (PreparedStatement ownerStmt = conn.prepareStatement(ownerSql)) {
+                    ownerStmt.setString(1, ownerId);
+                    ResultSet ownerRs = ownerStmt.executeQuery();
+                    if (ownerRs.next()) {
+                        setShopInfo(ownerRs);
+                    } else {
+                        System.out.println("Owner not found for the given OwnerID.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error accessing database: " + e.getMessage());
+        }
+    }
+
+    private void setShopInfo(ResultSet rs) throws SQLException {
+         shopname = rs.getString("ShopName");
+         shopaddress = rs.getString("ShopAddress");
+         email = rs.getString("Email");
+         phoneno = rs.getString("PhoneNumber");
+    }
 
     @FXML
     private TableView<Product> tableView;
@@ -46,14 +110,15 @@ public class BillController {
     private Button deleteBtn;
     @FXML
     private ListView<Product> suggestionList;
+    @FXML
+    private TextField customerName, date;
 
     private ObservableList<Product> productList;
     private Product selectedProduct;
 
-    int counter = 0;
-
     @FXML
     public void initialize() {
+        date.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
         productList = FXCollections.observableArrayList();
         tableView.setItems(productList);
 
@@ -267,59 +332,199 @@ public class BillController {
 
     @FXML
     private void handleGenerateBill(ActionEvent event) {
-        counter++;
-        String PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
-        String PDF_NAME = "Bill" + counter + ".pdf";
+        getShopInfo();
+
         Document document = new Document();
 
+        String CustomerName = customerName.getText();
+        date.setText(String.valueOf(LocalDate.now()));
+
         try {
+            // Insert data into Bill and Orders tables
+            insertBillAndOrders();
+
+
+            String PDF_FILEPATH = RegistrationController.FilePath;
+            String PDF_NAME = "Bill - " + billID + ".pdf";
+
+            if (PDF_FILEPATH == null) {
+                PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
+            }
+
+            // Create the PDF writer instance
             PdfWriter.getInstance(document, new FileOutputStream(new File(PDF_FILEPATH + PDF_NAME)));
             document.open();
 
-            Paragraph companyInfo = new Paragraph("Company Name\nAddress Line 1\nAddress Line 2\nContact: 99999 99999\t\tEmail: email@email.com\n\n",
-                    new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
-            companyInfo.setAlignment(Element.ALIGN_CENTER);
-            document.add(companyInfo);
+// Set fonts
+            Font shopNameFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
+            Font shopInfoFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+            Font contactFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+            Font sectionDividerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.GRAY);
 
-            Paragraph title = new Paragraph("Bill Receipt", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD));
+// Add shop name
+            Paragraph shopName = new Paragraph(shopname, shopNameFont);
+            shopName.setAlignment(Element.ALIGN_CENTER);
+            shopName.setSpacingAfter(10f); // Add some space below shop name
+            document.add(shopName);
+
+// Add shop address
+            Paragraph shopAddress = new Paragraph(shopaddress, shopInfoFont);
+            shopAddress.setAlignment(Element.ALIGN_CENTER);
+            shopAddress.setSpacingAfter(5f); // Add some space below shop address
+            document.add(shopAddress);
+
+// Add contact information (phone number and email) side by side
+            PdfPTable contactTable = new PdfPTable(2);
+            contactTable.setWidthPercentage(100); // Table width 100% of page
+            contactTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+            contactTable.setSpacingAfter(10f); // Add some space below contact info
+            contactTable.setWidths(new float[] { 1f, 1f }); // Set equal column widths
+
+// Create a cell for the phone number
+            PdfPCell phoneCell = new PdfPCell(new Phrase("Contact: " + phoneno, contactFont));
+            phoneCell.setBorder(PdfPCell.NO_BORDER);
+            phoneCell.setHorizontalAlignment(Element.ALIGN_LEFT); // Align left
+            contactTable.addCell(phoneCell);
+
+// Create a cell for the email
+            PdfPCell emailCell = new PdfPCell(new Phrase("Email: " + email, contactFont));
+            emailCell.setBorder(PdfPCell.NO_BORDER);
+            emailCell.setHorizontalAlignment(Element.ALIGN_RIGHT); // Align right
+            contactTable.addCell(emailCell);
+
+// Add the contact table to the document
+            document.add(contactTable);
+
+
+// Add a visible divider after shop details
+            Paragraph divider = new Paragraph("--------------------------------------------------------------------------------------------------------------------------------\n",
+                    sectionDividerFont);
+            divider.setAlignment(Element.ALIGN_CENTER);
+            divider.setSpacingAfter(10f);
+            document.add(divider);
+
+// Add bill receipt title
+            Paragraph title = new Paragraph("Bill Receipt", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
             title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(15f); // Add space below the title
             document.add(title);
 
-            Paragraph date = new Paragraph("Bill ID: " + billID + "                                     Date: " + java.time.LocalDate.now() + "\n\n",
-                    new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
-            document.add(date);
+// Add bill ID and date
+            // Create a table with 2 columns
+            PdfPTable dateTable = new PdfPTable(2);
+            dateTable.setWidthPercentage(100); // Set the width of the table to 100%
+            dateTable.setSpacingAfter(10f); // Add space below the table
 
-            Paragraph customerInfo = new Paragraph("Customer Name: \nContact Details: \n\n",
-                    new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+// Create a cell for the Bill ID
+            PdfPCell billIdCell = new PdfPCell(new Phrase("Bill ID: " + billID, new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL)));
+            billIdCell.setHorizontalAlignment(Element.ALIGN_LEFT); // Align left
+            billIdCell.setBorder(PdfPCell.NO_BORDER); // No border
+            dateTable.addCell(billIdCell);
+
+// Create a cell for the Date
+            PdfPCell dateCell = new PdfPCell(new Phrase("Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL)));
+            dateCell.setHorizontalAlignment(Element.ALIGN_RIGHT); // Align right
+            dateCell.setBorder(PdfPCell.NO_BORDER); // No border
+            dateTable.addCell(dateCell);
+
+// Add the table to the document
+            document.add(dateTable);
+
+// Add customer info
+            Paragraph customerInfo = new Paragraph("Customer Name: " + CustomerName + "\n" + "Contact Details: " + "\n\n", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            customerInfo.setSpacingAfter(15f); // Add space after customer info
             document.add(customerInfo);
 
+// Create a PdfPTable with 4 columns
             PdfPTable table = new PdfPTable(4);
-            table.addCell("Product Name");
-            table.addCell("Quantity");
-            table.addCell("Price per Quantity");
-            table.addCell("Total Price");
+            table.setWidthPercentage(100); // Set the width of the table to 100% of the page width
+            table.setSpacingBefore(10f); // Add space before table
 
+// Set column widths (optional but improves layout)
+            table.setWidths(new float[] { 2f, 1f, 1.5f, 1f });
+
+// Define fonts for the table
+            Font headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE);
+            Font cellFont = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
+
+// Create header cells with background color
+            PdfPCell header;
+
+            header = new PdfPCell(new Phrase("Product Name", headerFont));
+            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setBackgroundColor(BaseColor.GRAY);
+            header.setPadding(5);
+            table.addCell(header);
+
+            header = new PdfPCell(new Phrase("Quantity", headerFont));
+            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setBackgroundColor(BaseColor.GRAY);
+            header.setPadding(5);
+            table.addCell(header);
+
+            header = new PdfPCell(new Phrase("Price per Quantity", headerFont));
+            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setBackgroundColor(BaseColor.GRAY);
+            header.setPadding(5);
+            table.addCell(header);
+
+            header = new PdfPCell(new Phrase("Total Price", headerFont));
+            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setBackgroundColor(BaseColor.GRAY);
+            header.setPadding(5);
+            table.addCell(header);
+
+// Add product rows
             for (Product product : productList) {
-                table.addCell(product.getName());
-                table.addCell(String.valueOf(product.getQuantity()));
-                table.addCell(String.format("$%.2f", product.getPrice()));
-                table.addCell(String.format("$%.2f", product.getQuantity() * product.getPrice()));
+                PdfPCell cell;
+
+                // Product Name
+                cell = new PdfPCell(new Phrase(product.getName(), cellFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                // Quantity
+                cell = new PdfPCell(new Phrase(String.valueOf(product.getQuantity()), cellFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                // Price per Quantity
+                cell = new PdfPCell(new Phrase(String.format("%.2f", product.getPrice()), cellFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                // Total Price
+                cell = new PdfPCell(new Phrase(String.format("%.2f", product.getQuantity() * product.getPrice()), cellFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
 
                 // Update the product stock in the database
                 updateProductStockInDatabase(product);
             }
 
+// Add the table to the document
             document.add(table);
 
-            Paragraph grandTotal = new Paragraph("Grand Total: " + String.format("$%.2f", calculateTotalAmount()) + "           ",
+// Add Grand Total
+            Paragraph grandTotal = new Paragraph("Grand Total: " + String.format("%.2f", calculateTotalAmount()) + "\n\n",
                     new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             grandTotal.setAlignment(Element.ALIGN_RIGHT);
+            grandTotal.setSpacingBefore(15f); // Add some space before the total
             document.add(grandTotal);
 
-            Paragraph footer = new Paragraph("\n\nThank you for your purchase!\nPlease visit us again.",
+// Add a footer message
+            Paragraph footer = new Paragraph("\nThank you for your purchase!\nPlease visit us again.",
                     new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC));
             footer.setAlignment(Element.ALIGN_CENTER);
+            footer.setSpacingBefore(20f); // Add space before the footer
             document.add(footer);
+
+// Close the document
+            document.close();
 
             System.out.println("Successfully Generated PDF");
         } catch (DocumentException | IOException e) {
@@ -327,9 +532,6 @@ public class BillController {
         } finally {
             document.close();
         }
-
-        // Insert data into Bill and Orders tables
-        insertBillAndOrders();
 
         // Show confirmation dialog
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -379,8 +581,8 @@ public class BillController {
              PreparedStatement insertOrderStmt = conn.prepareStatement(insertOrderQuery)) {
 
             // Insert into Bill table
-            insertBillStmt.setInt(1, getEmployeeID()); // Replace with the correct employee ID
-            insertBillStmt.setString(2, "Customer Name"); // Replace with actual customer name
+            insertBillStmt.setInt(1, getUserID()); // Fetch user ID dynamically
+            insertBillStmt.setString(2, customerName.getText()); // Customer name
             insertBillStmt.setDouble(3, calculateTotalAmount());
             insertBillStmt.executeUpdate();
 
@@ -393,7 +595,7 @@ public class BillController {
             // Insert into Orders table
             for (Product product : productList) {
                 insertOrderStmt.setInt(1, billID);
-                insertOrderStmt.setInt(2, getProductID(product.getName())); // Replace with method to get Product ID
+                insertOrderStmt.setInt(2, getProductID(product.getName())); // Fetch product ID dynamically
                 insertOrderStmt.setString(3, product.getName());
                 insertOrderStmt.setInt(4, product.getQuantity());
                 insertOrderStmt.setDouble(5, product.getPrice() * product.getQuantity());
@@ -408,13 +610,59 @@ public class BillController {
         }
     }
 
-    private int getEmployeeID() {
-        // Replace with actual implementation to get employee ID based on session or context
-        return 1000; // Example: return a dummy employee ID
+    private int getUserID() {
+        int userID = -1; // Default if not found
+        String query;
+
+        if (isOwner) {
+            // Query to get OwnerID
+            query = "SELECT OwnerID FROM Owner WHERE Username = ?";
+        } else {
+            // Query to get EmployeeID
+            query = "SELECT EmpID FROM Employee WHERE Username = ?";
+        }
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username); // Use the logged-in user's username
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                if (isOwner) {
+                    userID = rs.getInt("OwnerID");
+                } else {
+                    userID = rs.getInt("EmpID");
+                }
+            } else {
+                System.out.println((isOwner ? "Owner" : "Employee") + " not found for username: " + username);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userID;
     }
 
+
+
     private int getProductID(String productName) {
-        // Replace with actual implementation to get product ID based on product name
-        return 24; // Example: return a dummy product ID
+        int productID = -1; // Default if not found
+        String query = "SELECT ProductID FROM Product WHERE ProductName = ?";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, productName);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                productID = rs.getInt("ProductID");
+            } else {
+                System.out.println("Product not found: " + productName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productID;
     }
 }

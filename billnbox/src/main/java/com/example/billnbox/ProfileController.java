@@ -21,17 +21,16 @@ import java.sql.SQLException;
 public class ProfileController {
 
     private final String username = SessionManager.getInstance().getUsername(); // Variable to store the username
+    private boolean isOwner = LoginController.getIsOwner();
     private boolean isEditing = false; // Track if the profile is in edit mode
-
+    private String Name, EmailID, PhoneNo, ShopName, ShopAddress;
+    private int ownerId;
     @FXML
-    private TextField nameField, emailField, mobnoField, shopnameField;
-
+    private TextField nameField, emailField, mobnoField, shopnameField, filePath;
     @FXML
     private TextArea shopaddressField;
-
     @FXML
     private Label emptyFields;
-
     @FXML
     private Button profilebtn; // Button for edit/save profile
 
@@ -44,6 +43,7 @@ public class ProfileController {
             profilebtn.setText("Edit Profile");  // Initial button text
             loadUserProfile();
         }
+        makeFieldsNonEditable(); // Make all fields non-editable initially
     }
 
     private void loadUserProfile() {
@@ -52,14 +52,23 @@ public class ProfileController {
             return;
         }
 
-        String sql = "SELECT Name, EmailID, PhoneNo, ShopName, ShopAddress FROM Owner WHERE Username = ?";
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+            if (isOwner) {
+                loadOwnerDetails(conn); // Load owner details if they are an owner
+            } else {
+                loadEmployeeDetails(conn); // Load employee details
+            }
+        } catch (SQLException e) {
+            showError("Error loading profile: " + e.getMessage());
+        }
+        filePath.setText(RegistrationController.FilePath);
+    }
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+    private void loadOwnerDetails(Connection conn) throws SQLException {
+        String ownerSql = "SELECT Name, EmailID, PhoneNo, ShopName, ShopAddress FROM Owner WHERE Username = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(ownerSql)) {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
-
             if (rs.next()) {
                 nameField.setText(rs.getString("Name"));
                 emailField.setText(rs.getString("EmailID"));
@@ -67,14 +76,72 @@ public class ProfileController {
                 shopnameField.setText(rs.getString("ShopName"));
                 shopaddressField.setText(rs.getString("ShopAddress"));
             } else {
-                showError("User profile not found.");
+                showError("Owner profile not found.");
             }
-
-        } catch (SQLException e) {
-            showError("Error loading profile: " + e.getMessage());
         }
+    }
 
-        makeFieldsNonEditable(); // Make fields non-editable initially
+    private void loadEmployeeDetails(Connection conn) throws SQLException {
+        String employeeSql = "SELECT Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE Username = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(employeeSql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                nameField.setText(rs.getString("Name"));
+                emailField.setText(rs.getString("EmailID"));
+                mobnoField.setText(rs.getString("PhoneNo"));
+                ownerId = rs.getInt("OwnerID");
+
+                if (ownerId > 0) {
+                    loadShopDetails(conn); // Load shop details only if OwnerID is valid
+                } else {
+                    // If there's no valid OwnerID, clear shop fields or set a message indicating no owner/shop
+                    shopnameField.setText("No associated shop");
+                    shopaddressField.setText("No associated address");
+                }
+            } else {
+                showError("Employee profile not found.");
+            }
+        }
+    }
+
+    private void loadShopDetails(Connection conn) throws SQLException {
+        String shopDetailsSql = "SELECT ShopName, ShopAddress FROM Owner WHERE OwnerID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(shopDetailsSql)) {
+            pstmt.setInt(1, ownerId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                shopnameField.setText(rs.getString("ShopName"));
+                shopaddressField.setText(rs.getString("ShopAddress"));
+            } else {
+                // If the shop details are not found, display a meaningful message
+                shopnameField.setText("Shop details not found");
+                shopaddressField.setText("Shop details not found");
+            }
+        }
+    }
+
+
+    // Method to toggle between edit and save modes
+    @FXML
+    private void updateProfile(ActionEvent event) {
+        if (isEditing) {
+            // Save changes to the database
+            RegistrationController.FilePath = filePath.getText();
+            saveProfile();
+            makeFieldsNonEditable();
+            profilebtn.setText("Edit Profile"); // Change button text back to "Edit Profile"
+            isEditing = false; // Switch back to non-editing mode
+        } else {
+            // Enable fields for editing
+            if (isOwner) {
+                makeOwnerFieldsEditable();
+            } else {
+                makeEmployeeFieldsEditable();
+            }
+            profilebtn.setText("Save Changes"); // Change button text to "Save Changes"
+            isEditing = true; // Switch to editing mode
+        }
     }
 
     // Method to make all fields non-editable
@@ -82,34 +149,27 @@ public class ProfileController {
         nameField.setEditable(false);
         emailField.setEditable(false);
         mobnoField.setEditable(false);
+        shopnameField.setEditable(false); // Shop name is non-editable by default
+        shopaddressField.setEditable(false); // Shop address is non-editable by default
+    }
+
+    // Method to make only employee fields editable
+    private void makeEmployeeFieldsEditable() {
+        nameField.setEditable(true);
+        emailField.setEditable(true);
+        mobnoField.setEditable(true);
+        // Employee cannot edit shop details
         shopnameField.setEditable(false);
         shopaddressField.setEditable(false);
     }
 
-    // Method to make all fields editable
-    private void makeFieldsEditable() {
+    // Method to make owner fields editable
+    private void makeOwnerFieldsEditable() {
         nameField.setEditable(true);
         emailField.setEditable(true);
         mobnoField.setEditable(true);
         shopnameField.setEditable(true);
         shopaddressField.setEditable(true);
-    }
-
-    // Method to toggle between edit and save modes
-    @FXML
-    private void updateProfile(ActionEvent event) {
-        if (isEditing) {
-            // Save changes to the database
-            saveProfile();
-            makeFieldsNonEditable();
-            profilebtn.setText("Edit Profile"); // Change button text back to "Edit Profile"
-            isEditing = false; // Switch back to non-editing mode
-        } else {
-            // Enable fields for editing
-            makeFieldsEditable();
-            profilebtn.setText("Save Changes"); // Change button text to "Save Changes"
-            isEditing = true; // Switch to editing mode
-        }
     }
 
     // Save profile information to the database
@@ -130,26 +190,33 @@ public class ProfileController {
             return;
         }
 
-        String updateSQL = "UPDATE Owner SET Name = ?, EmailID = ?, PhoneNo = ?, ShopName = ?, ShopAddress = ? WHERE Username = ?";
+        String updateOwnerSQL = isOwner ? "UPDATE Owner SET ShopName = ?, ShopAddress = ?, Name = ?, EmailID = ?, PhoneNo = ? WHERE Username = ?" : null;
+        // Update employee details
+        String updateEmployeeSQL = "UPDATE Employee SET Name = ?, EmailID = ?, PhoneNo = ? WHERE Username = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
 
-            pstmt.setString(1, name);
-            pstmt.setString(2, email);
-            pstmt.setString(3, mobno);
-            pstmt.setString(4, shopname);
-            pstmt.setString(5, shopaddress);
-            pstmt.setString(6, username);
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                showError("Profile updated successfully.");
+            // Update owner details if the user is the owner
+            if (isOwner) {
+                try (PreparedStatement pstmt = conn.prepareStatement(updateOwnerSQL)) {
+                    pstmt.setString(1, shopname);
+                    pstmt.setString(2, shopaddress);
+                    pstmt.setString(3, name);
+                    pstmt.setString(4, email);
+                    pstmt.setString(5, mobno);
+                    pstmt.setString(6, username);
+                    pstmt.executeUpdate();
+                }
             } else {
-                showError("Profile update failed.");
+                try (PreparedStatement pstmt = conn.prepareStatement(updateEmployeeSQL)) {
+                    pstmt.setString(1, name);
+                    pstmt.setString(2, email);
+                    pstmt.setString(3, mobno);
+                    pstmt.setString(4, username);
+                    pstmt.executeUpdate();
+                }
             }
-
+            showError("Profile updated successfully.");
         } catch (SQLException e) {
             showError("Error updating profile: " + e.getMessage());
         }
