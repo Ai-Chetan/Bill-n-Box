@@ -44,7 +44,7 @@ public class BillController {
             // Check if the user is an Owner or Employee
             if (isOwner) {
                 // Directly fetch Owner's info
-                String ownerSql = "SELECT ShopName, ShopAddress, Email, PhoneNumber FROM Owner WHERE Username = ?";
+                String ownerSql = "SELECT ShopName, ShopAddress, EmailID, PhoneNo FROM Owner WHERE Username = ?";
                 try (PreparedStatement ownerStmt = conn.prepareStatement(ownerSql)) {
                     ownerStmt.setString(1, username);
                     ResultSet ownerRs = ownerStmt.executeQuery();
@@ -69,7 +69,7 @@ public class BillController {
                 }
 
                 // Fetch the Owner's info based on OwnerID
-                String ownerSql = "SELECT ShopName, ShopAddress, Email, PhoneNumber FROM Owner WHERE OwnerID = ?";
+                String ownerSql = "SELECT ShopName, ShopAddress, EmailID, PhoneNo FROM Owner WHERE OwnerID = ?";
                 try (PreparedStatement ownerStmt = conn.prepareStatement(ownerSql)) {
                     ownerStmt.setString(1, ownerId);
                     ResultSet ownerRs = ownerStmt.executeQuery();
@@ -88,8 +88,8 @@ public class BillController {
     private void setShopInfo(ResultSet rs) throws SQLException {
          shopname = rs.getString("ShopName");
          shopaddress = rs.getString("ShopAddress");
-         email = rs.getString("Email");
-         phoneno = rs.getString("PhoneNumber");
+         email = rs.getString("EmailID");
+         phoneno = rs.getString("PhoneNo");
     }
 
     @FXML
@@ -573,7 +573,7 @@ public class BillController {
     }
 
     private void insertBillAndOrders() {
-        String insertBillQuery = "INSERT INTO Bill (EmpID, CustomerName, Amount) VALUES (?, ?, ?)";
+        String insertBillQuery = "INSERT INTO Bill (EmpID, OwnerID, CustomerName, Amount) VALUES (?, ?, ?, ?)";
         String insertOrderQuery = "INSERT INTO Orders (BillID, SrNo, ProductName, Quantity, TotalPrice) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
@@ -581,9 +581,16 @@ public class BillController {
              PreparedStatement insertOrderStmt = conn.prepareStatement(insertOrderQuery)) {
 
             // Insert into Bill table
-            insertBillStmt.setInt(1, getUserID()); // Fetch user ID dynamically
-            insertBillStmt.setString(2, customerName.getText()); // Customer name
-            insertBillStmt.setDouble(3, calculateTotalAmount());
+            if (isOwner) {
+                insertBillStmt.setNull(1, java.sql.Types.INTEGER); // No EmpID for owner
+                insertBillStmt.setInt(2, getUserID()); // Use OwnerID
+            } else {
+                insertBillStmt.setInt(1, getUserID()); // Use EmpID
+                insertBillStmt.setNull(2, java.sql.Types.INTEGER); // No OwnerID for employee
+            }
+
+            insertBillStmt.setString(3, customerName.getText()); // Customer name
+            insertBillStmt.setDouble(4, calculateTotalAmount()); // Amount
             insertBillStmt.executeUpdate();
 
             // Get the generated Bill ID
@@ -595,7 +602,7 @@ public class BillController {
             // Insert into Orders table
             for (Product product : productList) {
                 insertOrderStmt.setInt(1, billID);
-                insertOrderStmt.setInt(2, getProductID(product.getName())); // Fetch product ID dynamically
+                insertOrderStmt.setInt(2, getSrNo(product.getName())); // Fetch product ID dynamically
                 insertOrderStmt.setString(3, product.getName());
                 insertOrderStmt.setInt(4, product.getQuantity());
                 insertOrderStmt.setDouble(5, product.getPrice() * product.getQuantity());
@@ -609,6 +616,7 @@ public class BillController {
             e.printStackTrace();
         }
     }
+
 
     private int getUserID() {
         int userID = -1; // Default if not found
@@ -640,14 +648,13 @@ public class BillController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return userID;
     }
 
-
-
-    private int getProductID(String productName) {
-        int productID = -1; // Default if not found
-        String query = "SELECT ProductID FROM Product WHERE ProductName = ?";
+    private int getSrNo(String productName) {
+        int SrNo = -1; // Default if not found
+        String query = "SELECT SrNo FROM Product WHERE ProductName = ?";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -656,13 +663,13 @@ public class BillController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                productID = rs.getInt("ProductID");
+                SrNo = rs.getInt("SrNo");
             } else {
                 System.out.println("Product not found: " + productName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return productID;
+        return SrNo;
     }
 }
