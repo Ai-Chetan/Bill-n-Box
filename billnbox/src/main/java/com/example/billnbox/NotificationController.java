@@ -11,14 +11,6 @@ import java.util.Set;
 
 public class NotificationController {
 
-    // Database connection method
-    private Connection connection() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/BillNBoxDB";
-        String user = "root";
-        String password = "yash22@Ty23S5AfB";
-        return DriverManager.getConnection(url, user, password);
-    }
-
     // Start the notification service
     public void StartNotification() {
         Task<Void> notificationTask = new Task<>() {
@@ -40,7 +32,7 @@ public class NotificationController {
         String sql = "SELECT ProductName, ExpDate, Quantity, LowQuantityAlert FROM Product " +
                 "WHERE ExpDate <= CURDATE() + INTERVAL 7 DAY OR Quantity < LowQuantityAlert";
 
-        try (Connection conn = connection();
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
