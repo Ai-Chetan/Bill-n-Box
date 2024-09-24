@@ -5,11 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.scene.control.TextField;
 
 import javax.swing.*;
         import java.io.IOException;
@@ -33,6 +30,9 @@ public class AddNewEmployee {
 
     @FXML
     private Button cancelButton, backButton, nextButton, addEmployeeButton;
+
+    @FXML
+    private ProgressBar progBar1, progBar2;
 
     @FXML
     public void initialize() {
@@ -81,6 +81,8 @@ public class AddNewEmployee {
             backButton.setVisible(true);
             addEmployeeButton.setVisible(true);
         }
+        progBar1.setProgress(1.0);
+        progBar2.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
     }
 
     @FXML
@@ -127,6 +129,7 @@ public class AddNewEmployee {
                 e.printStackTrace();
             }
         }
+        progBar2.setProgress(1.0);
     }
 
     public static class DatabaseConnection {

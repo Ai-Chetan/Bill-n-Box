@@ -5,6 +5,7 @@ module com.example.billnbox {
     requires java.sql;
     requires transitive itextpdf;
     requires java.compiler;
+    requires javax.mail.api;
 
 
     opens com.example.billnbox to javafx.fxml;
