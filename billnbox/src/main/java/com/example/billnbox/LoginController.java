@@ -43,8 +43,15 @@ public class LoginController {
     @FXML
     private Label loginErrorLabel;
 
-    public static boolean isOwner;
     private String username;
+
+    public static boolean isOwner;
+    public static boolean getIsOwner() {
+        return isOwner;
+    }
+    public static void setIsOwner(boolean isOwner) {
+        LoginController.isOwner = isOwner;
+    }
 
     public void initialize() {
         // Initially hide the admin pane
@@ -131,10 +138,6 @@ public class LoginController {
             loginErrorLabel.setText("Invalid credentials, please try again.");
             loginErrorLabel.setVisible(true);
         }
-    }
-
-    public static boolean getIsOwner() {
-        return isOwner;
     }
 
     // Method to verify username and password from the respective table in the database

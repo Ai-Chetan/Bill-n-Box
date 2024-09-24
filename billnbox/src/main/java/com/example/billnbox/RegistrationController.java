@@ -15,6 +15,8 @@ import java.io.IOException;
 
 public class RegistrationController {
 
+    public static boolean isOwner = true;
+
     public static String FilePath;
     private String Name;
     private String EmailID;
@@ -63,6 +65,7 @@ public class RegistrationController {
     // Initialize controller
     @FXML
     public void initialize() {
+        LoginController.setIsOwner(isOwner);
         if (emptyFields != null) {
             emptyFields.setVisible(false);  // Hide the emptyFields label initially
         }
