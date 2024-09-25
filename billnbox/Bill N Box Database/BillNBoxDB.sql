@@ -25,11 +25,7 @@ INSERT INTO Product (ProductName, Category, Quantity, Price, MfgDate, ExpDate, L
 ('Sticky Notes', 'Paper Products', 100, 60.00, '2023-06-30', '2025-06-30', 10),('Whiteboard Marker', 'Writing Instruments', 50, 40.00, '2023-07-01', '2025-07-01', 10),('Permanent Marker', 'Writing Instruments', 50, 42.00, '2023-07-01', '2025-07-01', 10),
 ('Binder Clips', 'Office Supplies', 40, 22.00, '2023-07-01', '2025-07-01', 10),('Paper Clips', 'Office Supplies', 100, 5.00, '2023-07-01', '2025-07-01', 10),('Folders', 'Paper Products', 50, 45.00, '2023-07-01', '2025-07-01', 15),
 ('Tape', 'Adhesives', 30, 30.00, '2023-07-01', '2025-07-01', 5),('File', 'Paper Products', 20, 60.00, '2023-07-01', '2025-07-01', 15);
-select * from Product;
-desc Orders;
-insert into Orders (TotalAmount , IssueDate , CustomerId) values( 435.00 , '2024-07-01' , 157 );
-select * from Orders;
-drop table Orders;
+
 create table Orders( OrderId int auto_increment primary key, ProductId int, Quantity int);
 alter table Orders add column BillId int;
 insert into Orders Values(223,51,3,225);

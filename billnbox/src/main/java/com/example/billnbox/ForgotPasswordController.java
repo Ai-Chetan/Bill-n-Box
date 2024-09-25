@@ -96,7 +96,7 @@ public class ForgotPasswordController {
 
         public static void sendEmail(String recipientEmail, String newPassword) {
             String senderEmail = "billnboxibms@gmail.com"; // your email address
-            String senderPassword = ""; // your email password
+            String senderPassword = "irpf iawh jlau uujx"; // your email password
 
             // SMTP server properties
             Properties properties = new Properties();
@@ -119,7 +119,18 @@ public class ForgotPasswordController {
                 message.setFrom(new InternetAddress(senderEmail));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
                 message.setSubject("Password Reset");
-                message.setText("Your new password is: " + newPassword);
+
+                // Build the email body with UserName, newPassword, and company name
+                String emailBody = "Dear " + UserName + ",\n\n" +
+                        "We have received a request to reset your password. Your new password is: " + newPassword + "\n\n" +
+                        "Please use this password to log in and update your password as soon as possible. " +
+                        "For your security, we recommend that you change this temporary password to a new one immediately after logging in.\n\n" +
+                        "If you did not request this password reset, please ignore this message.\n\n" +
+                        "Best regards,\n" +
+                        "The Bill-N-Box Support Team";
+
+                // Set the email body content
+                message.setText(emailBody);
 
                 // Send the message
                 Transport.send(message);
