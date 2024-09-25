@@ -17,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
-import javax.annotation.processing.Generated;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -348,7 +347,7 @@ public class BillController {
             String PDF_NAME = "Bill - " + billID + ".pdf";
 
             if (PDF_FILEPATH == null) {
-                PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
+                PDF_FILEPATH = "C:/Users/aarya/Desktop/Mini Project Sem3/Bill-n-Box/billnbox/Bill PDF's";
             }
 
             // Create the PDF writer instance
@@ -612,11 +611,35 @@ public class BillController {
 
             System.out.println("Bill and Orders inserted successfully");
 
+            // Execute bill insertion
+            int affectedRows = insertBillStmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                // Log entry for bill creation
+                insertLog();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    // Method to insert a log into the logs table
+    private void insertLog(){
+        String activity = "Bill created of Amount " + calculateTotalAmount();
+        String logQuery = "INSERT INTO logs (date, time, User, activity, OwnerID) VALUES (CURDATE(), CURTIME(), ?, ?, ?)";
+        try (Connection conn1 = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn1.prepareStatement(logQuery)) {
+
+            stmt.setString(1, SessionManager.getInstance().getUsername());  // User performing the action
+            stmt.setString(2, activity);  // Activity description
+            stmt.setInt(3, SessionManager.getInstance().getOwnerID());  // OwnerID from SessionManager
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private int getUserID() {
         int userID = -1; // Default if not found

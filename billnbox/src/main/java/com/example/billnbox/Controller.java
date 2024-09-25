@@ -12,6 +12,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Button; // Import Button class
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Controller {
 
@@ -106,6 +110,10 @@ public class Controller {
 
     @FXML
     private void confirmLogout(ActionEvent event) {
+
+        String currentUser = SessionManager.getUsername();
+        logActivity(currentUser, "Logged out");
+
         loadScene(event, "16-logout-confirmation.fxml");
     }
 
@@ -133,6 +141,26 @@ public class Controller {
             e.printStackTrace();
         }
     }
+    private void logActivity(String username, String activity) {
+        String sql = "INSERT INTO logs (date, time, User, activity,OwnerID) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            pstmt.setTime(2, java.sql.Time.valueOf(java.time.LocalTime.now()));
+            pstmt.setString(3, username);
+            pstmt.setString(4, activity);
+            pstmt.setInt(5, SessionManager.getInstance().getOwnerID());  // OwnerID from SessionManager
+
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public void LogInButton(ActionEvent event) {
         loadScene(event, "8-dashboard.fxml");

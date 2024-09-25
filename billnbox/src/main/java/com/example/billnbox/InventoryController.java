@@ -17,13 +17,12 @@ import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
-public class InventoryController {
+public class    InventoryController {
+
+    private ArrayList<Product> editedProducts = new ArrayList<>();
 
     public static class Product {
         private final Integer srNo;
@@ -147,26 +146,62 @@ public class InventoryController {
         tableView.setEditable(true);
 
         productNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        productNameColumn.setOnEditCommit(event -> event.getRowValue().setProductName(event.getNewValue()));
+        productNameColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            String oldValue = product.getProductName();
+            product.setProductName(event.getNewValue());
+            logInventoryChange("ProductName", oldValue, event.getNewValue(), oldValue);  // Use oldValue as the product name before editing
+        });
 
         categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        categoryColumn.setOnEditCommit(event -> event.getRowValue().setCategory(event.getNewValue()));
+        categoryColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            String oldValue = product.getCategory();
+            product.setCategory(event.getNewValue());
+            logInventoryChange("Category", oldValue, event.getNewValue(), product.getProductName());
+        });
 
         quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        quantityColumn.setOnEditCommit(event -> event.getRowValue().setQuantity(event.getNewValue()));
+        quantityColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            Integer oldValue = product.getQuantity();
+            product.setQuantity(event.getNewValue());
+            logInventoryChange("Quantity", oldValue.toString(), event.getNewValue().toString(), product.getProductName());
+        });
 
         priceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        priceColumn.setOnEditCommit(event -> event.getRowValue().setPrice(event.getNewValue()));
+        priceColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            Double oldValue = product.getPrice();
+            product.setPrice(event.getNewValue());
+            logInventoryChange("Price", oldValue.toString(), event.getNewValue().toString(), product.getProductName());
+        });
 
         mfgDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        mfgDateColumn.setOnEditCommit(event -> event.getRowValue().setMfgDate(event.getNewValue()));
+        mfgDateColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            String oldValue = product.getMfgDate();
+            product.setMfgDate(event.getNewValue());
+            logInventoryChange("MfgDate", oldValue, event.getNewValue(), product.getProductName());
+        });
 
         expDateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        expDateColumn.setOnEditCommit(event -> event.getRowValue().setExpDate(event.getNewValue()));
+        expDateColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            String oldValue = product.getExpDate();
+            product.setExpDate(event.getNewValue());
+            logInventoryChange("ExpDate", oldValue, event.getNewValue(), product.getProductName());
+        });
 
         lowQuantityAlertColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        lowQuantityAlertColumn.setOnEditCommit(event -> event.getRowValue().setLowQuantityAlert(event.getNewValue()));
+        lowQuantityAlertColumn.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            Integer oldValue = product.getLowQuantityAlert();
+            product.setLowQuantityAlert(event.getNewValue());
+            logInventoryChange("LowQuantityAlert", oldValue.toString(), event.getNewValue().toString(), product.getProductName());
+        });
     }
+
 
     private void makeTableNonEditable() {
         tableView.setEditable(false); // Disable table editing
@@ -355,4 +390,79 @@ public class InventoryController {
             e.printStackTrace();
         }
     }
+
+
+
+    @FXML
+    private void saveInventoryChanges(ActionEvent event) {
+        if (isEditing) {
+            for (Product product : editedProducts) {
+                updateProductInDatabase(product);
+            }
+
+            // Log entry for inventory edit
+            insertLog("Inventory edited by " + getCurrentUser());
+
+            // Disable editing mode and refresh the product table
+            isEditing = false;
+            makeTableNonEditable();
+            loadProductData();
+        }
+    }
+
+    // Update product information in the database
+    private void updateProductInDatabase(Product product) {
+        String updateQuery = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ? WHERE SrNo = ? AND OwnerID = ?";
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+
+            stmt.setString(1, product.getProductName());
+            stmt.setString(2, product.getCategory());
+            stmt.setInt(3, product.getQuantity());
+            stmt.setDouble(4, product.getPrice());
+            stmt.setDate(5, Date.valueOf(product.getMfgDate()));
+            stmt.setDate(6, Date.valueOf(product.getExpDate()));
+            stmt.setInt(7, product.getSrNo());
+            stmt.setInt(8, getOwnerID());  // Use OwnerID from SessionManager
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get the current logged-in user from SessionManager
+    private String getCurrentUser() {
+        return SessionManager.getInstance().getUsername();  // Fetch current user from SessionManager
+    }
+
+    // Get the current OwnerID from the SessionManager
+    private int getOwnerID() {
+        return SessionManager.getInstance().getOwnerID();  // Fetch OwnerID from SessionManager
+    }
+
+    private void logInventoryChange(String columnName, String oldValue, String newValue, String productName) {
+        String activity = "Edited " + columnName + " from '" + oldValue + "' to '" + newValue + "' for Product: " + productName;
+        insertLog(activity);
+    }
+
+
+    // Insert a log entry into the logs table
+    private void insertLog(String activity) {
+        String logQuery = "INSERT INTO logs (date, time, User, activity,OwnerID) VALUES (CURDATE(), CURTIME(), ?, ?,?)";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn.prepareStatement(logQuery)) {
+
+            stmt.setString(1, getCurrentUser());  // User performing the action
+            stmt.setString(2, activity);          // Activity description
+            stmt.setInt(3, SessionManager.getInstance().getOwnerID());  // OwnerID from SessionManager
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

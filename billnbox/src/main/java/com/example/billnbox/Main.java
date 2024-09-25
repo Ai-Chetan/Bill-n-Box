@@ -19,6 +19,7 @@ public class Main extends Application {
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
 
+
             // Set the scene on the primary stage
             primaryStage.setScene(scene);
             primaryStage.setTitle("Bill N Box");

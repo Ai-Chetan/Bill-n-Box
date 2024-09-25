@@ -115,6 +115,11 @@ public class LoginController {
         if (isValidLogin) {
             // Set username in SessionManager
             SessionManager.getInstance().setUsername(username);
+
+            // Log the login activity
+            String userRole = isOwner ? "Owner" : "Employee"; // Determine if it's an owner or employee
+            logActivity(username, userRole + " logged in");
+
             try {
                 // Load the dashboard FXML
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("8-dashboard.fxml"));
@@ -139,6 +144,7 @@ public class LoginController {
             loginErrorLabel.setVisible(true);
         }
     }
+
 
     // Method to verify username and password from the respective table in the database
     private boolean verifyLogin(String username, String password, String userType) {
@@ -207,4 +213,23 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
+    private void logActivity(String username, String activity) {
+        String sql = "INSERT INTO logs (date, time, User, activity,OwnerID) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            pstmt.setTime(2, java.sql.Time.valueOf(java.time.LocalTime.now()));
+            pstmt.setString(3, username);
+            pstmt.setString(4, activity);
+            pstmt.setInt(5, SessionManager.getInstance().getOwnerID());  // OwnerID from SessionManager
+
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

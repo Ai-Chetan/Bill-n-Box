@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #d9d6c7;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.Controller">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #d9d6c7;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.billnbox.LogController">
    <children>
       <ImageView fx:id="image1" fitHeight="700.0" fitWidth="1300.0" nodeOrientation="INHERIT" opacity="0.9" pickOnBounds="true" smooth="false" style="-fx-alignment: center;">
          <image>
@@ -29,12 +29,12 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="inventoryTableView" layoutX="34.0" layoutY="34.0" prefHeight="429.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black;">
+            <TableView fx:id="LogEntry" layoutX="34.0" layoutY="34.0" prefHeight="429.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black;">
                <columns>
-                  <TableColumn fx:id="srNoColumn" prefWidth="81.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Date" />
-                  <TableColumn fx:id="productNameColumn" prefWidth="94.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Time" />
-                  <TableColumn fx:id="categoryColumn" prefWidth="117.0" style="-fx-border-color: black; -fx-font-size: 15;" text="User" />
-                  <TableColumn fx:id="quantityColumn" prefWidth="529.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Activity" />
+                  <TableColumn fx:id="dateColumn" prefWidth="81.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Date" />
+                  <TableColumn fx:id="timeColumn" prefWidth="94.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Time" />
+                  <TableColumn fx:id="userColumn" prefWidth="117.0" style="-fx-border-color: black; -fx-font-size: 15;" text="User" />
+                  <TableColumn fx:id="activityColumn" prefWidth="529.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Activity" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
