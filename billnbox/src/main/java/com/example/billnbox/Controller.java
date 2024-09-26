@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Controller {
@@ -47,28 +48,55 @@ public class Controller {
             employeesButton.setVisible(isOwner);
         }
 
-        // Creating data series for the BarChart
-        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-        series1.setName("2023");
+        // Load earnings for the year 2024
+        loadMonthlyEarnings2024();
+    }
 
-        // Add data to the series
-        series1.getData().add(new XYChart.Data<>("January", 200));
-        series1.getData().add(new XYChart.Data<>("February", 300));
-        series1.getData().add(new XYChart.Data<>("March", 150));
-        series1.getData().add(new XYChart.Data<>("April", 400));
-        series1.getData().add(new XYChart.Data<>("May", 200));
-        series1.getData().add(new XYChart.Data<>("June", 300));
-        series1.getData().add(new XYChart.Data<>("July", 150));
-        series1.getData().add(new XYChart.Data<>("August", 400));
-        series1.getData().add(new XYChart.Data<>("September", 200));
-        series1.getData().add(new XYChart.Data<>("October", 300));
-        series1.getData().add(new XYChart.Data<>("November", 150));
-        series1.getData().add(new XYChart.Data<>("December", 500));
+    private void loadMonthlyEarnings2024() {
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        series1.setName("Monthly Earnings for 2024");
+
+        // SQL query to get monthly earnings for the year 2024
+        String sql = "SELECT MONTH(Time) AS month, SUM(Amount) AS total_amount " +
+                "FROM Bill " +
+                "WHERE YEAR(Time) = 2024 " +
+                "GROUP BY MONTH(Time) " +
+                "ORDER BY MONTH(Time)";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            // Initialize an array to hold total amounts for each month
+            double[] monthlyEarnings = new double[12];
+
+            while (rs.next()) {
+                int month = rs.getInt("month");
+                double totalAmount = rs.getDouble("total_amount");
+
+                // Store total amount for the corresponding month (0-indexed for array)
+                monthlyEarnings[month - 1] = totalAmount;
+            }
+
+            // Add data to the series for each month (January to December)
+            for (int i = 0; i < monthlyEarnings.length; i++) {
+                series1.getData().add(new XYChart.Data<>(getMonthName(i + 1), monthlyEarnings[i]));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // Add the series to the BarChart
         if (barChart != null) {
             barChart.getData().add(series1);
         }
+    }
+
+    // Method to get month name from month number
+    private String getMonthName(int month) {
+        String[] monthNames = {"January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
+        return monthNames[month - 1]; // Adjusting for 0-index
     }
 
     // Initialize Dashboard method where notification system is started
@@ -110,10 +138,8 @@ public class Controller {
 
     @FXML
     private void confirmLogout(ActionEvent event) {
-
         String currentUser = SessionManager.getUsername();
         logActivity(currentUser, "Logged out");
-
         loadScene(event, "16-logout-confirmation.fxml");
     }
 
@@ -141,8 +167,9 @@ public class Controller {
             e.printStackTrace();
         }
     }
+
     private void logActivity(String username, String activity) {
-        String sql = "INSERT INTO logs (date, time, User, activity,OwnerID) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO logs (date, time, User, activity, OwnerID) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -152,15 +179,11 @@ public class Controller {
             pstmt.setString(4, activity);
             pstmt.setInt(5, SessionManager.getInstance().getOwnerID());  // OwnerID from SessionManager
 
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
     public void LogInButton(ActionEvent event) {
         loadScene(event, "8-dashboard.fxml");
