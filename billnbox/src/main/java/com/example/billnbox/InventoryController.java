@@ -222,9 +222,10 @@ public class InventoryController {
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
 
             try (ResultSet rs = pstmt.executeQuery()) {
+                int dynamicSrNo = 1; // Start counter for dynamic SrNo
                 while (rs.next()) {
                     Product product = new Product(
-                            rs.getInt("SrNo"),
+                            dynamicSrNo, // Use dynamic SrNo
                             rs.getString("ProductName"),
                             rs.getString("Category"),
                             rs.getInt("Quantity"),
@@ -234,6 +235,7 @@ public class InventoryController {
                             rs.getInt("LowQuantityAlert")
                     );
                     productList.add(product);
+                    dynamicSrNo++; // Increment for the next product
                 }
             }
 
