@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -297,6 +298,11 @@
                   <Font name="Arial" size="24.0" />
                </font>
             </Text>
+            <TextField fx:id="yearInput" alignment="CENTER" layoutX="730.0" layoutY="23.0" prefHeight="33.0" prefWidth="56.0" promptText="2024" style="-fx-border-radius: 2; -fx-background-color: white; -fx-border-color: black;">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
          </children>
       </Pane>
       <BarChart fx:id="barChart" prefHeight="280.0" prefWidth="837.0">
@@ -309,6 +315,9 @@
          <StackPane.margin>
             <Insets bottom="15.0" left="375.0" right="135.0" top="415.0" />
          </StackPane.margin>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
       </BarChart>
    </children>
 </StackPane>

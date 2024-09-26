@@ -1,5 +1,7 @@
 package com.example.billnbox;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,9 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Button; // Import Button class
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,6 +38,8 @@ public class Controller {
     private Button logButton; // Reference to the Log button
     @FXML
     private Button employeesButton; // Reference to the Employees button
+    @FXML
+    private TextField yearInput;
 
     // Reference to NotificationController
     private NotificationController notificationController;
@@ -42,45 +48,86 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        if (comboBox != null) {
+            ObservableList<String> items = FXCollections.observableArrayList("Today", "This Week", "This Month", "This Year", "All Time");
+            comboBox.setItems(items);
+        }
+
         // Set visibility of buttons based on ownership
         if (logButton != null) {
             logButton.setVisible(isOwner);
             employeesButton.setVisible(isOwner);
         }
 
-        // Load earnings for the year 2024
-        loadMonthlyEarnings2024();
+        if (yearInput != null) {
+            // Add event handler for yearInput to update the graph when Enter is pressed
+            yearInput.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    loadMonthlyEarningsFromInput(); // Update the graph
+                }
+            });
+        }
+
+        if (yearInput != null) {
+            // Load earnings for the current year or from the year input field
+            loadMonthlyEarningsFromInput();
+        }
     }
 
-    private void loadMonthlyEarnings2024() {
-        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-        series1.setName("Monthly Earnings for 2024");
+    private void loadMonthlyEarningsFromInput() {
+        try {
+            String yearText = yearInput.getText().trim(); // Get trimmed input
+            int year;
 
-        // SQL query to get monthly earnings for the year 2024
+            // Check if input is empty and set year to current year if it is
+            if (yearText.isEmpty()) {
+                year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+            } else {
+                year = Integer.parseInt(yearText); // Parse year from input
+            }
+
+            loadMonthlyEarnings(year); // Load earnings for the year
+        } catch (NumberFormatException e) {
+            // Handle the case where the input is not a valid number
+            System.out.println("Invalid year input: " + yearInput.getText());
+            yearInput.setText(""); // Clear the input field for correction
+        }
+    }
+
+    private void loadMonthlyEarnings(int year) {
+        barChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Monthly Earnings for " + year);
+
+        // SQL query to get monthly earnings for the specified year
         String sql = "SELECT MONTH(Time) AS month, SUM(Amount) AS total_amount " +
                 "FROM Bill " +
-                "WHERE YEAR(Time) = 2024 " +
+                "WHERE YEAR(Time) = ? " +
                 "GROUP BY MONTH(Time) " +
                 "ORDER BY MONTH(Time)";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Initialize an array to hold total amounts for each month
-            double[] monthlyEarnings = new double[12];
+            // Set the year parameter in the SQL query
+            pstmt.setInt(1, year);
 
-            while (rs.next()) {
-                int month = rs.getInt("month");
-                double totalAmount = rs.getDouble("total_amount");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Initialize an array to hold total amounts for each month
+                double[] monthlyEarnings = new double[12];
 
-                // Store total amount for the corresponding month (0-indexed for array)
-                monthlyEarnings[month - 1] = totalAmount;
-            }
+                while (rs.next()) {
+                    int month = rs.getInt("month");
+                    double totalAmount = rs.getDouble("total_amount");
 
-            // Add data to the series for each month (January to December)
-            for (int i = 0; i < monthlyEarnings.length; i++) {
-                series1.getData().add(new XYChart.Data<>(getMonthName(i + 1), monthlyEarnings[i]));
+                    // Store total amount for the corresponding month (0-indexed for array)
+                    monthlyEarnings[month - 1] = totalAmount;
+                }
+
+                // Add data to the series for each month (January to December)
+                for (int i = 0; i < monthlyEarnings.length; i++) {
+                    series.getData().add(new XYChart.Data<>(getMonthName(i + 1), monthlyEarnings[i]));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,7 +135,7 @@ public class Controller {
 
         // Add the series to the BarChart
         if (barChart != null) {
-            barChart.getData().add(series1);
+            barChart.getData().add(series);
         }
     }
 

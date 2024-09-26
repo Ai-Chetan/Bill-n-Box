@@ -69,7 +69,9 @@ public class EmployeeController {
 
         // Add a listener to enable/disable the delete button based on selection
         employeeTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            deleteButton.setDisable(newSelection == null);
+            if(deleteButton!=null) {
+                deleteButton.setDisable(newSelection == null);
+            }
         });
     }
 
