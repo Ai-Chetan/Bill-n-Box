@@ -229,52 +229,52 @@
                   <Font name="Arial Black" size="24.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Pen" wrappingWidth="189.169921875">
+            <Text layoutX="55.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1." wrappingWidth="23.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Notebook">
+            <Text layoutX="55.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2.">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Fevicol">
+            <Text layoutX="55.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3.">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Staple Pins">
+            <Text layoutX="55.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4.">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5. Book Cover">
+            <Text layoutX="55.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5.">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="232.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text fx:id="topOne" layoutX="78.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="232.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text fx:id="topFive" layoutX="78.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="232.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text fx:id="topFour" layoutX="78.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="232.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text fx:id="topThree" layoutX="78.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="232.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="189.169921875">
+            <Text fx:id="topTwo" layoutX="78.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
