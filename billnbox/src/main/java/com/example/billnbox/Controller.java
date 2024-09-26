@@ -149,7 +149,8 @@ public class Controller {
     // Initialize Dashboard method where notification system is started
     @FXML
     public void initializeDashboard() {
-        notificationController = new NotificationController();
+        int ownerid = SessionManager.getInstance().getOwnerID();
+        notificationController = new NotificationController(ownerid);
         notificationController.StartNotification();  // Start notifications on dashboard load
     }
 

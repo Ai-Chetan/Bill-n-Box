@@ -79,13 +79,14 @@ public class EmployeeController {
     private void loadEmployeeData() {
         ResultSet rs = null;
         Connection conn = null;
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
 
         try {
             conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-            stmt = conn.createStatement();
-            String query = "SELECT EmpID, Username, Password, Name, EmailID, PhoneNo FROM Employee";
-            rs = stmt.executeQuery(query);
+            String query = "SELECT EmpID, Username, Password, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 employeeList.add(new Employee(
@@ -94,7 +95,8 @@ public class EmployeeController {
                         rs.getString("Username"),
                         rs.getString("Password"),
                         rs.getString("PhoneNo"),
-                        rs.getString("EmailID")
+                        rs.getString("EmailID"),
+                        rs.getInt("OwnerID") // Set OwnerID
                 ));
             }
 
@@ -107,7 +109,7 @@ public class EmployeeController {
             // Close resources
             try {
                 if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (pstmt != null) pstmt.close();
                 if (conn != null) conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -272,14 +274,16 @@ public class EmployeeController {
         private String password;
         private String phone;
         private String email;
+        private int ownerId;
 
-        public Employee(int srNo, String name, String username, String password, String phone, String email) {
+        public Employee(int srNo, String name, String username, String password, String phone, String email, int ownerId) {
             this.srNo = srNo;
             this.name = name;
             this.username = username;
             this.password = password;
             this.phone = phone;
             this.email = email;
+            this.ownerId = ownerId;
         }
 
         public int getSrNo() {
@@ -324,6 +328,14 @@ public class EmployeeController {
 
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        public int getOwnerId() {
+            return ownerId;
+        }
+
+        public void setOwnerId(int ownerId) {
+            this.ownerId = ownerId;
         }
     }
 }

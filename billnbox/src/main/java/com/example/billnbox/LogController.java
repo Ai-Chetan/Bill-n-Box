@@ -60,8 +60,13 @@ public class LogController {
         String dbPassword = DatabaseConfig.getPassword();
 
         try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-            String sql = "SELECT date, time, User, activity FROM logs";
+            // Fetch the OwnerID from the session
+            int ownerID = SessionManager.getOwnerID();
+
+            // Query to fetch logs based on OwnerID
+            String sql = "SELECT date, time, User, activity FROM logs WHERE OwnerID = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, ownerID); // Set the OwnerID for filtering logs
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {

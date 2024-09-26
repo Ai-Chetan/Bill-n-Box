@@ -136,16 +136,20 @@ public class AddNewEmployee {
 
         // Method to insert employee data into the database
         public static boolean insertEmployee(String name, String email, String number, String username, String password) {
-            String query = "INSERT INTO Employee (Name, EmailID, PhoneNo, Username, Password) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Employee (Name, EmailID, PhoneNo, Username, Password, OwnerID) VALUES (?, ?, ?, ?, ?, ?)";
 
             try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
                  PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+                int ownerID = SessionManager.getOwnerID(); // Get the current owner ID
+                String ownerUsername = SessionManager.getInstance().getUsername(); // Get the owner username from the session
 
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, email);
                 preparedStatement.setString(3, number);
                 preparedStatement.setString(4, username);
                 preparedStatement.setString(5, password);
+                preparedStatement.setInt(6, ownerID); // Insert OwnerID to associate the employee with the shop
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 return rowsAffected > 0;
