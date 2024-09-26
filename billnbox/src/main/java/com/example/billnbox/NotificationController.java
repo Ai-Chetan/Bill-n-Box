@@ -11,6 +11,12 @@ import java.util.Set;
 
 public class NotificationController {
 
+    private final int ownerId; // Store the owner's ID
+
+    public NotificationController(int ownerId) {
+        this.ownerId = ownerId; // Initialize with the owner ID
+    }
+
     // Start the notification service
     public void StartNotification() {
         Task<Void> notificationTask = new Task<>() {
@@ -30,31 +36,34 @@ public class NotificationController {
     // Check for products with low stock or nearing expiry
     private void checkForNotifications() {
         String sql = "SELECT ProductName, ExpDate, Quantity, LowQuantityAlert FROM Product " +
-                "WHERE ExpDate <= CURDATE() + INTERVAL 7 DAY OR Quantity < LowQuantityAlert";
+                "WHERE (ExpDate <= CURDATE() + INTERVAL 7 DAY OR Quantity < LowQuantityAlert) AND OwnerId = ?";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Use a Set to track products that have already been notified
-            Set<String> notifiedProducts = new HashSet<>();
+            pstmt.setInt(1, ownerId); // Set the owner ID parameter
 
-            while (rs.next()) {
-                String productName = rs.getString("ProductName");
-                LocalDate expDate = rs.getDate("ExpDate").toLocalDate();
-                int quantity = rs.getInt("Quantity");
-                int lowQuantityAlert = rs.getInt("LowQuantityAlert");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Use a Set to track products that have already been notified
+                Set<String> notifiedProducts = new HashSet<>();
 
-                // Notify for expiry (if within 7 days)
-                if (expDate.isBefore(LocalDate.now().plusDays(7)) && !notifiedProducts.contains(productName + "Expiry")) {
-                    notifyUser("Expiry Alert", productName + " is expiring on " + expDate);
-                    notifiedProducts.add(productName + "Expiry");  // Mark as notified for expiry
-                }
+                while (rs.next()) {
+                    String productName = rs.getString("ProductName");
+                    LocalDate expDate = rs.getDate("ExpDate").toLocalDate();
+                    int quantity = rs.getInt("Quantity");
+                    int lowQuantityAlert = rs.getInt("LowQuantityAlert");
 
-                // Notify for low stock
-                if (quantity < lowQuantityAlert && !notifiedProducts.contains(productName + "LowStock")) {
-                    notifyUser("Low Stock Alert", productName + " is below the minimum specified value. Only " + quantity + " left.");
-                    notifiedProducts.add(productName + "LowStock");  // Mark as notified for low stock
+                    // Notify for expiry (if within 7 days)
+                    if (expDate.isBefore(LocalDate.now().plusDays(7)) && !notifiedProducts.contains(productName + "Expiry")) {
+                        notifyUser("Expiry Alert", productName + " is expiring on " + expDate);
+                        notifiedProducts.add(productName + "Expiry");  // Mark as notified for expiry
+                    }
+
+                    // Notify for low stock
+                    if (quantity < lowQuantityAlert && !notifiedProducts.contains(productName + "LowStock")) {
+                        notifyUser("Low Stock Alert", productName + " is below the minimum specified value. Only " + quantity + " left.");
+                        notifiedProducts.add(productName + "LowStock");  // Mark as notified for low stock
+                    }
                 }
             }
 

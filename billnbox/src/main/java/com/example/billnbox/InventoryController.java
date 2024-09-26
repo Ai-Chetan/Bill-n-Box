@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class    InventoryController {
+public class InventoryController {
 
     private ArrayList<Product> editedProducts = new ArrayList<>();
 
@@ -202,7 +202,6 @@ public class    InventoryController {
         });
     }
 
-
     private void makeTableNonEditable() {
         tableView.setEditable(false); // Disable table editing
     }
@@ -213,24 +212,31 @@ public class    InventoryController {
 
         ObservableList<Product> productList = FXCollections.observableArrayList();
 
-        String sql = "SELECT SrNo, ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert FROM Product";
+        // Use the OwnerID from the session manager
+        String sql = "SELECT SrNo, ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert FROM Product WHERE OwnerID=?";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                Product product = new Product(
-                        rs.getInt("SrNo"),
-                        rs.getString("ProductName"),
-                        rs.getString("Category"),
-                        rs.getInt("Quantity"),
-                        rs.getDouble("Price"),
-                        rs.getString("MfgDate"),
-                        rs.getString("ExpDate"),
-                        rs.getInt("LowQuantityAlert")
-                );
-                productList.add(product);
+            // Set the OwnerID parameter
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                int dynamicSrNo = 1; // Start counter for dynamic SrNo
+                while (rs.next()) {
+                    Product product = new Product(
+                            dynamicSrNo, // Use dynamic SrNo
+                            rs.getString("ProductName"),
+                            rs.getString("Category"),
+                            rs.getInt("Quantity"),
+                            rs.getDouble("Price"),
+                            rs.getString("MfgDate"),
+                            rs.getString("ExpDate"),
+                            rs.getInt("LowQuantityAlert")
+                    );
+                    productList.add(product);
+                    dynamicSrNo++; // Increment for the next product
+                }
             }
 
             tableView.setItems(productList);
@@ -254,12 +260,14 @@ public class    InventoryController {
 
     private void saveProductData() {
         ObservableList<Product> products = tableView.getItems();
-        String updateSql = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ?, LowQuantityAlert = ? WHERE SrNo = ?";
-        String deleteSql = "DELETE FROM Product WHERE SrNo = ?";  // SQL to delete products
+        String updateSql = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ?, LowQuantityAlert = ? WHERE SrNo = ? AND OwnerID = ?";
+        String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";  // SQL to delete products
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement updateStmt = conn.prepareStatement(updateSql);
              PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+
+            int ownerId = SessionManager.getOwnerID(); // Get the owner ID from the session manager
 
             // Update existing products
             for (Product product : products) {
@@ -271,6 +279,7 @@ public class    InventoryController {
                 updateStmt.setString(6, product.getExpDate());
                 updateStmt.setInt(7, product.getLowQuantityAlert());
                 updateStmt.setInt(8, product.getSrNo());
+                updateStmt.setInt(9, ownerId); // Set the owner ID for the update statement
                 updateStmt.addBatch();
             }
             updateStmt.executeBatch();
@@ -278,6 +287,7 @@ public class    InventoryController {
             // Delete marked products
             for (Product deletedProduct : deletedProducts) {
                 deleteStmt.setInt(1, deletedProduct.getSrNo());
+                deleteStmt.setInt(2, ownerId); // Set the owner ID for the delete statement
                 deleteStmt.addBatch();
             }
             deleteStmt.executeBatch();
@@ -290,6 +300,7 @@ public class    InventoryController {
             showError("Error saving product data: " + e.getMessage());
         }
     }
+
 
     @FXML
     private void toggleBtn(ActionEvent actionEvent) {
@@ -391,8 +402,6 @@ public class    InventoryController {
         }
     }
 
-
-
     @FXML
     private void saveInventoryChanges(ActionEvent event) {
         if (isEditing) {
@@ -435,17 +444,14 @@ public class    InventoryController {
     private String getCurrentUser() {
         return SessionManager.getInstance().getUsername();  // Fetch current user from SessionManager
     }
-
     // Get the current OwnerID from the SessionManager
     private int getOwnerID() {
         return SessionManager.getInstance().getOwnerID();  // Fetch OwnerID from SessionManager
     }
-
     private void logInventoryChange(String columnName, String oldValue, String newValue, String productName) {
         String activity = "Edited " + columnName + " from '" + oldValue + "' to '" + newValue + "' for Product: " + productName;
         insertLog(activity);
     }
-
 
     // Insert a log entry into the logs table
     private void insertLog(String activity) {
@@ -463,6 +469,4 @@ public class    InventoryController {
             e.printStackTrace();
         }
     }
-
-
 }

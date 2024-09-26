@@ -7,10 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.io.IOException;
 
 public class RegistrationController {
@@ -42,7 +40,7 @@ public class RegistrationController {
         public static void storeUser(String username, String password, String name, String email, String mobno, String shopname, String shopaddress) {
             String insertSQL = "INSERT INTO Owner (Username, Password, Name, EmailID, PhoneNo, ShopName, ShopAddress) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-                 PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+                 PreparedStatement pstmt = conn.prepareStatement(insertSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pstmt.setString(1, username);
                 pstmt.setString(2, password);
                 pstmt.setString(3, name);
@@ -53,6 +51,16 @@ public class RegistrationController {
                 int rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
                     System.out.println("User registered successfully.");
+                    try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            int newOwnerID = generatedKeys.getInt(1);
+
+                            // Set the new OwnerID in SessionManager
+                            SessionManager.getInstance().setOwnerID(newOwnerID);
+
+                            System.out.println("New OwnerID set in SessionManager: " + newOwnerID);
+                        }
+                    }
                 } else {
                     System.out.println("Registration failed.");
                 }

@@ -5,7 +5,7 @@ public class SessionManager {
     private static String username;
     private String shopname;
     private String shopaddress;
-    private int ownerID;
+    private static int ownerID;
 
     // Private constructor to restrict instantiation
     private SessionManager() { }
@@ -48,7 +48,7 @@ public class SessionManager {
         this.ownerID = ownerID;
     }
 
-    public int getOwnerID() {
+    public static int getOwnerID() {
         return ownerID;
     }
 

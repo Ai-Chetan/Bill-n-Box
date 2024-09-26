@@ -146,6 +146,7 @@ public class LoginController {
     }
 
 
+
     // Method to verify username and password from the respective table in the database
     private boolean verifyLogin(String username, String password, String userType) {
         String sql;
@@ -165,7 +166,15 @@ public class LoginController {
 
             // Check if user exists in the respective table
             if (resultSet.next()) {
-                // Username and password are correct
+                if (userType.equals("Owner")) {
+                    // Store the OwnerID in the session manager for owners
+                    int ownerID = resultSet.getInt("OwnerID");
+                    SessionManager.getInstance().setOwnerID(ownerID);
+                } else if (userType.equals("Employee")) {
+                    // Retrieve and store the associated OwnerID for employees
+                    int ownerID = resultSet.getInt("OwnerID");
+                    SessionManager.getInstance().setOwnerID(ownerID);
+                }
                 return true;
             }
         } catch (SQLException e) {
@@ -175,6 +184,7 @@ public class LoginController {
         // If no match found, return false
         return false;
     }
+
 
     @FXML
     public void ForgotPasswordText(javafx.scene.input.MouseEvent mouseEvent) {

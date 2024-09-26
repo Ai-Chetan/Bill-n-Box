@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class AddNewProduct {
 
@@ -113,7 +114,7 @@ public class AddNewProduct {
     }
 
     public static void addProductsToInventory(ObservableList<Product> products) throws SQLException {
-        String insertSql = "INSERT INTO Product (ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO Product (ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert, OwnerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
@@ -126,6 +127,7 @@ public class AddNewProduct {
                 insertStmt.setDate(5, Date.valueOf(product.getMfgDate()));
                 insertStmt.setDate(6, Date.valueOf(product.getExpDate()));
                 insertStmt.setInt(7, product.getLowQuantityAlert());
+                insertStmt.setInt(8, SessionManager.getOwnerID());
                 insertStmt.addBatch();
             }
             insertStmt.executeBatch();
@@ -194,6 +196,9 @@ public class AddNewProduct {
                 Product newProduct = new Product(name, cat, qty, prc, mfg, exp, alert);
                 data.add(newProduct);
                 statusLabel.setText("Product added successfully!");
+
+                // Log the activity of adding a new product
+                logActivity("Added new product: " + name);
             }
 
             // Clear text fields
@@ -332,4 +337,31 @@ public class AddNewProduct {
             statusLabel.setText("Error while adding products to inventory.");
         }
     }
+
+    private void logActivity(String activity) {
+        String insertLogSql = "INSERT INTO logs (date, time, User, activity, OwnerID) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(insertLogSql)) {
+
+            // Set current date and time
+            LocalDate today = LocalDate.now();
+            Time time = Time.valueOf(LocalTime.now());
+            String username = SessionManager.getInstance().getUsername(); // Assuming you have a way to get the current username
+            int ownerID = SessionManager.getOwnerID();
+
+            pstmt.setDate(1, Date.valueOf(today));
+            pstmt.setTime(2, time);
+            pstmt.setString(3, username);
+            pstmt.setString(4, activity);
+            pstmt.setInt(5, ownerID);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

@@ -239,12 +239,13 @@ public class BillController {
 
     private List<Product> getSuggestions(String input) {
         List<Product> suggestions = new ArrayList<>();
-        String query = "SELECT ProductName, Price FROM Product WHERE ProductName LIKE ?";
+        String query = "SELECT ProductName, Price FROM Product WHERE ProductName LIKE ? AND OwnerID = ?";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + input + "%");
+            stmt.setInt(2, SessionManager.getOwnerID()); // Set the OwnerID from the session manager
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -551,13 +552,15 @@ public class BillController {
     }
 
     private void updateProductStockInDatabase(Product product) {
-        String query = "UPDATE Product SET Quantity = Quantity - ? WHERE ProductName = ?";
+        String query = "UPDATE Product SET Quantity = Quantity - ? WHERE ProductName = ? AND OwnerID = ?";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, product.getQuantity()); // Deduct the product's quantity
             stmt.setString(2, product.getName()); // Identify the product by its name
+            stmt.setInt(3, SessionManager.getOwnerID()); // Include the OwnerID
+
             int rowsUpdated = stmt.executeUpdate();
 
             if (rowsUpdated > 0) {
@@ -573,19 +576,21 @@ public class BillController {
 
     private void insertBillAndOrders() {
         String insertBillQuery = "INSERT INTO Bill (EmpID, OwnerID, CustomerName, Amount) VALUES (?, ?, ?, ?)";
-        String insertOrderQuery = "INSERT INTO Orders (BillID, SrNo, ProductName, Quantity, TotalPrice) VALUES (?, ?, ?, ?, ?)";
+        String insertOrderQuery = "INSERT INTO Orders (BillID, SrNo, ProductName, Quantity, TotalPrice, OwnerID) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement insertBillStmt = conn.prepareStatement(insertBillQuery, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement insertOrderStmt = conn.prepareStatement(insertOrderQuery)) {
 
+            int ownerID = SessionManager.getOwnerID(); // Get the current owner ID
+
             // Insert into Bill table
             if (isOwner) {
                 insertBillStmt.setNull(1, java.sql.Types.INTEGER); // No EmpID for owner
-                insertBillStmt.setInt(2, getUserID()); // Use OwnerID
+                insertBillStmt.setInt(2, ownerID); // Set OwnerID for owner
             } else {
-                insertBillStmt.setInt(1, getUserID()); // Use EmpID
-                insertBillStmt.setNull(2, java.sql.Types.INTEGER); // No OwnerID for employee
+                insertBillStmt.setInt(1, getUserID()); // Set EmpID for employee
+                insertBillStmt.setInt(2, ownerID); // OwnerID associated with the employee's shop
             }
 
             insertBillStmt.setString(3, customerName.getText()); // Customer name
@@ -598,20 +603,21 @@ public class BillController {
                 billID = generatedKeys.getInt(1);
             }
 
-            // Insert into Orders table
+            // Insert into Orders table for each product
             for (Product product : productList) {
                 insertOrderStmt.setInt(1, billID);
                 insertOrderStmt.setInt(2, getSrNo(product.getName())); // Fetch product ID dynamically
                 insertOrderStmt.setString(3, product.getName());
                 insertOrderStmt.setInt(4, product.getQuantity());
                 insertOrderStmt.setDouble(5, product.getPrice() * product.getQuantity());
+                insertOrderStmt.setInt(6, ownerID); // Set OwnerID for each order
                 insertOrderStmt.addBatch();
             }
             insertOrderStmt.executeBatch();
 
             System.out.println("Bill and Orders inserted successfully");
 
-            // Execute bill insertion
+            // Execute bill insertion and check for success
             int affectedRows = insertBillStmt.executeUpdate();
 
             if (affectedRows > 0) {
