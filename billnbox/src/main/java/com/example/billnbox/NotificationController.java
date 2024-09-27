@@ -60,7 +60,7 @@ public class NotificationController {
                     }
 
                     // Notify for low stock
-                    if (quantity < lowQuantityAlert && !notifiedProducts.contains(productName + "LowStock")) {
+                    if (quantity <= lowQuantityAlert && !notifiedProducts.contains(productName + "LowStock")) {
                         notifyUser("Low Stock Alert", productName + " is below the minimum specified value. Only " + quantity + " left.");
                         notifiedProducts.add(productName + "LowStock");  // Mark as notified for low stock
                     }
