@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
@@ -27,6 +28,8 @@ public class Controller {
 
     @FXML
     private ComboBox<String> comboBox;
+    @FXML
+    private Label productsSoldLabel, earningsLabel, nearingexpirydateLabel;
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -80,6 +83,85 @@ public class Controller {
             comboBox.getSelectionModel().select("Today");
             loadTop5SoldProducts();  // Load today's sales initially
             }
+
+        if (productsSoldLabel != null) {
+            int totalProductsSold = getTotalProductsSoldToday();
+            productsSoldLabel.setText(String.valueOf(totalProductsSold));
+
+            loadTotalEarningsToday();
+            loadNearingExpiryProducts();
+        }
+    }
+
+    private void loadNearingExpiryProducts() {
+        String sql = "SELECT COUNT(*) AS nearingExpiryCount " +
+                "FROM Products " +
+                "WHERE ExpDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) " +
+                "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int nearingExpiryCount = rs.getInt("ProductName");
+                // Update the label with the count of products nearing expiry
+                nearingexpirydateLabel.setText(String.valueOf(nearingExpiryCount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadTotalEarningsToday() {
+        double totalEarnings = getTotalEarningsToday();
+        earningsLabel.setText(String.format("%.2f", totalEarnings)); // Format to two decimal places
+    }
+
+    private double getTotalEarningsToday() {
+        double totalEarnings = 0.0;
+
+        // SQL query to get total earnings for today
+        String sql = "SELECT SUM(Amount) AS total_amount " +
+                "FROM Bill " +
+                "WHERE DATE(Time) = CURDATE()"; // Use CURDATE() for current day
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                totalEarnings = rs.getDouble("total_amount");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalEarnings; // Return the total earnings
+    }
+
+    private int getTotalProductsSoldToday() {
+        int totalProductsSold = 0;
+
+        String sql = "SELECT SUM(o.Quantity) AS total_quantity " +
+                "FROM Orders o " +
+                "JOIN Bill b ON o.BillID = b.BillID " +
+                "WHERE DATE(b.Time) = CURDATE()"; // Get products sold today
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                totalProductsSold = rs.getInt("total_quantity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalProductsSold;
     }
 
     private void loadTop5SoldProducts() {

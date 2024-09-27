@@ -181,41 +181,41 @@
                   <Font name="Arial Black" size="24.0" />
                </font>
             </Text>
-            <Text layoutX="96.0" layoutY="85.0" smooth="false" stroke="#ff5a5a" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Sold : " wrappingWidth="189.169921875">
+            <Text  layoutX="46.0" layoutY="85.0" smooth="false" stroke="#ff5a5a" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Sold : " wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font></Text>
-            <Label layoutX="246.0" layoutY="62.0" text="100">
+            <Label fx:id="productsSoldLabel" layoutX="246.0" layoutY="62.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Text layoutX="46.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Purchased : ">
+            <Text  layoutX="46.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings :">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label layoutX="246.0" layoutY="227.0" text="100">
+            <Label fx:id="earningsLabel" layoutX="246.0" layoutY="116.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Text layoutX="126.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spendings :">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Label layoutX="246.0" layoutY="116.0" text="100">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Text layoutX="143.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings : ">
+            <Text layoutX="44.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Below Low Quantity :">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
             <Label layoutX="246.0" layoutY="172.0" text="100">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Text  layoutX="45.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nearing Expiry Date :">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Label fx:id="nearingexpirydateLabel" layoutX="246.0" layoutY="227.0" text="100">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
