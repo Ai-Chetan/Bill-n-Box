@@ -95,7 +95,7 @@ public class Controller {
 
     private void loadNearingExpiryProducts() {
         String sql = "SELECT COUNT(*) AS nearingExpiryCount " +
-                "FROM Products " +
+                "FROM Product " +
                 "WHERE ExpDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) " +
                 "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
 
@@ -106,7 +106,7 @@ public class Controller {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                int nearingExpiryCount = rs.getInt("ProductName");
+                int nearingExpiryCount = rs.getInt("nearingExpiryCount");
                 // Update the label with the count of products nearing expiry
                 nearingexpirydateLabel.setText(String.valueOf(nearingExpiryCount));
             }

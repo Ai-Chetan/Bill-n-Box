@@ -348,7 +348,7 @@ public class BillController {
             String PDF_NAME = "Bill - " + billID + ".pdf";
 
             if (PDF_FILEPATH == null) {
-                PDF_FILEPATH = "C:/Users/Dell/Desktop/SEM 3";
+                PDF_FILEPATH = "C:/Users/CHETAN CHAUDHARI/Desktop/Bills/";
             }
 
             // Create the PDF writer instance
