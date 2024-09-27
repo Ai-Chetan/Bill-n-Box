@@ -36,7 +36,7 @@ public class NotificationController {
     // Check for products with low stock or nearing expiry
     private void checkForNotifications() {
         String sql = "SELECT ProductName, ExpDate, Quantity, LowQuantityAlert FROM Product " +
-                "WHERE (ExpDate <= CURDATE() + INTERVAL 7 DAY OR Quantity < LowQuantityAlert) AND OwnerId = ?";
+                "WHERE (ExpDate <= CURDATE() + INTERVAL 7 DAY OR Quantity <= LowQuantityAlert) AND OwnerId = ?";
 
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

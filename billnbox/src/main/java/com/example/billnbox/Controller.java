@@ -29,7 +29,7 @@ public class Controller {
     @FXML
     private ComboBox<String> comboBox;
     @FXML
-    private Label productsSoldLabel, earningsLabel, nearingexpirydateLabel;
+    private Label productsSoldLabel, earningsLabel, nearingexpirydateLabel, belowlowquantityLabel;
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -90,6 +90,7 @@ public class Controller {
 
             loadTotalEarningsToday();
             loadNearingExpiryProducts();
+            loadBelowMinimumQuantityProducts();
         }
     }
 
@@ -114,6 +115,29 @@ public class Controller {
             e.printStackTrace();
         }
     }
+
+    private void loadBelowMinimumQuantityProducts() {
+        String sql = "SELECT COUNT(*) AS belowMinimumQuantityCount " +
+                "FROM Product " +
+                "WHERE Quantity <= LowQuantityAlert " +
+                "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int belowMinimumQuantityCount = rs.getInt("belowMinimumQuantityCount");
+                // Update the label with the count of products nearing expiry
+                belowlowquantityLabel.setText(String.valueOf(belowMinimumQuantityCount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void loadTotalEarningsToday() {
         double totalEarnings = getTotalEarningsToday();
