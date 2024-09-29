@@ -2,8 +2,15 @@ package com.example.billnbox;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -16,6 +23,8 @@ public class NotificationController {
     public NotificationController(int ownerId) {
         this.ownerId = ownerId; // Initialize with the owner ID
     }
+
+    public void initialize() {}
 
     // Start the notification service
     public void StartNotification() {
@@ -81,5 +90,30 @@ public class NotificationController {
             alert.setContentText(message);
             alert.showAndWait();
         });
+    }
+
+    @FXML
+    private void LogInButton(ActionEvent event) {
+        loadScene(event, "1-login-page.fxml");
+    }
+
+    private void loadScene(ActionEvent event, String fxmlFileName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+
+            // If loading the dashboard, also initialize BarChart data and notifications
+            if (fxmlFileName.equals("8-dashboard.fxml")) {
+                Controller controller = loader.getController();
+                controller.initializeDashboard();  // Initialize the dashboard and notifications
+            }
+
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.billnbox;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,11 +12,15 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.*;
@@ -42,11 +47,17 @@ public class Controller {
     private TextField yearInput;
     @FXML
     private Text topOne, topTwo, topThree, topFour, topFive;
+    @FXML
+    private ImageView bellIcon;
+
+    @FXML
+    private AnchorPane notificationPane;
 
     // Reference to NotificationController
     private NotificationController notificationController;
 
     private boolean isOwner = LoginController.getIsOwner(); // To determine if the user is an owner
+    private int ownerId = SessionManager.getOwnerID();
 
     @FXML
     public void initialize() {
@@ -92,6 +103,52 @@ public class Controller {
             loadNearingExpiryProducts();
             loadBelowMinimumQuantityProducts();
         }
+
+        if (bellIcon != null && notificationPane != null) {
+            notificationPane.setVisible(false);
+            bellIcon.setOnMouseEntered(event -> notificationPane.setVisible(true));
+            bellIcon.setOnMouseExited(event -> notificationPane.setVisible(false));
+        }
+    }
+
+    @FXML
+    private void notificationClick(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("17-notification-tab.fxml"));
+
+            // Set a controller factory that can pass parameters to the constructor
+            loader.setControllerFactory(controllerClass -> {
+                if (controllerClass == NotificationController.class) {
+                    return new NotificationController(ownerId); // Pass the ownerId here
+                } else {
+                    try {
+                        return controllerClass.getDeclaredConstructor().newInstance();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            Parent root = loader.load();
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void notification(javafx.scene.input.MouseEvent mouseEvent) {
+        notificationPane.setVisible(true); // Directly access notificationPane
+    }
+
+    @FXML
+    public void notificationDragExited(javafx.scene.input.MouseEvent mouseEvent) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1000));
+        pause.setOnFinished(event -> notificationPane.setVisible(false));
+        pause.play();
     }
 
     private void loadNearingExpiryProducts() {
@@ -214,11 +271,13 @@ public class Controller {
 
             // List to store product names and their total sold quantities
             ObservableList<String> topProducts = FXCollections.observableArrayList();
+            int counter = 0;
             while (rs.next() && topProducts.size() < 5) {
+                counter++;
                 String productName = rs.getString("productName");
                 int totalSold = rs.getInt("total_sold");
 
-                topProducts.add(productName + " (Sold: " + totalSold + ")");
+                topProducts.add(counter + ".  " + productName + " (Sold: " + totalSold + ")");
             }
 
             // Set the labels with product names or blank if there are fewer than 5 products
@@ -428,7 +487,4 @@ public class Controller {
     public void LogInButton(ActionEvent event) {
         loadScene(event, "8-dashboard.fxml");
     }
-
-
-
 }

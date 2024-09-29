@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Line?>
@@ -171,110 +172,97 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Pane prefHeight="310.0" prefWidth="399.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
+      <AnchorPane fx:id="notificationPane" accessibleRole="BUTTON" onMouseClicked="#notificationClick" opacity="0.9" prefHeight="48.0" prefWidth="240.0" style="-fx-background-color: E4C8AAFF; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20;">
          <StackPane.margin>
-            <Insets bottom="350.0" left="365.0" right="555.0" top="50.0" />
+            <Insets bottom="630.0" left="1050.0" right="30.0" top="20.0" />
          </StackPane.margin>
          <children>
-            <Text layoutX="97.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Today's Summary">
+            <Text layoutX="14.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Notifications" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="8.0">
+               <font>
+                  <Font name="Segoe UI" size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+      <Pane opacity="0.95" prefHeight="253.0" prefWidth="380.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
+         <StackPane.margin>
+            <Insets bottom="340.0" left="365.0" right="555.0" top="80.0" />
+         </StackPane.margin>
+         <children>
+            <Text layoutX="75.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Today's Summary">
                <font>
                   <Font name="Arial Black" size="24.0" />
                </font>
             </Text>
-            <Text layoutX="46.0" layoutY="85.0" smooth="false" stroke="#ff5a5a" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Sold : " wrappingWidth="189.169921875">
+            <Text layoutX="45.0" layoutY="98.0" smooth="false" stroke="#ff5a5a" strokeType="OUTSIDE" strokeWidth="0.0" text="Products Sold : " wrappingWidth="189.169921875">
                <font>
                   <Font size="20.0" />
                </font></Text>
-            <Label fx:id="productsSoldLabel" layoutX="246.0" layoutY="62.0" text="100">
+            <Label fx:id="productsSoldLabel" layoutX="244.0" layoutY="75.0" prefHeight="30.0" prefWidth="95.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Text layoutX="46.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings :">
+            <Text layoutX="44.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings :">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="earningsLabel" layoutX="246.0" layoutY="116.0" text="100">
+            <Label fx:id="earningsLabel" layoutX="244.0" layoutY="175.0" prefHeight="30.0" prefWidth="95.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Text layoutX="44.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Below Low Quantity :">
+            <Text layoutX="44.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Below Low Quantity :">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="belowlowquantityLabel" layoutX="249.0" layoutY="172.0" text="2">
+            <Label fx:id="belowlowquantityLabel" layoutX="244.0" layoutY="125.0" prefHeight="30.0" prefWidth="95.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Text layoutX="45.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nearing Expiry Date :">
+            <Text layoutX="44.0" layoutY="248.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nearing Expiry Date :">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="nearingexpirydateLabel" layoutX="246.0" layoutY="227.0" text="100">
+            <Label fx:id="nearingexpirydateLabel" layoutX="244.0" layoutY="225.0" prefHeight="30.0" prefWidth="95.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="topsoldmonthly" prefHeight="310.0" prefWidth="397.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
+      <Pane fx:id="topsoldmonthly" opacity="0.95" prefHeight="310.0" prefWidth="397.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
             <Text layoutX="100.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top Sold">
                <font>
                   <Font name="Arial Black" size="24.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1." wrappingWidth="23.169921875">
+            <Text fx:id="topOne" layoutX="35.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2.">
+            <Text fx:id="topFive" layoutX="35.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3.">
+            <Text fx:id="topFour" layoutX="35.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4.">
+            <Text fx:id="topThree" layoutX="35.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="55.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5.">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="topOne" layoutX="78.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="topFive" layoutX="78.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="topFour" layoutX="78.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="topThree" layoutX="78.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text fx:id="topTwo" layoutX="78.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" wrappingWidth="317.169921875">
+            <Text fx:id="topTwo" layoutX="35.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="317.169921875">
                <font>
                   <Font size="20.0" />
                </font>
@@ -285,12 +273,12 @@
                </cursor></ComboBox>
          </children>
          <StackPane.margin>
-            <Insets bottom="350.0" left="805.0" right="105.0" top="50.0" />
+            <Insets bottom="340.0" left="805.0" right="105.0" top="80.0" />
          </StackPane.margin>
       </Pane>
-      <Pane prefHeight="310.0" prefWidth="399.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
+      <Pane opacity="0.95" prefHeight="310.0" prefWidth="399.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <StackPane.margin>
-            <Insets bottom="10.0" left="365.0" right="105.0" top="375.0" />
+            <Insets bottom="10.0" left="365.0" right="105.0" top="385.0" />
          </StackPane.margin>
          <children>
             <Text layoutX="368.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings">
@@ -305,7 +293,7 @@
             </TextField>
          </children>
       </Pane>
-      <BarChart fx:id="barChart" prefHeight="280.0" prefWidth="837.0">
+      <BarChart fx:id="barChart" prefHeight="224.0" prefWidth="790.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -313,11 +301,19 @@
           <NumberAxis side="LEFT" />
         </yAxis>
          <StackPane.margin>
-            <Insets bottom="15.0" left="375.0" right="135.0" top="415.0" />
+            <Insets bottom="15.0" left="375.0" right="135.0" top="420.0" />
          </StackPane.margin>
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor>
       </BarChart>
+      <ImageView fx:id="bellIcon" accessibleRole="BUTTON" fitHeight="44.0" fitWidth="42.0" onMouseClicked="#notificationClick" onMouseDragEntered="#notification" onMouseDragExited="#notificationDragExited" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@notification (1).png" />
+         </image>
+         <StackPane.margin>
+            <Insets bottom="610.0" left="1175.0" />
+         </StackPane.margin>
+      </ImageView>
    </children>
 </StackPane>
