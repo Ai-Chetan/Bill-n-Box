@@ -7,13 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
-
 import javax.mail.MessagingException;
 import javax.mail.Transport;
 import java.io.IOException;
@@ -27,11 +25,7 @@ public class ForgotPasswordController {
     @FXML
     private Button submitButton;
 
-    @FXML
-    private RadioButton radiobtn1, radiobtn2;
-
     private static String UserName;
-    private static boolean isOwner = false;
 
     public class PasswordGenerator {
         private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -48,55 +42,71 @@ public class ForgotPasswordController {
         }
     }
 
-    public static void updatePassword(String userName, boolean isOwner) throws SQLException {
-        String table = isOwner ? "Owner" : "Employee"; // Select the table based on isOwner flag
+    public static void updatePassword(String userName) throws SQLException {
+        String table = null;
         String emailID = null;
 
-        // Query to fetch the EmailID from the respective table
-        String selectEmailQuery = "SELECT EmailID FROM " + table + " WHERE UserName = ?";
-
-        // Update the password query
-        String updateQuery = "UPDATE " + table + " SET password = ? WHERE UserName = ?";
+        // Queries to fetch EmailID and update password in both tables
+        String selectEmailQueryOwner = "SELECT EmailID FROM Owner WHERE UserName = ?";
+        String selectEmailQueryEmployee = "SELECT EmailID FROM Employee WHERE UserName = ?";
+        String updatePasswordQueryOwner = "UPDATE Owner SET password = ? WHERE UserName = ?";
+        String updatePasswordQueryEmployee = "UPDATE Employee SET password = ? WHERE UserName = ?";
 
         try (Connection connection = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
-            // Step 1: Fetch the EmailID
-            try (PreparedStatement selectStatement = connection.prepareStatement(selectEmailQuery)) {
-                selectStatement.setString(1, userName);
-                ResultSet resultSet = selectStatement.executeQuery();
+            // Step 1: Try fetching EmailID from Owner table
+            try (PreparedStatement selectStatementOwner = connection.prepareStatement(selectEmailQueryOwner)) {
+                selectStatementOwner.setString(1, userName);
+                ResultSet resultSet = selectStatementOwner.executeQuery();
 
                 if (resultSet.next()) {
-                    emailID = resultSet.getString("EmailID");  // Get the EmailID from the result
-                } else {
-                    System.out.println("User not found!");
-                    return;
+                    emailID = resultSet.getString("EmailID");
+                    table = "Owner";
                 }
             }
 
-            // Step 2: Generate new password and update it in the database
+            // Step 2: If not found in Owner, try Employee table
+            if (emailID == null) {
+                try (PreparedStatement selectStatementEmployee = connection.prepareStatement(selectEmailQueryEmployee)) {
+                    selectStatementEmployee.setString(1, userName);
+                    ResultSet resultSet = selectStatementEmployee.executeQuery();
+
+                    if (resultSet.next()) {
+                        emailID = resultSet.getString("EmailID");
+                        table = "Employee";
+                    }
+                }
+            }
+
+            // Step 3: If user not found in either table
+            if (emailID == null) {
+                System.out.println("User not found in both Owner and Employee tables!");
+                return;
+            }
+
+            // Step 4: Generate new password and update it in the corresponding table
             String newPassword = PasswordGenerator.generatePassword();
+            String updateQuery = table.equals("Owner") ? updatePasswordQueryOwner : updatePasswordQueryEmployee;
+
             try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                 updateStatement.setString(1, newPassword);
                 updateStatement.setString(2, userName);
                 updateStatement.executeUpdate();
             }
 
-            // Step 3: Send the generated password to the fetched EmailID
-            if (emailID != null) {
-                EmailSender.sendEmail(emailID, newPassword);  // Email the new password to the user
-                System.out.println("Password updated and sent to email: " + emailID);
-            }
+            // Step 5: Send the generated password to the fetched EmailID
+            EmailSender.sendEmail(emailID, newPassword);
+            System.out.println("Password updated and sent to email: " + emailID);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
     public class EmailSender {
 
         public static void sendEmail(String recipientEmail, String newPassword) {
-            String senderEmail = "billnboxibms@gmail.com"; // your email address
-            String senderPassword = "irpf iawh jlau uujx"; // your email password
+            String senderEmail = ""; // your email address
+            String senderPassword = ""; // your email password
 
             // SMTP server properties
             Properties properties = new Properties();
@@ -142,7 +152,6 @@ public class ForgotPasswordController {
         }
     }
 
-
     @FXML
     private void LoginPage(ActionEvent event) {
         navigateToPage(event, "1-login-page.fxml");
@@ -150,16 +159,13 @@ public class ForgotPasswordController {
 
     @FXML
     private void forgotPasswordSubmit(ActionEvent event) throws SQLException {
-        if(!radiobtn1.isSelected()&&!radiobtn2.isSelected()) {
-            submitButton.setDisable(true);
-        } else if (radiobtn1.isSelected()) {
-            isOwner = true;
-        } else if (radiobtn2.isSelected()) {
-            isOwner = false;
-        }
         UserName = Username.getText();
+
+        // Navigate to the next page before calling updatePassword
         navigateToPage(event, "7-forgot-password-2.fxml");
-        updatePassword(UserName, isOwner);
+
+        // Call updatePassword after navigation
+        updatePassword(UserName);
     }
 
     // Simple navigation without data passing

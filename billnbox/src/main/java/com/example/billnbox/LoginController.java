@@ -23,18 +23,6 @@ import java.sql.SQLException;
 public class LoginController {
 
     @FXML
-    private RadioButton loginradiobtn1; // Owner radio button
-
-    @FXML
-    private RadioButton loginradiobtn2; // Employee radio button
-
-    @FXML
-    private AnchorPane registerpane;
-
-    @FXML
-    private ToggleGroup LoginAsOwnerOrEmployee;
-
-    @FXML
     private TextField usernameField;
 
     @FXML
@@ -54,33 +42,11 @@ public class LoginController {
     }
 
     public void initialize() {
-        // Initially hide the admin pane
-        registerpane.setVisible(false);
         loginErrorLabel.setVisible(false);
-
-        // Add a listener to detect changes in the radio buttons
-        LoginAsOwnerOrEmployee.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (LoginAsOwnerOrEmployee.getSelectedToggle() != null) {
-                RadioButton selectedRadioButton = (RadioButton) LoginAsOwnerOrEmployee.getSelectedToggle();
-
-                // Change content based on selected radio button
-                if (selectedRadioButton == loginradiobtn1) {
-                    registerpane.setVisible(true);
-                } else if (selectedRadioButton == loginradiobtn2) {
-                    registerpane.setVisible(false);
-                }
-            }
-        });
     }
 
     @FXML
     private void LogInButton(ActionEvent event) {
-
-        if (loginradiobtn1.isSelected()) {
-            isOwner = true;
-        } else {
-            isOwner = false;
-        }
 
         // Get the username and password from the fields
         username = usernameField.getText();
@@ -93,24 +59,10 @@ public class LoginController {
             return;
         }
 
-        // Determine if the user is logging in as Owner or Employee
-        RadioButton selectedRadioButton = (RadioButton) LoginAsOwnerOrEmployee.getSelectedToggle();
         boolean isValidLogin = false;
 
-        if (selectedRadioButton != null) {
-            if (selectedRadioButton == loginradiobtn1) {
-                // Owner login
-                isValidLogin = verifyLogin(username, password, "Owner");
-            } else if (selectedRadioButton == loginradiobtn2) {
-                // Employee login
-                isValidLogin = verifyLogin(username, password, "Employee");
-            }
-        } else {
-            // No radio button selected
-            loginErrorLabel.setText("Please select whether you are logging in as Owner or Employee.");
-            loginErrorLabel.setVisible(true);
-            return;
-        }
+        // User login
+        isValidLogin = verifyLogin(username, password);
 
         if (isValidLogin) {
             // Set username in SessionManager
@@ -145,17 +97,15 @@ public class LoginController {
         }
     }
 
-
-
     // Method to verify username and password from the respective table in the database
-    private boolean verifyLogin(String username, String password, String userType) {
+    private boolean verifyLogin(String username, String password) {
         String sql;
-        if (userType.equals("Owner")) {
-            sql = "SELECT * FROM Owner WHERE Username = ? AND Password = ?";
-        } else {
-            sql = "SELECT * FROM Employee WHERE Username = ? AND Password = ?";
-        }
 
+        // Reset isOwner to false initially
+        isOwner = false; // Assume not an owner until verified
+
+        // First check Employee table
+        sql = "SELECT * FROM Employee WHERE Username = ? AND Password = ?";
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -164,18 +114,34 @@ public class LoginController {
 
             ResultSet resultSet = pstmt.executeQuery();
 
-            // Check if user exists in the respective table
+            // Check if user exists in Employee table
             if (resultSet.next()) {
-                if (userType.equals("Owner")) {
-                    // Store the OwnerID in the session manager for owners
-                    int ownerID = resultSet.getInt("OwnerID");
-                    SessionManager.getInstance().setOwnerID(ownerID);
-                } else if (userType.equals("Employee")) {
-                    // Retrieve and store the associated OwnerID for employees
-                    int ownerID = resultSet.getInt("OwnerID");
-                    SessionManager.getInstance().setOwnerID(ownerID);
-                }
-                return true;
+                // User is an employee, store OwnerID if applicable
+                int ownerID = resultSet.getInt("OwnerID");
+                SessionManager.getInstance().setOwnerID(ownerID);
+                return true; // Successful login as Employee
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // If not found in Employee table, check Owner table
+        sql = "SELECT * FROM Owner WHERE Username = ? AND Password = ?";
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            // Check if user exists in Owner table
+            if (resultSet.next()) {
+                // User is an owner, store OwnerID and set isOwner flag
+                int ownerID = resultSet.getInt("OwnerID");
+                SessionManager.getInstance().setOwnerID(ownerID);
+                isOwner = true; // Set isOwner to true
+                return true; // Successful login as Owner
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -184,7 +150,6 @@ public class LoginController {
         // If no match found, return false
         return false;
     }
-
 
     @FXML
     public void ForgotPasswordText(javafx.scene.input.MouseEvent mouseEvent) {
@@ -241,5 +206,4 @@ public class LoginController {
             e.printStackTrace();
         }
     }
-
 }

@@ -208,7 +208,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="earningsLabel" layoutX="244.0" layoutY="175.0" prefHeight="30.0" prefWidth="95.0">
+            <Label fx:id="earningsLabel" layoutX="244.0" layoutY="125.0" prefHeight="30.0" prefWidth="95.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -218,7 +218,7 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="belowlowquantityLabel" layoutX="244.0" layoutY="125.0" prefHeight="30.0" prefWidth="95.0">
+            <Label fx:id="belowlowquantityLabel" layoutX="244.0" layoutY="175.0" prefHeight="30.0" prefWidth="95.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
