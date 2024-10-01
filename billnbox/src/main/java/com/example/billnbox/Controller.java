@@ -89,7 +89,7 @@ public class Controller {
         }
 
         if (topOne != null) {
-            // Load default data (e.g., Today)
+            // Load default data
             comboBox.setOnAction(event -> loadTop5SoldProducts());
 
             // Set default selection
