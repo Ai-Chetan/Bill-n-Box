@@ -203,12 +203,12 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Text layoutX="44.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings :">
+            <Text layoutX="44.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Earnings (in Rs) :">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Label fx:id="earningsLabel" layoutX="244.0" layoutY="125.0" prefHeight="30.0" prefWidth="95.0">
+            <Label fx:id="earningsLabel" layoutX="244.0" layoutY="125.0" prefHeight="30.0" prefWidth="134.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

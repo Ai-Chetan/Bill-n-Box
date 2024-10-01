@@ -181,7 +181,7 @@ public class BillController {
         for (Product product : productList) {
             grandTotal += product.getQuantity() * product.getPrice();
         }
-        grandPrice.setText(String.format("%.2f", grandTotal));
+        grandPrice.setText(String.format("Rs. " + "%.2f", grandTotal));
     }
 
     public class Product {
@@ -348,7 +348,7 @@ public class BillController {
             String PDF_NAME = "Bill - " + billID + ".pdf";
 
             if (PDF_FILEPATH == null) {
-                PDF_FILEPATH = "C:/Users/aarya/Desktop/Mini Project Sem3/Bill-n-Box/billnbox/Bill PDF's";
+                PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
             }
 
             // Create the PDF writer instance
@@ -510,7 +510,7 @@ public class BillController {
             document.add(table);
 
 // Add Grand Total
-            Paragraph grandTotal = new Paragraph("Grand Total: " + String.format("%.2f", calculateTotalAmount()) + "\n\n",
+            Paragraph grandTotal = new Paragraph("Grand Total: Rs. " + String.format("%.2f", calculateTotalAmount()) + "\n\n",
                     new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             grandTotal.setAlignment(Element.ALIGN_RIGHT);
             grandTotal.setSpacingBefore(15f); // Add some space before the total

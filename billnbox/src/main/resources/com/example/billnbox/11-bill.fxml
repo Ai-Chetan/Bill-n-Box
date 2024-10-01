@@ -89,7 +89,7 @@
                         <Font size="16.0" />
                      </font>
                   </TextField>
-                  <Text layoutX="489.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price :">
+                  <Text layoutX="490.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price : Rs.">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -112,12 +112,12 @@
             </AnchorPane>
             <Label fx:id="statusLabel" alignment="CENTER" layoutX="226.0" layoutY="474.0" prefHeight="17.0" prefWidth="446.0" AnchorPane.bottomAnchor="50.0" />
             <Label alignment="CENTER" layoutX="226.0" layoutY="524.0" prefHeight="17.0" prefWidth="446.0" />
-            <Text layoutX="574.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grand Total :">
+            <Text layoutX="627.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Grand Total : Rs.">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <TextField fx:id="grandPrice" alignment="CENTER_RIGHT" editable="false" layoutX="682.0" layoutY="348.0" prefHeight="32.0" prefWidth="181.0" promptText="0.00" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
+            <TextField fx:id="grandPrice" alignment="CENTER_RIGHT" editable="false" layoutX="761.0" layoutY="348.0" prefHeight="37.0" prefWidth="102.0" promptText="0.00" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 5; -fx-border-radius: 5;">
                <font>
                   <Font size="16.0" />
                </font>

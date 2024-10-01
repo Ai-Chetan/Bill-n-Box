@@ -1,8 +1,10 @@
 package com.example.billnbox;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -93,21 +95,47 @@ public class Controller {
             // Set default selection
             comboBox.getSelectionModel().select("Today");
             loadTop5SoldProducts();  // Load today's sales initially
-            }
+        }
 
         if (productsSoldLabel != null) {
             int totalProductsSold = getTotalProductsSoldToday();
             productsSoldLabel.setText(String.valueOf(totalProductsSold));
 
-            loadTotalEarningsToday();
-            loadNearingExpiryProducts();
-            loadBelowMinimumQuantityProducts();
         }
 
         if (bellIcon != null && notificationPane != null) {
             notificationPane.setVisible(false);
             bellIcon.setOnMouseEntered(event -> notificationPane.setVisible(true));
             bellIcon.setOnMouseExited(event -> notificationPane.setVisible(false));
+        }
+
+        // Load charts and analysis data in a separate thread
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() {
+                loadTop5SoldProducts();
+
+                return null;
+            }@Override
+            protected void succeeded() {
+                super.succeeded();
+                Platform.runLater(() -> {
+                    loadNearingExpiryProducts();
+                    loadBelowMinimumQuantityProducts();
+                    loadTotalEarningsToday();
+                });
+            }
+        };
+        new Thread(task).start();
+    }
+
+    // Database connection optimization
+    private Connection getConnection() {
+        try {
+            return DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -157,7 +185,7 @@ public class Controller {
                 "WHERE ExpDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) " +
                 "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
@@ -179,7 +207,7 @@ public class Controller {
                 "WHERE Quantity <= LowQuantityAlert " +
                 "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
@@ -195,7 +223,6 @@ public class Controller {
         }
     }
 
-
     private void loadTotalEarningsToday() {
         double totalEarnings = getTotalEarningsToday();
         earningsLabel.setText(String.format("%.2f", totalEarnings)); // Format to two decimal places
@@ -209,7 +236,7 @@ public class Controller {
                 "FROM Bill " +
                 "WHERE DATE(Time) = CURDATE()"; // Use CURDATE() for current day
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -231,7 +258,7 @@ public class Controller {
                 "JOIN Bill b ON o.BillID = b.BillID " +
                 "WHERE DATE(b.Time) = CURDATE()"; // Get products sold today
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -265,7 +292,7 @@ public class Controller {
         }
 
         try {
-            Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            Connection conn = getConnection();
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(sqlQuery);
 
@@ -332,7 +359,7 @@ public class Controller {
                 "ORDER BY total_sold DESC LIMIT 5;";
     }
 
-   // Load monthly earnings based on input or default to the current year
+    // Load monthly earnings based on input or default to the current year
     private void loadMonthlyEarningsFromInput() {
         try {
             String yearText = yearInput.getText().trim();
@@ -357,7 +384,7 @@ public class Controller {
                 "GROUP BY MONTH(Time) " +
                 "ORDER BY MONTH(Time)";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // Set the year parameter in the SQL query
