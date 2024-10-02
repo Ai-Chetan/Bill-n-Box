@@ -49,12 +49,17 @@ public class ChangePasswordController {
             showError("All fields must be filled.");
             return;
         }
-        if(newPwd.length()<8){
-            showError("Password must be at least 8 characters long");
-            return;
-        }
+
         if (!newPwd.equals(confirmNewPwd)) {
             showError("New password and confirmation do not match.");
+            return;
+        }
+        if(newPwd.equals(oldPwd)){
+            showError("New Password cannot be same as Old Password.");
+            return;
+        }
+        if(newPwd.length()<8){
+            showError("Password must be at least 8 characters long");
             return;
         }
         String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).+$";
