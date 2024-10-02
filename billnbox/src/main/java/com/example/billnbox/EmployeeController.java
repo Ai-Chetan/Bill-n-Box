@@ -80,6 +80,7 @@ public class EmployeeController {
         ResultSet rs = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
+        int srNo = 1;  // Initialize serial number counter
 
         try {
             conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
@@ -88,9 +89,12 @@ public class EmployeeController {
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
             rs = pstmt.executeQuery();
 
+            // Clear the employeeList before adding new data
+            employeeList.clear();
+
             while (rs.next()) {
                 employeeList.add(new Employee(
-                        rs.getInt("EmpID"),
+                        srNo++,  // Increment and set SrNo
                         rs.getString("Name"),
                         rs.getString("Username"),
                         rs.getString("Password"),

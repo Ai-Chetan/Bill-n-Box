@@ -10,10 +10,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -139,20 +136,39 @@ public class AddNewEmployee {
         }
 
         String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).+$";
-
         if (!EmpPassword.getText().matches(passwordPattern)) {
             showError("Password must contain at least one uppercase letter, one digit, and one special symbol");
+            return;
         }
+
+        // Set the values for Username and Password
+        Username = EmpUsername.getText();
+        Password = EmpPassword.getText();
 
         try {
+            // Make the fields invisible during the process
             employeeName.setVisible(false);
-            DatabaseConnection.insertEmployee(EmployeeName, EmailID, PhoneNo, Username, Password);
-            navigateToPage(event, "12a-employees.fxml");
+            emailId.setVisible(false);
+            phoneNo.setVisible(false);
+            EmpUsername.setVisible(false);
+            EmpPassword.setVisible(false);
+
+            // Insert employee into the database
+            boolean isInserted = DatabaseConnection.insertEmployee(EmployeeName, EmailID, PhoneNo, Username, Password);
+
+            // If insertion is successful, navigate to the next page
+            if (isInserted) {
+                navigateToPage(event, "12a-employees.fxml");
+            } else {
+                showError("Failed to add employee.");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+            showError("An error occurred while adding the employee.");
         }
 
-        progBar2.setProgress(1.0);
+        progBar2.setProgress(1.0);  // Set progress to full when done
     }
 
     // Method to show error messages with a timer
@@ -183,6 +199,13 @@ public class AddNewEmployee {
                 int ownerID = SessionManager.getOwnerID(); // Get the current owner ID
                 String ownerUsername = SessionManager.getInstance().getUsername(); // Get the owner username from the session
 
+                // Ensure username is not null or empty
+                if (username == null || username.trim().isEmpty()) {
+                    System.out.println("Error: Username cannot be null or empty.");
+                    return false;
+                }
+
+                // Set values in the prepared statement
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, email);
                 preparedStatement.setString(3, number);
@@ -190,10 +213,17 @@ public class AddNewEmployee {
                 preparedStatement.setString(5, password);
                 preparedStatement.setInt(6, ownerID); // Insert OwnerID to associate the employee with the shop
 
+                // Execute the update
                 int rowsAffected = preparedStatement.executeUpdate();
+                System.out.println("Rows affected: " + rowsAffected); // For debugging
                 return rowsAffected > 0;
 
+            } catch (SQLIntegrityConstraintViolationException e) {
+                System.out.println("Integrity constraint violation: " + e.getMessage());
+                e.printStackTrace();
+                return false;
             } catch (SQLException e) {
+                System.out.println("SQL error: " + e.getMessage());
                 e.printStackTrace();
                 return false;
             }
