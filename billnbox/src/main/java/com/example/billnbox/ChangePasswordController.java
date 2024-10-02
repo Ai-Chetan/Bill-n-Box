@@ -57,6 +57,12 @@ public class ChangePasswordController {
             showError("New password and confirmation do not match.");
             return;
         }
+        String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).+$";
+
+        if (!newPwd.matches(passwordPattern)) {
+            showError("Password must contain at least one uppercase letter, one digit, and one special symbol");
+            return;
+        }
 
         System.out.println(username);
 

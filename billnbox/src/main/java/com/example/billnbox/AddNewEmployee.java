@@ -138,6 +138,12 @@ public class AddNewEmployee {
             return;
         }
 
+        String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).+$";
+
+        if (!EmpPassword.getText().matches(passwordPattern)) {
+            showError("Password must contain at least one uppercase letter, one digit, and one special symbol");
+        }
+
         try {
             employeeName.setVisible(false);
             DatabaseConnection.insertEmployee(EmployeeName, EmailID, PhoneNo, Username, Password);

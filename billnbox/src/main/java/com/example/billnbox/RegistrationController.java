@@ -152,11 +152,15 @@ public class RegistrationController {
         Password = passwordField.getText();
         ConfirmPassword = confirmpasswordField.getText();
 
+        String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).+$";
+
         if (!Password.equals(ConfirmPassword)) {
             showError("Confirm Password does not match");
         } else if (Password.length() < 8) {
             showError("Password must be at least 8 characters long");
-        } else if (Username.isEmpty() || Password.isEmpty()) {
+        } else if (!Password.matches(passwordPattern)) {
+            showError("Password must contain at least one uppercase letter, one digit, and one special symbol");
+        }else if (Username.isEmpty() || Password.isEmpty()) {
             showError("Username and Password Fields cannot be Empty");
         } else {
             // Set username in SessionManager
