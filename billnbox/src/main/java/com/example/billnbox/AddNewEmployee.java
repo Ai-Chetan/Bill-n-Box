@@ -56,31 +56,40 @@ public class AddNewEmployee {
         EmailID = emailId.getText();
         PhoneNo = phoneNo.getText();
 
-        if(employeeName.getText().isEmpty() || emailId.getText().isEmpty() || phoneNo.getText().isEmpty()) {
+        if (EmployeeName.isEmpty() || EmailID.isEmpty() || PhoneNo.isEmpty()) {
             emptyFields.setVisible(true);
             emptyFields.setText("Fields cannot be Empty");
             return;
-        } else {
-            employeeName.setVisible(false);
-            emailId.setVisible(false);
-            phoneNo.setVisible(false);
-            employeeNameTag.setVisible(false);
-            emailIdTag.setVisible(false);
-            phoneNoTag.setVisible(false);
-            emptyFields.setVisible(false);
-
-            cancelButton.setVisible(false);
-            nextButton.setVisible(false);
-            backButton.setVisible(true);
-            addEmployeeButton.setVisible(true);
-
-            EmpUsernameTag.setVisible(true);
-            EmpPasswordTag.setVisible(true);
-            EmpUsername.setVisible(true);
-            EmpPassword.setVisible(true);
-            backButton.setVisible(true);
-            addEmployeeButton.setVisible(true);
         }
+
+        // Mobile number constraint - must be exactly 10 digits
+        if (!PhoneNo.matches("\\d{10}")) {
+            emptyFields.setVisible(true);
+            emptyFields.setText("Mobile number must be exactly 10 digits");
+            return;
+        }
+
+        // Hide the first section and display the next section
+        employeeName.setVisible(false);
+        emailId.setVisible(false);
+        phoneNo.setVisible(false);
+        employeeNameTag.setVisible(false);
+        emailIdTag.setVisible(false);
+        phoneNoTag.setVisible(false);
+        emptyFields.setVisible(false);
+
+        cancelButton.setVisible(false);
+        nextButton.setVisible(false);
+        backButton.setVisible(true);
+        addEmployeeButton.setVisible(true);
+
+        EmpUsernameTag.setVisible(true);
+        EmpPasswordTag.setVisible(true);
+        EmpUsername.setVisible(true);
+        EmpPassword.setVisible(true);
+        backButton.setVisible(true);
+        addEmployeeButton.setVisible(true);
+
         progBar1.setProgress(1.0);
         progBar2.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
     }
@@ -113,8 +122,6 @@ public class AddNewEmployee {
 
     @FXML
     private void handleaddEmployeeButton(ActionEvent event) {
-        Username = EmpUsername.getText();
-        Password = EmpPassword.getText();
 
         // Check if fields are empty
         if (EmpUsername.getText().isEmpty() || EmpPassword.getText().isEmpty()) {
@@ -124,7 +131,7 @@ public class AddNewEmployee {
         }
 
         // Add constraint for password length
-        if (Password.length() < 8) {
+        if (EmpPassword.getText().length() < 8) {
             emptyFields.setVisible(true);
             emptyFields.setText("Password must be at least 8 characters long");
             return;

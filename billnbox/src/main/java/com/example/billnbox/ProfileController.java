@@ -126,12 +126,17 @@ public class ProfileController {
     @FXML
     private void updateProfile(ActionEvent event) {
         if (isEditing) {
-            // Save changes to the database
-            RegistrationController.FilePath = filePath.getText();
-            saveProfile();
-            makeFieldsNonEditable();
-            profilebtn.setText("Edit Profile"); // Change button text back to "Edit Profile"
-            isEditing = false; // Switch back to non-editing mode
+            // Validate inputs before saving
+            if (isValidInput()) {
+                // Save changes to the database
+                RegistrationController.FilePath = filePath.getText();
+                saveProfile();
+
+                // Only make fields non-editable and change the button text if the save is successful
+                makeFieldsNonEditable();
+                profilebtn.setText("Edit Profile"); // Change button text back to "Edit Profile"
+                isEditing = false; // Switch back to non-editing mode
+            }
         } else {
             // Enable fields for editing
             if (isOwner) {
@@ -142,6 +147,27 @@ public class ProfileController {
             profilebtn.setText("Save Changes"); // Change button text to "Save Changes"
             isEditing = true; // Switch to editing mode
         }
+    }
+
+    // Validation method to ensure mobile number is correct and other fields are filled
+    private boolean isValidInput() {
+        String mobno = mobnoField.getText();
+
+        // Check if the mobile number is valid (10 digits)
+        if (mobno.length() != 10 || !mobno.matches("\\d+")) {
+            showError("Mobile number must be exactly 10 digits.");
+            return false;
+        }
+
+        // Check if any required fields are empty
+        if (nameField.getText().isEmpty() || emailField.getText().isEmpty() || mobno.isEmpty() ||
+                (isOwner && (shopnameField.getText().isEmpty() || shopaddressField.getText().isEmpty()))) {
+            showError("All fields must be filled out.");
+            return false;
+        }
+
+        // If all validations pass, return true
+        return true;
     }
 
     // Method to make all fields non-editable
@@ -185,6 +211,12 @@ public class ProfileController {
         String shopname = shopnameField.getText();
         String shopaddress = shopaddressField.getText();
 
+        // Validate mobile number length (should be exactly 10 digits)
+        if (mobno.length() != 10 || !mobno.matches("\\d+")) {
+            showError("Mobile number must be exactly 10 digits.");
+            return;
+        }
+
         if (name.isEmpty() || email.isEmpty() || mobno.isEmpty() || shopname.isEmpty() || shopaddress.isEmpty()) {
             showError("All fields must be filled out.");
             return;
@@ -221,6 +253,7 @@ public class ProfileController {
             showError("Error updating profile: " + e.getMessage());
         }
     }
+
 
     // Show error message in label
     private void showError(String message) {

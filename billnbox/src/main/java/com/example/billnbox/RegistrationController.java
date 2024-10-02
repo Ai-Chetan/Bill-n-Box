@@ -80,6 +80,7 @@ public class RegistrationController {
     }
 
     // Move to Page 2 (Shop Details)
+    // Move to Page 2 (Shop Details)
     @FXML
     private void RegistrationNext1(ActionEvent event) {
         Name = nameField.getText();
@@ -88,10 +89,13 @@ public class RegistrationController {
 
         if (Name.isEmpty() || EmailID.isEmpty() || MobileNumber.isEmpty()) {
             showError("Fields cannot be Empty");
-        }
-        // Pass data to next controller
-        if (validateFields(Name, EmailID, MobileNumber)) {
-            navigateToPageWithData(event, "3-registration-page-2.fxml");
+        } else if (!MobileNumber.matches("\\d{10}")) {
+            showError("Mobile number must consist of exactly 10 digits");
+        } else {
+            // Pass data to next controller
+            if (validateFields(Name, EmailID, MobileNumber)) {
+                navigateToPageWithData(event, "3-registration-page-2.fxml");
+            }
         }
     }
 
