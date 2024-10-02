@@ -32,13 +32,13 @@
          <children>
             <TableView fx:id="tableView" layoutX="34.0" layoutY="34.0" prefHeight="410.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
               <columns>
-                <TableColumn fx:id="srNoColumn" prefWidth="64.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
-                  <TableColumn fx:id="productNameColumn" prefWidth="134.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Product Name" />
-                  <TableColumn fx:id="categoryColumn" prefWidth="86.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Category" />
-                  <TableColumn fx:id="quantityColumn" prefWidth="85.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Quantity" />
-                  <TableColumn fx:id="priceColumn" prefWidth="67.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Price" />
-                  <TableColumn fx:id="mfgDateColumn" prefWidth="101.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Mfg. Date" />
-                  <TableColumn fx:id="expDateColumn" minWidth="0.0" prefWidth="94.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Exp. Date" />
+                <TableColumn fx:id="srNoColumn" prefWidth="64.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="ProdID" />
+                  <TableColumn fx:id="productNameColumn" prefWidth="143.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Product Name" />
+                  <TableColumn fx:id="categoryColumn" prefWidth="119.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Category" />
+                  <TableColumn fx:id="quantityColumn" prefWidth="73.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Quantity" />
+                  <TableColumn fx:id="priceColumn" prefWidth="85.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Price (Rs.)" />
+                  <TableColumn fx:id="mfgDateColumn" prefWidth="90.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Mfg. Date" />
+                  <TableColumn fx:id="expDateColumn" minWidth="0.0" prefWidth="89.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Exp. Date" />
                   <TableColumn fx:id="lowQuantityAlertColumn" prefWidth="159.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Low Quantity Alert" />
               </columns>
                <columnResizePolicy>
