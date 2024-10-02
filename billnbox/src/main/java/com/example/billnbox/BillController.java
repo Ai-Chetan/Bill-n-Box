@@ -346,10 +346,10 @@ public class BillController {
 
             String PDF_FILEPATH = RegistrationController.FilePath;
             String PDF_NAME = "Bill - " + billID + ".pdf";
-
             if (PDF_FILEPATH == null) {
-                PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
+                PDF_FILEPATH = "C:/Users/Dell/Desktop/SEM 3/MINI PROJECT/Bill-n-Box/billnbox/Generated PDFs/";
             }
+
 
             // Create the PDF writer instance
             PdfWriter.getInstance(document, new FileOutputStream(new File(PDF_FILEPATH + PDF_NAME)));

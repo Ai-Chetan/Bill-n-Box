@@ -11,6 +11,11 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.io.IOException;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
+
 public class RegistrationController {
 
     public static boolean isOwner = true;
@@ -178,6 +183,13 @@ public class RegistrationController {
         if (emptyFields != null) {
             emptyFields.setVisible(true);
             emptyFields.setText(message);
+
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.millis(3000), // 3 seconds delay
+                    event -> emptyFields.setVisible(false) // Hide the label after the delay
+            ));
+            timeline.setCycleCount(1); // Execute only once
+            timeline.play();
         }
     }
 

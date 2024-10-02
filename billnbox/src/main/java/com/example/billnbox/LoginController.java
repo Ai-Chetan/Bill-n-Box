@@ -1,5 +1,6 @@
 package com.example.billnbox;
 
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,11 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,9 +33,11 @@ public class LoginController {
     private String username;
 
     public static boolean isOwner;
+
     public static boolean getIsOwner() {
         return isOwner;
     }
+
     public static void setIsOwner(boolean isOwner) {
         LoginController.isOwner = isOwner;
     }
@@ -54,8 +55,7 @@ public class LoginController {
 
         // Check if fields are empty
         if (username.isEmpty() || password.isEmpty()) {
-            loginErrorLabel.setText("Username and Password Fields cannot be Empty.");
-            loginErrorLabel.setVisible(true);
+            showError("Username and Password Fields cannot be Empty.");
             return;
         }
 
@@ -92,8 +92,7 @@ public class LoginController {
             }
         } else {
             // Show error message for invalid login
-            loginErrorLabel.setText("Invalid credentials, please try again.");
-            loginErrorLabel.setVisible(true);
+            showError("Invalid credentials, please try again.");
         }
     }
 
@@ -200,10 +199,20 @@ public class LoginController {
             pstmt.setString(4, activity);
             pstmt.setInt(5, SessionManager.getInstance().getOwnerID());  // OwnerID from SessionManager
 
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // Method to display the error message and automatically hide it after 3 seconds
+    private void showError(String message) {
+        loginErrorLabel.setText(message);
+        loginErrorLabel.setVisible(true);
+
+        // Create a PauseTransition to hide the label after 3 seconds
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(event -> loginErrorLabel.setVisible(false));
+        pause.play();
     }
 }

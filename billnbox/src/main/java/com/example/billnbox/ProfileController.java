@@ -1,5 +1,7 @@
 package com.example.billnbox;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -260,6 +263,13 @@ public class ProfileController {
         if (emptyFields != null) {
             emptyFields.setVisible(true);
             emptyFields.setText(message);
+
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.millis(3000), // 3-second delay
+                    event -> emptyFields.setVisible(false) // Hide the label after the delay
+            ));
+            timeline.setCycleCount(1); // Ensure it only runs once
+            timeline.play();
         }
     }
 

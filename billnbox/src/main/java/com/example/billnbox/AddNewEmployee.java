@@ -9,14 +9,19 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-        import java.io.IOException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 public class AddNewEmployee {
 
+    // Fields remain the same
     private String EmployeeName, PhoneNo, EmailID, Username, Password;
 
     @FXML
@@ -57,15 +62,13 @@ public class AddNewEmployee {
         PhoneNo = phoneNo.getText();
 
         if (EmployeeName.isEmpty() || EmailID.isEmpty() || PhoneNo.isEmpty()) {
-            emptyFields.setVisible(true);
-            emptyFields.setText("Fields cannot be Empty");
+            showError("Fields cannot be Empty");
             return;
         }
 
         // Mobile number constraint - must be exactly 10 digits
         if (!PhoneNo.matches("\\d{10}")) {
-            emptyFields.setVisible(true);
-            emptyFields.setText("Mobile number must be exactly 10 digits");
+            showError("Mobile number must be exactly 10 digits");
             return;
         }
 
@@ -125,15 +128,13 @@ public class AddNewEmployee {
 
         // Check if fields are empty
         if (EmpUsername.getText().isEmpty() || EmpPassword.getText().isEmpty()) {
-            emptyFields.setVisible(true);
-            emptyFields.setText("Fields cannot be empty");
+            showError("Fields cannot be empty");
             return;
         }
 
         // Add constraint for password length
         if (EmpPassword.getText().length() < 8) {
-            emptyFields.setVisible(true);
-            emptyFields.setText("Password must be at least 8 characters long");
+            showError("Password must be at least 8 characters long");
             return;
         }
 
@@ -148,10 +149,25 @@ public class AddNewEmployee {
         progBar2.setProgress(1.0);
     }
 
+    // Method to show error messages with a timer
+    private void showError(String message) {
+        if (emptyFields != null) {
+            emptyFields.setVisible(true);
+            emptyFields.setText(message);
 
+            // Automatically hide the message after 3 seconds (3000 ms)
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.millis(3000), // 3-second delay
+                    event -> emptyFields.setVisible(false) // Hide the label after the delay
+            ));
+            timeline.setCycleCount(1); // Ensure it only runs once
+            timeline.play();
+        }
+    }
+
+    // Database connection class remains the same
     public static class DatabaseConnection {
 
-        // Method to insert employee data into the database
         public static boolean insertEmployee(String name, String email, String number, String username, String password) {
             String query = "INSERT INTO Employee (Name, EmailID, PhoneNo, Username, Password, OwnerID) VALUES (?, ?, ?, ?, ?, ?)";
 
