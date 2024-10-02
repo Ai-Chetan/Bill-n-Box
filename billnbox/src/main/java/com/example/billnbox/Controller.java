@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -26,6 +27,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.Optional;
 
 public class Controller {
 
@@ -40,7 +42,8 @@ public class Controller {
 
     @FXML
     private BarChart<String, Number> barChart;
-
+    @FXML
+    private PieChart pieChart;
     @FXML
     private Button logButton; // Reference to the Log button
     @FXML
@@ -66,6 +69,18 @@ public class Controller {
         if (comboBox != null) {
             ObservableList<String> items = FXCollections.observableArrayList("Today", "This Week", "This Month", "This Year", "All Time");
             comboBox.setItems(items);
+
+
+            // Load default data
+            comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    loadTopSoldProductsPieChart();
+                }
+            });
+
+            // Set default selection
+            comboBox.getSelectionModel().select("Today");
+            loadTopSoldProductsPieChart();  // Load today's sales initially
         }
 
         // Set visibility of buttons based on ownership
@@ -88,15 +103,6 @@ public class Controller {
             loadMonthlyEarningsFromInput();
         }
 
-        if (topOne != null) {
-            // Load default data
-            comboBox.setOnAction(event -> loadTop5SoldProducts());
-
-            // Set default selection
-            comboBox.getSelectionModel().select("Today");
-            loadTop5SoldProducts();  // Load today's sales initially
-        }
-
         if (productsSoldLabel != null) {
             int totalProductsSold = getTotalProductsSoldToday();
             productsSoldLabel.setText(String.valueOf(totalProductsSold));
@@ -113,7 +119,7 @@ public class Controller {
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() {
-                loadTop5SoldProducts();
+//                loadTop5SoldProducts();
 
                 return null;
             }@Override
@@ -123,10 +129,72 @@ public class Controller {
                     loadNearingExpiryProducts();
                     loadBelowMinimumQuantityProducts();
                     loadTotalEarningsToday();
+                    loadTopSoldProductsPieChart();
                 });
             }
         };
         new Thread(task).start();
+    }
+
+    private void loadTopSoldProductsPieChart() {
+        if (pieChart != null) {
+            pieChart.getData().clear();
+        }
+        pieChart.setLabelLineLength(5);
+        String selectedRange = Optional.ofNullable(comboBox.getSelectionModel().getSelectedItem()).orElse("Today"); // Set a default value if selectedRange is null
+        String sqlQuery = "";
+
+        switch (selectedRange) {
+            case "Today":
+                sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
+                        "FROM Orders o " +
+                        "JOIN Bill b ON o.BillID = b.BillID " +
+                        "JOIN Product p ON o.SrNo = p.SrNo " +
+                        "WHERE DATE(b.Time) = CURDATE() " +
+                        "GROUP BY p.Category ";
+                break;
+            case "This Week":
+                sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
+                        "FROM Orders o " +
+                        "JOIN Bill b ON o.BillID = b.BillID " +
+                        "JOIN Product p ON o.SrNo = p.SrNo " +
+                        "WHERE WEEK(b.Time) = WEEK(CURDATE()) AND YEAR(b.Time) = YEAR(CURDATE()) " +
+                        "GROUP BY p.Category ";
+                break;
+            case "This Month":
+                sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
+                        "FROM Orders o " +
+                        "JOIN Bill b ON o.BillID = b.BillID " +
+                        "JOIN Product p ON o.SrNo = p.SrNo " +
+                        "WHERE MONTH(b.Time) = MONTH(CURDATE()) AND YEAR(b.Time) = YEAR(CURDATE()) " +
+                        "GROUP BY p.Category ";
+                break;
+            case "This Year":
+                sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
+                        "FROM Orders o " +
+                        "JOIN Bill b ON o.BillID = b.BillID " +
+                        "JOIN Product p ON o.SrNo = p.SrNo " +
+                        "WHERE YEAR(b.Time) = YEAR(CURDATE()) " +
+                        "GROUP BY p.Category ";
+                break;
+        }
+
+        try (Connection conn = getConnection();
+             Statement statement = conn.createStatement();
+             ResultSet rs = statement.executeQuery(sqlQuery)) {
+
+            while (rs.next()) {
+                String category = rs.getString("Category");
+                double totalSold = rs.getDouble("total_sold");
+
+                PieChart.Data data = new PieChart.Data(category, totalSold);
+                if (pieChart != null) {
+                    pieChart.getData().add(data);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // Database connection optimization
@@ -271,7 +339,7 @@ public class Controller {
 
         return totalProductsSold;
     }
-
+/*
     private void loadTop5SoldProducts() {
         String selectedRange = comboBox.getSelectionModel().getSelectedItem();
         String sqlQuery = "";
@@ -358,7 +426,7 @@ public class Controller {
                 "GROUP BY o.ProductName " +
                 "ORDER BY total_sold DESC LIMIT 5;";
     }
-
+*/
     // Load monthly earnings based on input or default to the current year
     private void loadMonthlyEarningsFromInput() {
         try {
@@ -375,7 +443,7 @@ public class Controller {
     private void loadMonthlyEarnings(int year) {
         barChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Monthly Earnings for " + year);
+        series.setName("Monthly Earnings for " + year + " (in Rupees)");
 
         // SQL query to get monthly earnings for the specified year
         String sql = "SELECT MONTH(Time) AS month, SUM(Amount) AS total_amount " +
