@@ -38,7 +38,7 @@ public class Controller {
     @FXML
     private ComboBox<String> comboBox;
     @FXML
-    private Label productsSoldLabel, earningsLabel, nearingexpirydateLabel, belowlowquantityLabel;
+    private Label productsSoldLabel, earningsLabel, nearingexpirydateLabel, belowlowquantityLabel, expiredproductsLabel;
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -106,6 +106,7 @@ public class Controller {
             loadNearingExpiryProducts();
             loadBelowMinimumQuantityProducts();
             loadTotalEarningsToday();
+            loadExpiredProducts();
 
 
 
@@ -242,6 +243,29 @@ public class Controller {
         pause.setOnFinished(event -> notificationPane.setVisible(false));
         pause.play();
     }
+
+    private void loadExpiredProducts() {
+        String sql = "SELECT COUNT(*) AS ExpiredProductsCount " +
+                "FROM Product " +
+                "WHERE ExpDate <= CURDATE() " +
+                "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int ExpiredProductsCount = rs.getInt("ExpiredProductsCount");
+                // Update the label with the count of products nearing expiry
+                expiredproductsLabel.setText(String.valueOf(ExpiredProductsCount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void loadNearingExpiryProducts() {
         String sql = "SELECT COUNT(*) AS nearingExpiryCount " +
