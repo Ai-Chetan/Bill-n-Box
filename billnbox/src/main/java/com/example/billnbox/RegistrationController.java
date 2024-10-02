@@ -145,6 +145,8 @@ public class RegistrationController {
 
         if (!Password.equals(ConfirmPassword)) {
             showError("Confirm Password does not match");
+        } else if (Password.length() < 8) {
+            showError("Password must be at least 8 characters long");
         } else if (Username.isEmpty() || Password.isEmpty()) {
             showError("Username and Password Fields cannot be Empty");
         } else {
@@ -154,6 +156,7 @@ public class RegistrationController {
             navigateToPage(event, "5-registration-successful.fxml");
         }
     }
+
 
     // Validation for empty fields
     private boolean validateFields(String... fields) {

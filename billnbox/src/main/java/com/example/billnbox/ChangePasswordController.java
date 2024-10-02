@@ -46,7 +46,10 @@ public class ChangePasswordController {
             showError("All fields must be filled.");
             return;
         }
-
+        if(newPwd.length()<8){
+            showError("Password must be at least 8 characters long");
+            return;
+        }
         if (!newPwd.equals(confirmNewPwd)) {
             showError("New password and confirmation do not match.");
             return;

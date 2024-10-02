@@ -116,21 +116,31 @@ public class AddNewEmployee {
         Username = EmpUsername.getText();
         Password = EmpPassword.getText();
 
-        if(EmpUsername.getText().isEmpty() || EmpPassword.getText().isEmpty()) {
+        // Check if fields are empty
+        if (EmpUsername.getText().isEmpty() || EmpPassword.getText().isEmpty()) {
             emptyFields.setVisible(true);
-            emptyFields.setText("Fields cannot be Empty");
+            emptyFields.setText("Fields cannot be empty");
             return;
-        } else {
-            employeeName.setVisible(false);
-            try {
-                DatabaseConnection.insertEmployee(EmployeeName, EmailID, PhoneNo, Username, Password);
-                navigateToPage(event, "12a-employees.fxml");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
+
+        // Add constraint for password length
+        if (Password.length() < 8) {
+            emptyFields.setVisible(true);
+            emptyFields.setText("Password must be at least 8 characters long");
+            return;
+        }
+
+        try {
+            employeeName.setVisible(false);
+            DatabaseConnection.insertEmployee(EmployeeName, EmailID, PhoneNo, Username, Password);
+            navigateToPage(event, "12a-employees.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         progBar2.setProgress(1.0);
     }
+
 
     public static class DatabaseConnection {
 
