@@ -210,7 +210,7 @@ public class Controller {
     @FXML
     private void notificationClick(MouseEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("17-notification-tab.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("17-notification-tab(new).fxml"));
 
             // Set a controller factory that can pass parameters to the constructor
             loader.setControllerFactory(controllerClass -> {
