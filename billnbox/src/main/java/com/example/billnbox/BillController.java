@@ -270,6 +270,18 @@ public class BillController {
         double productPrice = Double.parseDouble(price.getText());
         int productQuantity = Integer.parseInt(quantity.getText());
 
+        // Check if the product quantity is available in the Product tab
+        int availableQuantity = getAvailableQuantity(productNameText);
+        if (productQuantity > availableQuantity) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Insufficient Quantity");
+            alert.setHeaderText(null);
+            alert.setContentText("The available quantity of "+productNameText+" is only "+availableQuantity+".");
+            alert.showAndWait();
+            quantity.clear();
+            return;
+        }
+
         if (selectedProduct == null) {
             Product product = new Product(productNameText, productPrice, productQuantity);
             productList.add(product);
@@ -288,6 +300,29 @@ public class BillController {
 
         clearForm();
         calculateGrandTotal();
+    }
+
+    // Method to get the available quantity of a product
+    private int getAvailableQuantity(String productName) {
+        int availableQuantity = 0;
+        String query = "SELECT Quantity FROM Product WHERE ProductName = ? AND OwnerID = ?";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, productName);
+            stmt.setInt(2, SessionManager.getOwnerID());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                availableQuantity = rs.getInt("Quantity");
+            } else {
+                System.out.println("Product not found: " + productName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return availableQuantity;
     }
 
     @FXML
