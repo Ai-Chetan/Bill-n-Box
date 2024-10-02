@@ -222,10 +222,9 @@ public class InventoryController {
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                int dynamicSrNo = 1; // Start counter for dynamic SrNo
                 while (rs.next()) {
                     Product product = new Product(
-                            dynamicSrNo, // Use dynamic SrNo
+                            rs.getInt("SrNo"), // Use actual SrNo from database
                             rs.getString("ProductName"),
                             rs.getString("Category"),
                             rs.getInt("Quantity"),
@@ -235,7 +234,6 @@ public class InventoryController {
                             rs.getInt("LowQuantityAlert")
                     );
                     productList.add(product);
-                    dynamicSrNo++; // Increment for the next product
                 }
             }
 
@@ -343,11 +341,34 @@ public class InventoryController {
         Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
 
         if (selectedProduct != null) {
-            // Remove product from TableView but not the database yet
+            // Mark the product for deletion
+            deletedProducts.add(selectedProduct);
+
+            // Remove product from TableView
             tableView.getItems().remove(selectedProduct);
-            deletedProducts.add(selectedProduct);  // Track the deleted product
 
             showError("Product marked for deletion.");
+        }
+    }
+
+    private void deleteProductFromDatabase(Product product) {
+        String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+            // Disable foreign key checks
+            Statement stmt = conn.createStatement();
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+
+            // Delete product from database
+            PreparedStatement pstmt = conn.prepareStatement(deleteSql);
+            pstmt.setInt(1, product.getSrNo());
+            pstmt.setInt(2, getOwnerID());  // Use OwnerID from SessionManager
+            pstmt.executeUpdate();
+
+            // Re-enable foreign key checks
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -402,12 +423,41 @@ public class InventoryController {
         }
     }
 
+
+    private void deleteMarkedProducts() {
+        String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";
+
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+            // Disable foreign key checks
+            Statement stmt = conn.createStatement();
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+
+            // Delete marked products from database
+            PreparedStatement pstmt = conn.prepareStatement(deleteSql);
+            for (Product product : deletedProducts) {
+                pstmt.setInt(1, product.getSrNo());
+                pstmt.setInt(2, getOwnerID());  // Use OwnerID from SessionManager
+                pstmt.executeUpdate();
+            }
+
+            // Re-enable foreign key checks
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Clear the products marked for deletion
+        deletedProducts.clear();
+    }
+
     @FXML
     private void saveInventoryChanges(ActionEvent event) {
         if (isEditing) {
-            for (Product product : editedProducts) {
-                updateProductInDatabase(product);
-            }
+            // Delete marked products from database
+            deleteMarkedProducts();
+
+            // Save other changes to the database
+            saveProductData();
 
             // Log entry for inventory edit
             insertLog("Inventory edited by " + getCurrentUser());

@@ -58,9 +58,6 @@ public class Controller {
     @FXML
     private AnchorPane notificationPane;
 
-    // Reference to NotificationController
-    private NotificationController notificationController;
-
     private boolean isOwner = LoginController.getIsOwner(); // To determine if the user is an owner
     private int ownerId = SessionManager.getOwnerID();
 
@@ -214,15 +211,11 @@ public class Controller {
 
             // Set a controller factory that can pass parameters to the constructor
             loader.setControllerFactory(controllerClass -> {
-                if (controllerClass == NotificationController.class) {
-                    return new NotificationController(ownerId); // Pass the ownerId here
-                } else {
                     try {
                         return controllerClass.getDeclaredConstructor().newInstance();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                }
             });
 
             Parent root = loader.load();
@@ -496,8 +489,6 @@ public class Controller {
     @FXML
     public void initializeDashboard() {
         int ownerid = SessionManager.getInstance().getOwnerID();
-        notificationController = new NotificationController(ownerid);
-        notificationController.StartNotification();  // Start notifications on dashboard load
     }
 
     @FXML

@@ -1,119 +1,175 @@
 package com.example.billnbox;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
+import javafx.scene.control.Button; // Import Button
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+
+import com.example.billnbox.InventoryController.Product;
+import javafx.stage.Stage;
 
 public class NotificationController {
 
-    private final int ownerId; // Store the owner's ID
+    @FXML
+    private TableView<Product> expiryProducts;
+    @FXML
+    private TableView<Product> lowQuantityProducts;
 
-    public NotificationController(int ownerId) {
-        this.ownerId = ownerId; // Initialize with the owner ID
+    @FXML
+    private TableColumn<Product, String> expiryProductNameColumn;
+    @FXML
+    private TableColumn<Product, String> expiryProductCategoryColumn;
+    @FXML
+    private TableColumn<Product, Integer> expiryProductQuantityColumn;
+    @FXML
+    private TableColumn<Product, String> expiryProductExpDateColumn;
+
+    @FXML
+    private TableColumn<Product, String> lowQuantityProductNameColumn;
+    @FXML
+    private TableColumn<Product, String> lowQuantityProductCategoryColumn;
+    @FXML
+    private TableColumn<Product, Integer> lowQuantityProductQuantityColumn;
+    @FXML
+    private TableColumn<Product, Double> lowQuantityProductPriceColumn;
+
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button removeAlertButton;
+    @FXML
+    private Button removeAllButton;
+
+    private Product selectedProduct; // To store the selected product
+
+    // Helper method to extract product information from the ResultSet
+    private Product extractProductFromResultSet(ResultSet resultSet) throws SQLException {
+        return new Product(
+                resultSet.getInt("SrNo"),
+                resultSet.getString("ProductName"),
+                resultSet.getString("Category"),
+                resultSet.getInt("Quantity"),
+                resultSet.getDouble("Price"),
+                resultSet.getString("MfgDate"),
+                resultSet.getString("ExpDate"),
+                resultSet.getInt("LowQuantityAlert")
+        );
     }
 
-    public void initialize() {}
-
-    // Start the notification service
-    public void StartNotification() {
-        Task<Void> notificationTask = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                while (true) {
-                    checkForNotifications();  // Check for notifications every day
-                    Thread.sleep(24 * 60 * 60 * 1000);  // 24 hours
-                }
-            }
-        };
-        Thread notificationThread = new Thread(notificationTask);
-        notificationThread.setDaemon(true);
-        notificationThread.start();
+    // Method to initialize the table columns and load notifications
+    @FXML
+    private void initialize() {
+        initializeColumns();
+        loadNotifications();
     }
 
-    // Check for products with low stock or nearing expiry
-    private void checkForNotifications() {
-        String sql = "SELECT ProductName, ExpDate, Quantity, LowQuantityAlert FROM Product " +
-                "WHERE (ExpDate <= CURDATE() + INTERVAL 7 DAY OR Quantity <= LowQuantityAlert) AND OwnerId = ?";
+    // Helper method to initialize the columns for the TableView
+    private void initializeColumns() {
+        expiryProductNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        expiryProductCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        expiryProductQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        expiryProductExpDateColumn.setCellValueFactory(new PropertyValueFactory<>("expDate"));
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        lowQuantityProductNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        lowQuantityProductCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        lowQuantityProductQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        lowQuantityProductPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    }
 
-            pstmt.setInt(1, ownerId); // Set the owner ID parameter
+    @FXML
+    private void handleBackToDashboard(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("8-dashboard.fxml")); // Adjust path as necessary
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                // Use a Set to track products that have already been notified
-                Set<String> notifiedProducts = new HashSet<>();
+    @FXML
+    private void handleRemoveAll(ActionEvent event) {
+        // Only clear the TableView (display) items, without affecting the database
+        expiryProducts.getItems().clear();
+        lowQuantityProducts.getItems().clear();
+    }
 
-                while (rs.next()) {
-                    String productName = rs.getString("ProductName");
-                    LocalDate expDate = rs.getDate("ExpDate").toLocalDate();
-                    int quantity = rs.getInt("Quantity");
-                    int lowQuantityAlert = rs.getInt("LowQuantityAlert");
+    @FXML
+    private void handleRemoveAlert(ActionEvent event) {
+        if (selectedProduct != null) {
+            // Remove the selected product from the display without affecting the database
+            expiryProducts.getItems().remove(selectedProduct);
+            lowQuantityProducts.getItems().remove(selectedProduct);
+        } else {
+            showErrorAlert("No Selection", "No notification selected for removal.");
+        }
+    }
 
-                    // Notify for expiry (if within 7 days)
-                    if (expDate.isBefore(LocalDate.now().plusDays(7)) && !notifiedProducts.contains(productName + "Expiry")) {
-                        notifyUser("Expiry Alert", productName + " is expiring on " + expDate);
-                        notifiedProducts.add(productName + "Expiry");  // Mark as notified for expiry
-                    }
+    // Method to load notifications for expiry and low quantity products
+    public void loadNotifications() {
+        ObservableList<Product> expiryList = FXCollections.observableArrayList();
+        ObservableList<Product> lowQuantityList = FXCollections.observableArrayList();
 
-                    // Notify for low stock
-                    if (quantity <= lowQuantityAlert && !notifiedProducts.contains(productName + "LowStock")) {
-                        notifyUser("Low Stock Alert", productName + " is below the minimum specified value. Only " + quantity + " left.");
-                        notifiedProducts.add(productName + "LowStock");  // Mark as notified for low stock
-                    }
-                }
+        String expiryQuery = "SELECT * FROM Product WHERE ExpDate <= NOW() + INTERVAL 7 DAY AND OwnerID = ?";
+        String lowQuantityQuery = "SELECT * FROM Product WHERE Quantity <= LowQuantityAlert AND OwnerID = ?";
+
+        try (Connection connection = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement expiryStmt = connection.prepareStatement(expiryQuery);
+             PreparedStatement lowQuantityStmt = connection.prepareStatement(lowQuantityQuery)) {
+
+            String ownerID = String.valueOf(SessionManager.getInstance().getOwnerID());
+            expiryStmt.setString(1, ownerID);
+            lowQuantityStmt.setString(1, ownerID);
+
+            ResultSet expiryResults = expiryStmt.executeQuery();
+            while (expiryResults.next()) {
+                Product product = extractProductFromResultSet(expiryResults);
+                expiryList.add(product);
             }
+            expiryProducts.setItems(expiryList);
+
+            ResultSet lowQuantityResults = lowQuantityStmt.executeQuery();
+            while (lowQuantityResults.next()) {
+                Product product = extractProductFromResultSet(lowQuantityResults);
+                lowQuantityList.add(product);
+            }
+            lowQuantityProducts.setItems(lowQuantityList);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Notify the user with a custom message
-    private void notifyUser(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);  // Warning alert for notifications
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        });
-    }
-
+    // Handle double-click to select a product for removal
     @FXML
-    private void LogInButton(ActionEvent event) {
-        loadScene(event, "1-login-page.fxml");
-    }
+    private void handleTableClick(javafx.scene.input.MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {  // Use mouseEvent instead of event
 
-    private void loadScene(ActionEvent event, String fxmlFileName) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-
-            // If loading the dashboard, also initialize BarChart data and notifications
-            if (fxmlFileName.equals("8-dashboard.fxml")) {
-                Controller controller = loader.getController();
-                controller.initializeDashboard();  // Initialize the dashboard and notifications
+            selectedProduct = expiryProducts.getSelectionModel().getSelectedItem();
+            if (selectedProduct == null) {
+                selectedProduct = lowQuantityProducts.getSelectionModel().getSelectedItem();
             }
-
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+    private void showErrorAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 }
+
+

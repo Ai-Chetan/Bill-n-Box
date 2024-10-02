@@ -37,14 +37,14 @@
       </Text>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="employeeTable" layoutX="47.0" layoutY="42.0" prefHeight="405.0" prefWidth="657.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
+            <TableView fx:id="employeeTable" layoutX="22.0" layoutY="38.0" prefHeight="405.0" prefWidth="706.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
                <columns>
-                  <TableColumn fx:id="srNoColumn" prefWidth="61.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
-                  <TableColumn fx:id="nameColumn" prefWidth="166.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
-                  <TableColumn fx:id="usernameColumn" minWidth="0.0" prefWidth="118.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Username" />
+                  <TableColumn fx:id="srNoColumn" prefWidth="60.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="Sr. No." />
+                  <TableColumn fx:id="nameColumn" prefWidth="150.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Employee Name" />
+                  <TableColumn fx:id="usernameColumn" minWidth="0.0" prefWidth="115.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Username" />
                   <TableColumn fx:id="passwordColumn" prefWidth="110.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Password" />
-                  <TableColumn fx:id="phoneColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Phone No." />
-                  <TableColumn fx:id="emailColumn" prefWidth="100.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Email ID" />
+                  <TableColumn fx:id="phoneColumn" prefWidth="101.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Phone No." />
+                  <TableColumn fx:id="emailColumn" prefWidth="161.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Email ID" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
