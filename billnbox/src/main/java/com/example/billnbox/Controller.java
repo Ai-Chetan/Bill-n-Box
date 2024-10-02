@@ -103,6 +103,11 @@ public class Controller {
         if (productsSoldLabel != null) {
             int totalProductsSold = getTotalProductsSoldToday();
             productsSoldLabel.setText(String.valueOf(totalProductsSold));
+            loadNearingExpiryProducts();
+            loadBelowMinimumQuantityProducts();
+            loadTotalEarningsToday();
+
+
 
         }
 
@@ -123,9 +128,7 @@ public class Controller {
             protected void succeeded() {
                 super.succeeded();
                 Platform.runLater(() -> {
-                    loadNearingExpiryProducts();
-                    loadBelowMinimumQuantityProducts();
-                    loadTotalEarningsToday();
+
                     loadTopSoldProductsPieChart();
                 });
             }
