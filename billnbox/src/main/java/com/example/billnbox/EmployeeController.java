@@ -60,7 +60,6 @@ public class EmployeeController {
         srNoColumn.setCellValueFactory(new PropertyValueFactory<>("srNo"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
@@ -84,9 +83,10 @@ public class EmployeeController {
 
         try {
             conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-            String query = "SELECT EmpID, Username, Password, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
+            String query = "SELECT EmpID, Username, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
             pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID()); // Assuming OwnerID is a String
+
             rs = pstmt.executeQuery();
 
             // Clear the employeeList before adding new data
@@ -97,7 +97,6 @@ public class EmployeeController {
                         srNo++,  // Increment and set SrNo
                         rs.getString("Name"),
                         rs.getString("Username"),
-                        rs.getString("Password"),
                         rs.getString("PhoneNo"),
                         rs.getString("EmailID"),
                         rs.getInt("OwnerID") // Set OwnerID
@@ -156,9 +155,6 @@ public class EmployeeController {
 
             usernameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
             usernameColumn.setOnEditCommit(event -> event.getRowValue().setUsername(event.getNewValue()));
-
-            passwordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            passwordColumn.setOnEditCommit(event -> event.getRowValue().setPassword(event.getNewValue()));
 
             phoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
             phoneColumn.setOnEditCommit(event -> event.getRowValue().setPhone(event.getNewValue()));
@@ -280,11 +276,10 @@ public class EmployeeController {
         private String email;
         private int ownerId;
 
-        public Employee(int srNo, String name, String username, String password, String phone, String email, int ownerId) {
+        public Employee(int srNo, String name, String username, String phone, String email, int ownerId) {
             this.srNo = srNo;
             this.name = name;
             this.username = username;
-            this.password = password;
             this.phone = phone;
             this.email = email;
             this.ownerId = ownerId;
