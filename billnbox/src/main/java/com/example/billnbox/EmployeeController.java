@@ -82,7 +82,7 @@ public class EmployeeController {
         int srNo = 1;  // Initialize serial number counter
 
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            conn = (DatabaseConfig.getConnection());
             String query = "SELECT EmpID, Username, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
             pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
@@ -173,7 +173,7 @@ public class EmployeeController {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            conn = (DatabaseConfig.getConnection());
             String updateQuery = "UPDATE Employee SET Name = ?, Username = ?, PhoneNo = ?, EmailID = ? WHERE Username = ? and OwnerID=?";
 
             pstmt = conn.prepareStatement(updateQuery);
@@ -243,7 +243,7 @@ public class EmployeeController {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            conn = (DatabaseConfig.getConnection());
             String query = "DELETE FROM Employee WHERE Username = ? and OwnerID=?";
             pstmt = conn.prepareStatement(query);
             pstmt.setString(1, employee.getUsername());

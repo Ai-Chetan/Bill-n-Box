@@ -166,7 +166,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor></Label>
             <Label fx:id="loginErrorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="305.0" prefHeight="17.0" prefWidth="437.0" text="Username or Password is Incorrect" textFill="#ae2424" />
-            <CheckBox fx:id="showpasswordCheckbox" layoutX="281.0" layoutY="241.0" mnemonicParsing="false" onAction="#togglePasswordVisibility" text="Show" />
+            <CheckBox fx:id="showpasswordCheckbox" layoutX="284.0" layoutY="243.0" mnemonicParsing="false" onAction="#togglePasswordVisibility" text="Show" />
          </children>
          <StackPane.margin>
             <Insets bottom="75.0" left="725.0" right="130.0" top="75.0" />

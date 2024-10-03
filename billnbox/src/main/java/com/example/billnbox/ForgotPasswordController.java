@@ -28,17 +28,44 @@ public class ForgotPasswordController {
     private static String UserName;
 
     public class PasswordGenerator {
-        private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+        private static final String DIGITS = "0123456789";
+        private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
         private static final int PASSWORD_LENGTH = 8;
 
         public static String generatePassword() {
             SecureRandom random = new SecureRandom();
             StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
-            for (int i = 0; i < PASSWORD_LENGTH; i++) {
-                int index = random.nextInt(CHARACTERS.length());
-                password.append(CHARACTERS.charAt(index));
+
+            // Ensure at least one uppercase letter
+            password.append(UPPERCASE.charAt(random.nextInt(UPPERCASE.length())));
+
+            // Ensure at least one lowercase letter
+            password.append(LOWERCASE.charAt(random.nextInt(LOWERCASE.length())));
+
+            // Ensure at least one digit
+            password.append(DIGITS.charAt(random.nextInt(DIGITS.length())));
+
+            // Ensure at least one special character
+            password.append(SPECIAL_CHARACTERS.charAt(random.nextInt(SPECIAL_CHARACTERS.length())));
+
+            // Fill the rest of the password with random characters from all categories
+            String allCharacters = UPPERCASE + LOWERCASE + DIGITS + SPECIAL_CHARACTERS;
+            for (int i = 4; i < PASSWORD_LENGTH; i++) {
+                password.append(allCharacters.charAt(random.nextInt(allCharacters.length())));
             }
-            return password.toString();
+
+            // Shuffle the characters to make the password more random
+            char[] passwordArray = password.toString().toCharArray();
+            for (int i = passwordArray.length - 1; i > 0; i--) {
+                int j = random.nextInt(i + 1);
+                char temp = passwordArray[i];
+                passwordArray[i] = passwordArray[j];
+                passwordArray[j] = temp;
+            }
+
+            return new String(passwordArray);
         }
     }
 
