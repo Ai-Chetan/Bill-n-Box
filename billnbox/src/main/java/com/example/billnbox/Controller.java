@@ -150,6 +150,8 @@ public class Controller {
         String selectedRange = Optional.ofNullable(comboBox.getSelectionModel().getSelectedItem()).orElse("Today"); // Set a default value if selectedRange is null
         String sqlQuery = "";
 
+        int ownerId = SessionManager.getInstance().getOwnerID(); // Get the OwnerID as an integer
+
         switch (selectedRange) {
             case "Today":
                 sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
@@ -157,7 +159,8 @@ public class Controller {
                         "JOIN Bill b ON o.BillID = b.BillID " +
                         "JOIN Product p ON o.SrNo = p.SrNo " +
                         "WHERE DATE(b.Time) = CURDATE() " +
-                        "GROUP BY p.Category ";
+                        "AND p.OwnerID = ? " + // Filter by OwnerID
+                        "GROUP BY p.Category";
                 break;
             case "This Week":
                 sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
@@ -165,7 +168,8 @@ public class Controller {
                         "JOIN Bill b ON o.BillID = b.BillID " +
                         "JOIN Product p ON o.SrNo = p.SrNo " +
                         "WHERE WEEK(b.Time) = WEEK(CURDATE()) AND YEAR(b.Time) = YEAR(CURDATE()) " +
-                        "GROUP BY p.Category ";
+                        "AND p.OwnerID = ? " + // Filter by OwnerID
+                        "GROUP BY p.Category";
                 break;
             case "This Month":
                 sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
@@ -173,7 +177,8 @@ public class Controller {
                         "JOIN Bill b ON o.BillID = b.BillID " +
                         "JOIN Product p ON o.SrNo = p.SrNo " +
                         "WHERE MONTH(b.Time) = MONTH(CURDATE()) AND YEAR(b.Time) = YEAR(CURDATE()) " +
-                        "GROUP BY p.Category ";
+                        "AND p.OwnerID = ? " + // Filter by OwnerID
+                        "GROUP BY p.Category";
                 break;
             case "This Year":
                 sqlQuery = "SELECT p.Category, SUM(o.Quantity) AS total_sold " +
@@ -181,21 +186,25 @@ public class Controller {
                         "JOIN Bill b ON o.BillID = b.BillID " +
                         "JOIN Product p ON o.SrNo = p.SrNo " +
                         "WHERE YEAR(b.Time) = YEAR(CURDATE()) " +
-                        "GROUP BY p.Category ";
+                        "AND p.OwnerID = ? " + // Filter by OwnerID
+                        "GROUP BY p.Category";
                 break;
         }
 
         try (Connection conn = DatabaseConfig.getConnection();
-             Statement statement = conn.createStatement();
-             ResultSet rs = statement.executeQuery(sqlQuery)) {
+             PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
-            while (rs.next()) {
-                String category = rs.getString("Category");
-                double totalSold = rs.getDouble("total_sold");
+            pstmt.setInt(1, ownerId); // Set the OwnerID parameter
 
-                PieChart.Data data = new PieChart.Data(category, totalSold);
-                if (pieChart != null) {
-                    pieChart.getData().add(data);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String category = rs.getString("Category");
+                    double totalSold = rs.getDouble("total_sold");
+
+                    PieChart.Data data = new PieChart.Data(category, totalSold);
+                    if (pieChart != null) {
+                        pieChart.getData().add(data);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -293,12 +302,15 @@ public class Controller {
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
+            // Retrieve OwnerID from SessionManager
+            Integer ownerId = SessionManager.getInstance().getOwnerID();
+            pstmt.setInt(1, ownerId); // Set the OwnerID parameter as a String
+
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
                 int belowMinimumQuantityCount = rs.getInt("belowMinimumQuantityCount");
-                // Update the label with the count of products nearing expiry
+                // Update the label with the count of products nearing minimum quantity
                 belowlowquantityLabel.setText(String.valueOf(belowMinimumQuantityCount));
             }
         } catch (SQLException e) {
@@ -314,17 +326,22 @@ public class Controller {
     private double getTotalEarningsToday() {
         double totalEarnings = 0.0;
 
-        // SQL query to get total earnings for today
+        // SQL query to get total earnings for today, filtered by OwnerID
         String sql = "SELECT SUM(Amount) AS total_amount " +
                 "FROM Bill " +
-                "WHERE DATE(Time) = CURDATE()"; // Use CURDATE() for current day
+                "WHERE DATE(Time) = CURDATE() " +
+                "AND OwnerID = ?"; // Filter by OwnerID
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                totalEarnings = rs.getDouble("total_amount");
+            Integer ownerId = SessionManager.getInstance().getOwnerID(); // Retrieve OwnerID from SessionManager
+            pstmt.setInt(1, ownerId); // Set the OwnerID parameter
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    totalEarnings = rs.getDouble("total_amount");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -339,14 +356,19 @@ public class Controller {
         String sql = "SELECT SUM(o.Quantity) AS total_quantity " +
                 "FROM Orders o " +
                 "JOIN Bill b ON o.BillID = b.BillID " +
-                "WHERE DATE(b.Time) = CURDATE()"; // Get products sold today
+                "WHERE DATE(b.Time) = CURDATE() " +
+                "AND b.OwnerID = ?"; // Filter by OwnerID
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                totalProductsSold = rs.getInt("total_quantity");
+            Integer ownerId = SessionManager.getInstance().getOwnerID(); // Retrieve OwnerID from SessionManager
+            pstmt.setInt(1, ownerId); // Set the OwnerID parameter
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    totalProductsSold = rs.getInt("total_quantity");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -354,7 +376,8 @@ public class Controller {
 
         return totalProductsSold;
     }
-/*
+
+    /*
     private void loadTop5SoldProducts() {
         String selectedRange = comboBox.getSelectionModel().getSelectedItem();
         String sqlQuery = "";
@@ -463,7 +486,7 @@ public class Controller {
         // SQL query to get monthly earnings for the specified year
         String sql = "SELECT MONTH(Time) AS month, SUM(Amount) AS total_amount " +
                 "FROM Bill " +
-                "WHERE YEAR(Time) = ? " +
+                "WHERE YEAR(Time) = ? and OwnerID=? " +
                 "GROUP BY MONTH(Time) " +
                 "ORDER BY MONTH(Time)";
 
@@ -472,6 +495,7 @@ public class Controller {
 
             // Set the year parameter in the SQL query
             pstmt.setInt(1, year);
+            pstmt.setInt(2, SessionManager.getInstance().getOwnerID());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 // Initialize an array to hold total amounts for each month
