@@ -1,8 +1,7 @@
 package com.example.billnbox;
 
 import com.example.billnbox.InventoryController.Product;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.text.FontWeight;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +25,8 @@ public class NotificationControllerNew {
     private Text notificationText;
     @FXML
     private VBox notificationPanel;
+    @FXML
+    private ScrollPane scrollPane; // Add this line
 
     private Product selectedProduct; // To store the selected product
 
@@ -61,65 +62,85 @@ public class NotificationControllerNew {
         }
     }
 
-    // Method to load notifications for expiry and low quantity products
     public void loadNotifications() {
-        String expiryQuery = "SELECT * FROM Product WHERE ExpDate <= NOW() + INTERVAL 7 DAY AND OwnerID = ?";
+        String expiryQuery = "SELECT * FROM Product WHERE ExpDate > NOW() AND ExpDate <= NOW() + INTERVAL 7 DAY AND OwnerID = ?";
+        String expiredQuery = "SELECT * FROM Product WHERE ExpDate <= NOW() AND OwnerID = ?";
         String lowQuantityQuery = "SELECT * FROM Product WHERE Quantity <= LowQuantityAlert AND OwnerID = ?";
 
         try (Connection connection = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
              PreparedStatement expiryStmt = connection.prepareStatement(expiryQuery);
+             PreparedStatement expiredStmt = connection.prepareStatement(expiredQuery);
              PreparedStatement lowQuantityStmt = connection.prepareStatement(lowQuantityQuery)) {
 
             String ownerID = String.valueOf(SessionManager.getInstance().getOwnerID());
             expiryStmt.setString(1, ownerID);
+            expiredStmt.setString(1, ownerID);
             lowQuantityStmt.setString(1, ownerID);
 
+            // Handle products that are already expired
+            ResultSet expiredResults = expiredStmt.executeQuery();
+            while (expiredResults.next()) {
+                Product product = extractProductFromResultSet(expiredResults);
+                Pane notificationPane = createNotificationPane(
+                        "Product " + product.getProductName() + " has expired.\nExpiry date was " + product.getExpDate() + "."
+                );
+                notificationPanel.getChildren().add(notificationPane);
+                addSeparator();
+            }
+
+            // Handle products that are about to expire
             ResultSet expiryResults = expiryStmt.executeQuery();
             while (expiryResults.next()) {
                 Product product = extractProductFromResultSet(expiryResults);
-                Pane notificationPane = new Pane();
-                notificationPane.setStyle("-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 15; -fx-border-radius: 15;");
-                notificationPane.setPrefHeight(71);
-                notificationPane.setPrefWidth(676);
-
-                Text notificationText = new Text("Product " + product.getProductName() + " is nearing expiry date.");
-                notificationText.setWrappingWidth(563);
-                notificationText.setLayoutX(14);
-                notificationText.setLayoutY(31);
-                notificationText.setFont(Font.font("Segoe UI", 16));
-
-                notificationPane.setPadding(new Insets(10));
+                Pane notificationPane = createNotificationPane(
+                        "A stock of " + product.getProductName() + " is about to expire. Expiry date is " + product.getExpDate() + ".\nQuantity in stock is " + product.getQuantity() + "."
+                );
                 notificationPanel.getChildren().add(notificationPane);
-                Separator separator = new Separator();
-                separator.setOrientation(Orientation.HORIZONTAL);
-                separator.setPrefWidth(676);
-                notificationPanel.getChildren().add(separator); // Add a separator for spacing
+                addSeparator();
             }
 
+            // Handle products with low quantity
             ResultSet lowQuantityResults = lowQuantityStmt.executeQuery();
             while (lowQuantityResults.next()) {
                 Product product = extractProductFromResultSet(lowQuantityResults);
-                Pane notificationPane = new Pane();
-                notificationPane.setStyle("-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 15; -fx-border-radius: 15;");
-                notificationPane.setPrefHeight(71);
-                notificationPane.setPrefWidth(676);
-
-                Text notificationText = new Text("Product " + product.getProductName() + " has low quantity.");
-                notificationText.setWrappingWidth(563);
-                notificationText.setLayoutX(14);
-                notificationText.setLayoutY(31);
-                notificationText.setFont(Font.font("Segoe UI", 16));
-
-                notificationPane.setPadding(new Insets(10));
+                Pane notificationPane = createNotificationPane(
+                        "Quantity of " + product.getProductName() + " is very low.\nOnly " + product.getQuantity() + " left."
+                );
                 notificationPanel.getChildren().add(notificationPane);
-                Separator separator = new Separator();
-                separator.setOrientation(Orientation.HORIZONTAL);
-                separator.setPrefWidth(676);
-                notificationPanel.getChildren().add(separator); // Add a separator for spacing
+                addSeparator();
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // Helper method to create notification pane
+    private Pane createNotificationPane(String message) {
+        Pane notificationPane = new Pane();
+        notificationPane.setStyle("-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 15; -fx-border-radius: 15;");
+        notificationPane.setPrefHeight(71);
+        notificationPane.setPrefWidth(676);
+
+        Text notificationText = new Text(message);
+        notificationText.setWrappingWidth(563);
+
+        // Set the font to bold using FontWeight
+        notificationText.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
+
+        // Instead of absolute positioning, we can add the text directly to the pane
+        VBox vBox = new VBox(notificationText);
+        vBox.setPadding(new Insets(10));
+        notificationPane.getChildren().add(vBox);
+
+        return notificationPane;
+    }
+
+    // Helper method to add a separator for spacing
+    private void addSeparator() {
+        Separator separator = new Separator();
+        separator.setOrientation(Orientation.HORIZONTAL);
+        separator.setPrefWidth(676);
+        notificationPanel.getChildren().add(separator);
     }
 }
