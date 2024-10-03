@@ -176,7 +176,7 @@ public class RegistrationController {
     // Check if the username already exists in the database
     private boolean isUsernameTaken(String username) {
         String query = "SELECT * FROM Owner WHERE Username = ?";
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, username);
