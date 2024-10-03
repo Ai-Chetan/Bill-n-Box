@@ -124,7 +124,7 @@ public class NotificationController {
         String expiryQuery = "SELECT * FROM Product WHERE ExpDate <= NOW() + INTERVAL 7 DAY AND OwnerID = ?";
         String lowQuantityQuery = "SELECT * FROM Product WHERE Quantity <= LowQuantityAlert AND OwnerID = ?";
 
-        try (Connection connection = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement expiryStmt = connection.prepareStatement(expiryQuery);
              PreparedStatement lowQuantityStmt = connection.prepareStatement(lowQuantityQuery)) {
 

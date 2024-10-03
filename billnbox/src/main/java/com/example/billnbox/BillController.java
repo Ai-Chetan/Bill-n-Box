@@ -39,7 +39,7 @@ public class BillController {
 
     public void getShopInfo() {
         String ownerId = null;
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             // Check if the user is an Owner or Employee
             if (isOwner) {
                 // Directly fetch Owner's info
@@ -241,7 +241,7 @@ public class BillController {
         List<Product> suggestions = new ArrayList<>();
         String query = "SELECT ProductName, Price FROM Product WHERE ProductName LIKE ? AND OwnerID = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + input + "%");
@@ -307,7 +307,7 @@ public class BillController {
         int availableQuantity = 0;
         String query = "SELECT Quantity FROM Product WHERE ProductName = ? AND OwnerID = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, productName);
@@ -382,7 +382,7 @@ public class BillController {
             String PDF_FILEPATH = RegistrationController.FilePath;
             String PDF_NAME = "Bill - " + billID + ".pdf";
             if (PDF_FILEPATH == null) {
-                PDF_FILEPATH = "C:/Users/Dell/Desktop/SEM 3/MINI PROJECT/Bill-n-Box/billnbox/Generated PDFs/";
+                PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
             }
 
 
@@ -589,7 +589,7 @@ public class BillController {
     private void updateProductStockInDatabase(Product product) {
         String query = "UPDATE Product SET Quantity = Quantity - ? WHERE ProductName = ? AND OwnerID = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, product.getQuantity()); // Deduct the product's quantity
@@ -613,7 +613,7 @@ public class BillController {
         String insertBillQuery = "INSERT INTO Bill (EmpID, OwnerID, CustomerName, Amount) VALUES (?, ?, ?, ?)";
         String insertOrderQuery = "INSERT INTO Orders (BillID, SrNo, ProductName, Quantity, TotalPrice, OwnerID) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement insertBillStmt = conn.prepareStatement(insertBillQuery, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement insertOrderStmt = conn.prepareStatement(insertOrderQuery)) {
 
@@ -669,7 +669,7 @@ public class BillController {
     private void insertLog(){
         String activity = "Bill created of Amount " + calculateTotalAmount();
         String logQuery = "INSERT INTO logs (date, time, User, activity, OwnerID) VALUES (CURDATE(), CURTIME(), ?, ?, ?)";
-        try (Connection conn1 = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn1 = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn1.prepareStatement(logQuery)) {
 
             stmt.setString(1, SessionManager.getInstance().getUsername());  // User performing the action
@@ -694,7 +694,7 @@ public class BillController {
             query = "SELECT EmpID FROM Employee WHERE Username = ?";
         }
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, username); // Use the logged-in user's username
@@ -720,7 +720,7 @@ public class BillController {
         int SrNo = -1; // Default if not found
         String query = "SELECT SrNo FROM Product WHERE ProductName = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, productName);

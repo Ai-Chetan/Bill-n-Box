@@ -193,7 +193,7 @@ public class AddNewEmployee {
         public static boolean insertEmployee(String name, String email, String number, String username, String password) {
             String query = "INSERT INTO Employee (Name, EmailID, PhoneNo, Username, Password, OwnerID) VALUES (?, ?, ?, ?, ?, ?)";
 
-            try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            try (Connection conn = DatabaseConfig.getConnection();
                  PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
                 int ownerID = SessionManager.getOwnerID(); // Get the current owner ID
