@@ -31,7 +31,7 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="486.0" prefWidth="921.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TextArea fx:id="shopaddressField" layoutX="369.0" layoutY="190.0" prefHeight="81.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+            <TextArea fx:id="shopaddressField" layoutX="370.0" layoutY="190.0" prefHeight="81.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -70,7 +70,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="shopnameField" layoutX="370.0" layoutY="114.0" prefHeight="42.0" prefWidth="359.0" promptText="Enter the Shop Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="shopnameField" layoutX="370.0" layoutY="114.0" prefHeight="42.0" prefWidth="360.0" promptText="Enter the Shop Name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>
@@ -110,7 +110,7 @@
                   <Font name="Segoe UI Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="filePath" layoutX="370.0" layoutY="301.0" prefHeight="42.0" prefWidth="359.0" promptText="Location of Directory to save PDFs" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
+            <TextField fx:id="filePath" layoutX="370.0" layoutY="301.0" prefHeight="42.0" prefWidth="360.0" promptText="Location of Directory to save PDFs" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;">
                <font>
                   <Font size="18.0" />
                </font>

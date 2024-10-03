@@ -52,7 +52,7 @@ public class ForgotPasswordController {
         String updatePasswordQueryOwner = "UPDATE Owner SET password = ? WHERE UserName = ?";
         String updatePasswordQueryEmployee = "UPDATE Employee SET password = ? WHERE UserName = ?";
 
-        try (Connection connection = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+        try (Connection connection = DatabaseConfig.getConnection()) {
             // Step 1: Try fetching EmailID from Owner table
             try (PreparedStatement selectStatementOwner = connection.prepareStatement(selectEmailQueryOwner)) {
                 selectStatementOwner.setString(1, userName);
@@ -105,8 +105,8 @@ public class ForgotPasswordController {
     public class EmailSender {
 
         public static void sendEmail(String recipientEmail, String newPassword) {
-            String senderEmail = ""; // your email address
-            String senderPassword = ""; // your email password
+            String senderEmail = "billnboxibms@gmail.com"; // your email address
+            String senderPassword = "irpf iawh jlau uujx"; // your email password
 
             // SMTP server properties
             Properties properties = new Properties();

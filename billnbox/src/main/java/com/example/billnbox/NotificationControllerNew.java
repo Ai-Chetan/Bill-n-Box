@@ -28,6 +28,7 @@ public class NotificationControllerNew {
     @FXML
     private ScrollPane scrollPane; // Add this line
 
+    private static int notificationCount = 0;
     private Product selectedProduct; // To store the selected product
 
     // Helper method to extract product information from the ResultSet
@@ -47,6 +48,9 @@ public class NotificationControllerNew {
     // Method to initialize the notification panel and load notifications
     @FXML
     private void initialize() {
+        if (scrollPane != null) {
+            scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        }
         loadNotifications();
     }
 
@@ -67,7 +71,7 @@ public class NotificationControllerNew {
         String expiredQuery = "SELECT * FROM Product WHERE ExpDate <= NOW() AND OwnerID = ?";
         String lowQuantityQuery = "SELECT * FROM Product WHERE Quantity <= LowQuantityAlert AND OwnerID = ?";
 
-        try (Connection connection = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement expiryStmt = connection.prepareStatement(expiryQuery);
              PreparedStatement expiredStmt = connection.prepareStatement(expiredQuery);
              PreparedStatement lowQuantityStmt = connection.prepareStatement(lowQuantityQuery)) {
@@ -86,6 +90,7 @@ public class NotificationControllerNew {
                 );
                 notificationPanel.getChildren().add(notificationPane);
                 addSeparator();
+                notificationCount++;
             }
 
             // Handle products that are about to expire
@@ -97,6 +102,7 @@ public class NotificationControllerNew {
                 );
                 notificationPanel.getChildren().add(notificationPane);
                 addSeparator();
+                notificationCount++;
             }
 
             // Handle products with low quantity
@@ -108,6 +114,7 @@ public class NotificationControllerNew {
                 );
                 notificationPanel.getChildren().add(notificationPane);
                 addSeparator();
+                notificationCount++;
             }
 
         } catch (SQLException e) {
@@ -118,7 +125,7 @@ public class NotificationControllerNew {
     // Helper method to create notification pane
     private Pane createNotificationPane(String message) {
         Pane notificationPane = new Pane();
-        notificationPane.setStyle("-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 15; -fx-border-radius: 15;");
+        notificationPane.setStyle("-fx-background-color: #F7F7F7; -fx-border-color: black; -fx-background-radius: 15; -fx-border-radius: 15;");
         notificationPane.setPrefHeight(71);
         notificationPane.setPrefWidth(676);
 
@@ -131,6 +138,7 @@ public class NotificationControllerNew {
         // Instead of absolute positioning, we can add the text directly to the pane
         VBox vBox = new VBox(notificationText);
         vBox.setPadding(new Insets(10));
+        notificationPanel.setPadding(new Insets(10, 20, 10, 10));
         notificationPane.getChildren().add(vBox);
 
         return notificationPane;
@@ -142,5 +150,10 @@ public class NotificationControllerNew {
         separator.setOrientation(Orientation.HORIZONTAL);
         separator.setPrefWidth(676);
         notificationPanel.getChildren().add(separator);
+        notificationPanel.setPadding(new Insets(10, 20, 10, 10));
+    }
+
+    public static int getNotificationCount () {
+        return notificationCount;
     }
 }

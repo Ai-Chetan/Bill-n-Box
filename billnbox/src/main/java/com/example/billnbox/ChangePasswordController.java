@@ -79,7 +79,7 @@ public class ChangePasswordController {
             sql = "SELECT Password FROM Employee WHERE Username = ?";
         }
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
@@ -113,7 +113,7 @@ public class ChangePasswordController {
             updateSQL = "UPDATE Employee SET Password = ? WHERE Username = ?";
         }
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
 
             pstmt.setString(1, newPassword);

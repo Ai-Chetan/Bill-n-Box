@@ -105,7 +105,7 @@ public class LoginController {
 
         // First check Employee table
         sql = "SELECT * FROM Employee WHERE Username = ? AND Password = ?";
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
@@ -126,7 +126,7 @@ public class LoginController {
 
         // If not found in Employee table, check Owner table
         sql = "SELECT * FROM Owner WHERE Username = ? AND Password = ?";
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
@@ -190,7 +190,7 @@ public class LoginController {
 
     private void logActivity(String username, String activity) {
         String sql = "INSERT INTO logs (date, time, User, activity,OwnerID) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));

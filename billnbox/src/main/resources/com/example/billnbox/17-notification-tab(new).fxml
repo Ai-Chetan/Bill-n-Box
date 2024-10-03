@@ -37,7 +37,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <ScrollPane layoutX="20.0" layoutY="22.0" prefHeight="401.0" prefWidth="762.0" style="-fx-background-color: white;" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+            <ScrollPane hbarPolicy="NEVER" layoutX="20.0" layoutY="22.0" prefHeight="401.0" prefWidth="762.0" vbarPolicy="AS_NEEDED">
                <VBox fx:id="notificationPanel" prefWidth="762.0" style="-fx-border-color: black; -fx-border-radius: 15; -fx-background-color: white; -fx-background-radius: 15;" />
             </ScrollPane>
          </children>

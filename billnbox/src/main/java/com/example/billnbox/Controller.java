@@ -50,8 +50,9 @@ public class Controller {
     private Button employeesButton; // Reference to the Employees button
     @FXML
     private TextField yearInput;
+    NotificationControllerNew notificationControllerNew = new NotificationControllerNew();
     @FXML
-    private Text topOne, topTwo, topThree, topFour, topFive;
+    private Text topOne, topTwo, topThree, topFour, topFive, notificationCount;
     @FXML
     private ImageView bellIcon;
 
@@ -63,6 +64,9 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        if (notificationCount != null) {
+            notificationCount.setText(String.valueOf(NotificationControllerNew.getNotificationCount()));
+        }
         if (comboBox != null) {
             ObservableList<String> items = FXCollections.observableArrayList("Today", "This Week", "This Month", "This Year", "All Time");
             comboBox.setItems(items);
@@ -129,8 +133,9 @@ public class Controller {
             protected void succeeded() {
                 super.succeeded();
                 Platform.runLater(() -> {
-
-                    loadTopSoldProductsPieChart();
+                    if (comboBox != null) {
+                        loadTopSoldProductsPieChart();
+                    }
                 });
             }
         };
@@ -140,8 +145,8 @@ public class Controller {
     private void loadTopSoldProductsPieChart() {
         if (pieChart != null) {
             pieChart.getData().clear();
+            pieChart.setLabelLineLength(5);
         }
-        pieChart.setLabelLineLength(5);
         String selectedRange = Optional.ofNullable(comboBox.getSelectionModel().getSelectedItem()).orElse("Today"); // Set a default value if selectedRange is null
         String sqlQuery = "";
 
@@ -180,7 +185,7 @@ public class Controller {
                 break;
         }
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              Statement statement = conn.createStatement();
              ResultSet rs = statement.executeQuery(sqlQuery)) {
 
@@ -195,16 +200,6 @@ public class Controller {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    // Database connection optimization
-    private Connection getConnection() {
-        try {
-            return DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
@@ -250,7 +245,7 @@ public class Controller {
                 "WHERE ExpDate <= CURDATE() " +
                 "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
@@ -273,7 +268,7 @@ public class Controller {
                 "WHERE ExpDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) " +
                 "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
@@ -295,7 +290,7 @@ public class Controller {
                 "WHERE Quantity <= LowQuantityAlert " +
                 "AND OwnerID = ?"; // Assuming OwnerID is used to filter products for the current owner
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());  // Replace with appropriate OwnerID logic
@@ -324,7 +319,7 @@ public class Controller {
                 "FROM Bill " +
                 "WHERE DATE(Time) = CURDATE()"; // Use CURDATE() for current day
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -346,7 +341,7 @@ public class Controller {
                 "JOIN Bill b ON o.BillID = b.BillID " +
                 "WHERE DATE(b.Time) = CURDATE()"; // Get products sold today
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -472,7 +467,7 @@ public class Controller {
                 "GROUP BY MONTH(Time) " +
                 "ORDER BY MONTH(Time)";
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // Set the year parameter in the SQL query
@@ -582,7 +577,7 @@ public class Controller {
 
     private void logActivity(String username, String activity) {
         String sql = "INSERT INTO logs (date, time, User, activity, OwnerID) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
