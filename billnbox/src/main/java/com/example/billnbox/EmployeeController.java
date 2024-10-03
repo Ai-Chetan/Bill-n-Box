@@ -85,8 +85,7 @@ public class EmployeeController {
             conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
             String query = "SELECT EmpID, Username, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
             pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, SessionManager.getInstance().getOwnerID()); // Assuming OwnerID is a String
-
+            pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
             rs = pstmt.executeQuery();
 
             // Clear the employeeList before adding new data
@@ -175,17 +174,17 @@ public class EmployeeController {
 
         try {
             conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-            String updateQuery = "UPDATE Employee SET Name = ?, Username = ?, Password = ?, PhoneNo = ?, EmailID = ? WHERE EmpID = ?";
+            String updateQuery = "UPDATE Employee SET Name = ?, Username = ?, PhoneNo = ?, EmailID = ? WHERE Username = ? and OwnerID=?";
 
             pstmt = conn.prepareStatement(updateQuery);
 
             for (Employee employee : employeeList) {
                 pstmt.setString(1, employee.getName());
                 pstmt.setString(2, employee.getUsername());
-                pstmt.setString(3, employee.getPassword());
-                pstmt.setString(4, employee.getPhone());
-                pstmt.setString(5, employee.getEmail());
-                pstmt.setInt(6, employee.getSrNo());
+                pstmt.setString(3, employee.getPhone());
+                pstmt.setString(4, employee.getEmail());
+                pstmt.setString(5, employee.getUsername());
+                pstmt.setInt(6, SessionManager.getInstance().getOwnerID());
 
                 pstmt.addBatch();
             }
@@ -245,9 +244,10 @@ public class EmployeeController {
 
         try {
             conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-            String query = "DELETE FROM Employee WHERE EmpID = ?";
+            String query = "DELETE FROM Employee WHERE Username = ? and OwnerID=?";
             pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, employee.getSrNo());
+            pstmt.setString(1, employee.getUsername());
+            pstmt.setInt(2, SessionManager.getInstance().getOwnerID());
             pstmt.executeUpdate();
 
             // Remove employee from the TableView
