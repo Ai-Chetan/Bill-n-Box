@@ -134,6 +134,10 @@ public class AddNewEmployee {
             showError("Password must be at least 8 characters long");
             return;
         }
+        if(isUsernameTaken(EmpUsername.getText())){
+            showError("Username already exists. Please choose another.");
+            return;
+        }
 
         String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).+$";
         if (!EmpPassword.getText().matches(passwordPattern)) {
@@ -171,6 +175,20 @@ public class AddNewEmployee {
         progBar2.setProgress(1.0);  // Set progress to full when done
     }
 
+    private boolean isUsernameTaken(String username) {
+        String query = "SELECT * FROM Employee WHERE Username = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();  // If a record is found, the username exists
+        } catch (SQLException e) {
+            System.out.println("Database connection failed: " + e.getMessage());
+        }
+        return false;
+    }
     // Method to show error messages with a timer
     private void showError(String message) {
         if (emptyFields != null) {

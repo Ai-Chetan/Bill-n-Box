@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -28,6 +29,12 @@ public class LoginController {
     private PasswordField passwordField;
 
     @FXML
+    private TextField visiblePasswordField; // TextField to show plain text password
+
+    @FXML
+    private CheckBox showpasswordCheckbox; // CheckBox for toggling visibility
+
+    @FXML
     private Label loginErrorLabel;
 
     private String username;
@@ -44,6 +51,24 @@ public class LoginController {
 
     public void initialize() {
         loginErrorLabel.setVisible(false);
+        visiblePasswordField.setVisible(false); // Initially hidden since password is masked
+        visiblePasswordField.managedProperty().bind(visiblePasswordField.visibleProperty());
+
+    }
+
+    @FXML
+    private void togglePasswordVisibility(ActionEvent event) {
+        if (showpasswordCheckbox.isSelected()) {
+            // Show the plain text password and hide the PasswordField
+            visiblePasswordField.setText(passwordField.getText());
+            visiblePasswordField.setVisible(true);
+            passwordField.setVisible(false);
+        } else {
+            // Hide the plain text password and show the PasswordField
+            passwordField.setText(visiblePasswordField.getText());
+            passwordField.setVisible(true);
+            visiblePasswordField.setVisible(false);
+        }
     }
 
     @FXML
@@ -51,7 +76,9 @@ public class LoginController {
 
         // Get the username and password from the fields
         username = usernameField.getText();
-        String password = passwordField.getText();
+        //String password = passwordField.getText();
+
+        String password = showpasswordCheckbox.isSelected() ? visiblePasswordField.getText() : passwordField.getText();
 
         // Check if fields are empty
         if (username.isEmpty() || password.isEmpty()) {
