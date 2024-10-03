@@ -21,7 +21,7 @@ import java.sql.*;
 
 public class NotificationControllerNew {
     @FXML
-    private Button backButton, removeAllButton, removeBtn;
+    private Button backButton;
     @FXML
     private Text notificationText;
     @FXML
@@ -88,16 +88,6 @@ public class NotificationControllerNew {
                 notificationText.setLayoutY(31);
                 notificationText.setFont(Font.font("Segoe UI", 16));
 
-                Button removeButton = new Button("x");
-                removeButton.setLayoutX(600);
-                removeButton.setLayoutY(11);
-                removeButton.setStyle("-fx-background-color: #e4c8aa;");
-                removeButton.setFont(Font.font("Segoe UI", 22));
-                removeButton.setOnAction(event -> {
-                    notificationPanel.getChildren().remove(notificationPane);
-                });
-
-                notificationPane.getChildren().addAll(notificationText, removeButton);
                 notificationPane.setPadding(new Insets(10));
                 notificationPanel.getChildren().add(notificationPane);
                 Separator separator = new Separator();
@@ -120,16 +110,6 @@ public class NotificationControllerNew {
                 notificationText.setLayoutY(31);
                 notificationText.setFont(Font.font("Segoe UI", 16));
 
-                Button removeButton = new Button("x");
-                removeButton.setLayoutX(600);
-                removeButton.setLayoutY(11);
-                removeButton.setStyle("-fx-background-color: #e4c8aa;");
-                removeButton.setFont(Font.font("Segoe UI", 22));
-                removeButton.setOnAction(event -> {
-                    notificationPanel.getChildren().remove(notificationPane);
-                });
-
-                notificationPane.getChildren().addAll(notificationText, removeButton);
                 notificationPane.setPadding(new Insets(10));
                 notificationPanel.getChildren().add(notificationPane);
                 Separator separator = new Separator();
@@ -141,10 +121,5 @@ public class NotificationControllerNew {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    private void handleRemoveAll(ActionEvent event) {
-        notificationPanel.getChildren().clear();
     }
 }
