@@ -116,7 +116,7 @@ public class AddNewProduct {
     public static void addProductsToInventory(ObservableList<Product> products) throws SQLException {
         String insertSql = "INSERT INTO Product (ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert, OwnerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
 
             for (Product product : products) {
@@ -341,7 +341,7 @@ public class AddNewProduct {
     private void logActivity(String activity) {
         String insertLogSql = "INSERT INTO logs (date, time, User, activity, OwnerID) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(insertLogSql)) {
 
             // Set current date and time

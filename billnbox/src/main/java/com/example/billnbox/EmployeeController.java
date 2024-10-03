@@ -35,9 +35,6 @@ public class EmployeeController {
     private TableColumn<Employee, String> usernameColumn;
 
     @FXML
-    private TableColumn<Employee, String> passwordColumn;
-
-    @FXML
     private TableColumn<Employee, String> phoneColumn;
 
     @FXML
@@ -60,7 +57,6 @@ public class EmployeeController {
         srNoColumn.setCellValueFactory(new PropertyValueFactory<>("srNo"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
@@ -83,8 +79,8 @@ public class EmployeeController {
         int srNo = 1;  // Initialize serial number counter
 
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-            String query = "SELECT EmpID, Username, Password, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
+            conn = DatabaseConfig.getConnection();
+            String query = "SELECT EmpID, Username, Name, EmailID, PhoneNo, OwnerID FROM Employee WHERE OwnerID = ?";
             pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
             rs = pstmt.executeQuery();
@@ -97,7 +93,6 @@ public class EmployeeController {
                         srNo++,  // Increment and set SrNo
                         rs.getString("Name"),
                         rs.getString("Username"),
-                        rs.getString("Password"),
                         rs.getString("PhoneNo"),
                         rs.getString("EmailID"),
                         rs.getInt("OwnerID") // Set OwnerID
@@ -157,9 +152,6 @@ public class EmployeeController {
             usernameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
             usernameColumn.setOnEditCommit(event -> event.getRowValue().setUsername(event.getNewValue()));
 
-            passwordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            passwordColumn.setOnEditCommit(event -> event.getRowValue().setPassword(event.getNewValue()));
-
             phoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
             phoneColumn.setOnEditCommit(event -> event.getRowValue().setPhone(event.getNewValue()));
 
@@ -178,18 +170,17 @@ public class EmployeeController {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
-            String updateQuery = "UPDATE Employee SET Name = ?, Username = ?, Password = ?, PhoneNo = ?, EmailID = ? WHERE EmpID = ?";
+            conn = DatabaseConfig.getConnection();
+            String updateQuery = "UPDATE Employee SET Name = ?, Username = ?, PhoneNo = ?, EmailID = ? WHERE EmpID = ?";
 
             pstmt = conn.prepareStatement(updateQuery);
 
             for (Employee employee : employeeList) {
                 pstmt.setString(1, employee.getName());
                 pstmt.setString(2, employee.getUsername());
-                pstmt.setString(3, employee.getPassword());
-                pstmt.setString(4, employee.getPhone());
-                pstmt.setString(5, employee.getEmail());
-                pstmt.setInt(6, employee.getSrNo());
+                pstmt.setString(3, employee.getPhone());
+                pstmt.setString(4, employee.getEmail());
+                pstmt.setInt(5, employee.getSrNo());
 
                 pstmt.addBatch();
             }
@@ -248,7 +239,7 @@ public class EmployeeController {
         PreparedStatement pstmt = null;
 
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            conn = DatabaseConfig.getConnection();
             String query = "DELETE FROM Employee WHERE EmpID = ?";
             pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, employee.getSrNo());
@@ -280,11 +271,10 @@ public class EmployeeController {
         private String email;
         private int ownerId;
 
-        public Employee(int srNo, String name, String username, String password, String phone, String email, int ownerId) {
+        public Employee(int srNo, String name, String username, String phone, String email, int ownerId) {
             this.srNo = srNo;
             this.name = name;
             this.username = username;
-            this.password = password;
             this.phone = phone;
             this.email = email;
             this.ownerId = ownerId;
@@ -308,14 +298,6 @@ public class EmployeeController {
 
         public void setUsername(String username) {
             this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
         }
 
         public String getPhone() {

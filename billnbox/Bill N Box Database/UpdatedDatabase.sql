@@ -1,6 +1,7 @@
 show databases;
 create database billnbox;
 use billnbox;
+show tables;
 
 
 -- 1. Bill Table
@@ -194,24 +195,54 @@ INSERT INTO Employee (Username, Password, Name, EmailID, PhoneNo) VALUES
 ('dekock123', 'dekock@123', 'Quniton de kock', 'quniton@gmail.com', '9087654321'),
 ('abd', 'abd', 'A B De Villers', 'abd@gmail.com', '7895243610');
 
-INSERT INTO Product (SrNo, ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert, OwnerID) VALUES
-(1, 'Notebook', 'Paper Products', 10, 45.00, '2023-07-01', '2025-07-01', 10, '1'),
-(2, 'Pen', 'Writing Instruments', 25, 15.00, '2023-07-15', '2025-07-15', 25, '1'),
-(3, 'Pencil', 'Writing Instruments', 25, 10.00, '2023-07-10', '2025-07-10', 25, '1'),
-(4, 'Eraser', 'Accessories', 10, 5.00, '2023-07-05', '2025-07-05', 10, '1'),
-(5, 'Sharpener', 'Accessories', 10, 8.00, '2023-07-05', '2025-07-05', 10, '1'),
-(6, 'Ruler', 'Measuring Tools', 5, 20.00, '2023-07-01', '2025-07-01', 5, '1'),
-(7, 'Glue Stick', 'Adhesives', 40, 35.00, '2023-06-30', '2025-06-30', 5, '1'),
-(8, 'Scissors', 'Cutting Tools', 25, 75.00, '2023-07-01', '2025-07-01', 5, '1'),
-(9, 'Stapler', 'Office Supplies', 15, 90.00, '2023-07-01', '2025-07-01', 10, '1'),
-(10, 'Staples', 'Office Supplies', 50, 25.00, '2023-07-01', '2025-07-01', 15, '1'),
-(11, 'Highlighter', 'Writing Instruments', 30, 45.00, '2023-07-01', '2025-07-01', 5, '1'),
-(12, 'Calculator', 'Electronics', 10, 750.00, '2023-06-15', '2025-06-15', 5, '1'),
-(13, 'Sticky Notes', 'Paper Products', 100, 60.00, '2023-06-30', '2025-06-30', 10, '1'),
-(14, 'Whiteboard Marker', 'Writing Instruments', 50, 40.00, '2023-07-01', '2025-07-01', 10, '1'),
-(15, 'Permanent Marker', 'Writing Instruments', 50, 42.00, '2023-07-01', '2025-07-01', 10, '1'),
-(16, 'Binder Clips', 'Office Supplies', 40, 22.00, '2023-07-01', '2025-07-01', 10, '1'),
-(17, 'Paper Clips', 'Office Supplies', 100, 5.00, '2023-07-01', '2025-07-01', 10, '1'),
-(18, 'Folders', 'Paper Products', 50, 45.00, '2023-07-01', '2025-07-01', 15, '1'),
-(19, 'Tape', 'Adhesives', 30, 30.00, '2023-07-01', '2024-10-08', 5, '1');
 
+
+INSERT INTO Product (ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert, OwnerID)
+VALUES
+('Toor Dal 1kg', 'Pulses', 150, 100.00, '2023-01-01', '2025-01-01', 25, 1),  -- 2 years
+('Chana Dal 1kg', 'Pulses', 120, 90.00, '2023-02-01', '2025-02-01', 30, 1),  -- 2 years
+('Moong Dal 1kg', 'Pulses', 100, 110.00, '2023-03-01', '2024-03-01', 25, 1),  -- 1 year
+('Masoor Dal 1kg', 'Pulses', 110, 95.00, '2023-04-01', '2025-04-01', 25, 1),  -- 2 years
+('Brown Rice 1kg', 'Grains', 80, 80.00, '2023-05-01', '2024-05-01', 15, 1),  -- 1 year
+('Basmati Rice 1kg', 'Grains', 200, 90.00, '2023-06-10', '2025-06-10', 30, 1),  -- 2 years
+('Quinoa 500g', 'Grains', 60, 120.00, '2023-07-05', '2024-07-05', 25, 1),  -- 1 year
+('Whole Wheat Flour 1kg', 'Grains', 150, 50.00, '2023-08-20', '2024-08-20', 30, 1),  -- 1 year
+('Red Kidney Beans 500g', 'Pulses', 100, 70.00, '2023-09-01', '2025-09-01', 20, 1),  -- 2 years
+('Chickpeas 500g', 'Pulses', 90, 80.00, '2023-10-01', '2024-10-01', 15, 1),  -- 1 year
+('Lentils 500g', 'Pulses', 95, 75.00, '2023-11-01', '2025-11-01', 20, 1),  -- 2 years
+('Pigeon Peas 500g', 'Pulses', 85, 65.00, '2023-12-01', '2024-12-01', 15, 1),  -- 1 year
+('Parle-G Biscuits 500g', 'Biscuits', 120, 50.00, '2023-05-01', '2024-05-01', 20, 1),  -- 1 year
+('Oreo Chocolate Cream Biscuits 300g', 'Biscuits', 85, 60.00, '2023-06-15', '2024-12-15', 10, 1),  -- 1.5 years
+('Lay’s Classic Salted Chips 200g', 'Snacks', 150, 35.00, '2023-01-10', '2025-01-10', 30, 1),  -- 2 years
+('Kurkure Masala Munch 150g', 'Snacks', 200, 25.00, '2023-03-01', '2024-09-01', 25, 1),  -- 6 months
+('Bingo Mad Angles 100g', 'Snacks', 100, 20.00, '2023-12-01', '2024-06-01', 15, 1),  -- 6 months
+('Maggi Noodles 70g', 'Instant Noodles', 300, 12.00, '2024-02-20', '2025-08-20', 50, 1),  -- 1.5 years
+('Top Ramen Curry Noodles 280g', 'Instant Noodles', 250, 45.00, '2024-03-10', '2025-11-10', 40, 1),  -- 20 months
+('Sunfeast Marie Light Biscuits 250g', 'Biscuits', 180, 30.00, '2023-11-01', '2024-11-01', 25, 1),  -- 1 year
+('Good Day Cashew Cookies 500g', 'Biscuits', 90, 55.00, '2023-10-05', '2024-10-05', 15, 1),  -- 1 year
+('Britannia Bourbon 400g', 'Biscuits', 140, 60.00, '2024-04-01', '2025-04-01', 20, 1),  -- 1 year
+('Haldiram’s Classic Salted Peanuts 250g', 'Snacks', 110, 40.00, '2023-09-10', '2024-09-10', 15, 1),  -- 1 year
+('Pringles Original 110g', 'Snacks', 130, 80.00, '2024-01-05', '2025-01-05', 20, 1),  -- 1 year
+('Doritos Nacho Cheese Chips 150g', 'Snacks', 75, 85.00, '2024-02-01', '2025-06-01', 10, 1),  -- 16 months
+('Cheetos Cheese Puffs 150g', 'Snacks', 190, 70.00, '2024-03-15', '2025-07-15', 20, 1),  -- 16 months
+('Yippee Noodles Magic Masala 65g', 'Instant Noodles', 250, 10.00, '2024-01-20', '2025-04-20', 40, 1),  -- 15 months
+('Aloo Bhujia 200g', 'Snacks', 150, 30.00, '2024-03-05', '2025-03-05', 15, 1),  -- 1 year
+('Bisleri Water 1L', 'Beverages', 200, 15.00, '2024-01-10', '2025-01-10', 50, 1),  -- 1 year
+('Tata Tea 500g', 'Beverages', 120, 100.00, '2023-12-15', '2024-12-15', 25, 1),  -- 1 year
+('Bournvita 500g', 'Health Drink', 80, 250.00, '2023-11-05', '2024-11-05', 15, 1),  -- 1 year
+('Nescafe Coffee 100g', 'Beverages', 150, 300.00, '2024-02-10', '2025-05-10', 20, 1),  -- 15 months
+('Patanjali Atta 1kg', 'Staples', 100, 40.00, '2024-03-01', '2025-03-01', 25, 1),  -- 1 year
+('Dalda Ghee 1L', 'Cooking Oil', 80, 400.00, '2023-10-15', '2024-10-15', 10, 1),  -- 1 year
+('Uncle Chipps 150g', 'Snacks', 90, 30.00, '2024-02-15', '2025-05-15', 15, 1),  -- 15 months
+('Pillsbury Atta 5kg', 'Staples', 50, 250.00, '2024-02-20', '2025-02-20', 30, 1),  -- 1 year
+('Almonds 200g', 'Dry Fruits', 90, 400.00, '2024-03-01', '2025-06-01', 15, 1),  -- 15 months
+('Cashews 200g', 'Dry Fruits', 80, 450.00, '2023-12-10', '2025-04-10', 20, 1),  -- 1.5 years
+('Pistachios 100g', 'Dry Fruits', 50, 600.00, '2023-10-20', '2025-10-20', 25, 1),  -- 2 years
+('Raisins 200g', 'Dry Fruits', 75, 250.00, '2024-01-05', '2025-01-05', 15, 1),  -- 1 year
+('Dates 250g', 'Dry Fruits', 120, 300.00, '2023-09-15', '2024-09-15', 20, 1),  -- 1 year
+('Walnuts 100g', 'Dry Fruits', 60, 500.00, '2023-11-01', '2024-11-01', 20, 1);  -- 1 year
+
+
+
+select * from Product;
+truncate table Product;

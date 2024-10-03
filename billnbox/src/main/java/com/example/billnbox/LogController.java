@@ -54,12 +54,8 @@ public class LogController {
     private void loadLogData() {
         ObservableList<LogEntry> logData = FXCollections.observableArrayList();
 
-        // Use DatabaseConfig to get the connection details
-        String dbUrl = DatabaseConfig.getUrl();
-        String dbUser = DatabaseConfig.getUser();
-        String dbPassword = DatabaseConfig.getPassword();
 
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             // Fetch the OwnerID from the session
             int ownerID = SessionManager.getOwnerID();
 

@@ -46,7 +46,7 @@ public class RegistrationController {
 
         public static void storeUser(String username, String password, String name, String email, String mobno, String shopname, String shopaddress) {
             String insertSQL = "INSERT INTO Owner (Username, Password, Name, EmailID, PhoneNo, ShopName, ShopAddress) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+            try (Connection conn = DatabaseConfig.getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(insertSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pstmt.setString(1, username);
                 pstmt.setString(2, password);

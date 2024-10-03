@@ -55,8 +55,8 @@ public class ProfileController {
             return;
         }
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
-            if (isOwner) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
+             if (isOwner) {
                 loadOwnerDetails(conn); // Load owner details if they are an owner
             } else {
                 loadEmployeeDetails(conn); // Load employee details
@@ -229,7 +229,7 @@ public class ProfileController {
         // Update employee details
         String updateEmployeeSQL = "UPDATE Employee SET Name = ?, EmailID = ?, PhoneNo = ? WHERE Username = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
 
             // Update owner details if the user is the owner
             if (isOwner) {

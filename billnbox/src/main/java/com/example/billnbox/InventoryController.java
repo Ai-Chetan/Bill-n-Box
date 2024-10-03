@@ -215,7 +215,7 @@ public class InventoryController {
         // Use the OwnerID from the session manager
         String sql = "SELECT SrNo, ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert FROM Product WHERE OwnerID=?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // Set the OwnerID parameter
@@ -261,7 +261,7 @@ public class InventoryController {
         String updateSql = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ?, LowQuantityAlert = ? WHERE SrNo = ? AND OwnerID = ?";
         String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";  // SQL to delete products
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement updateStmt = conn.prepareStatement(updateSql);
              PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
 
@@ -354,7 +354,7 @@ public class InventoryController {
     private void deleteProductFromDatabase(Product product) {
         String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             // Disable foreign key checks
             Statement stmt = conn.createStatement();
             stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
@@ -427,7 +427,7 @@ public class InventoryController {
     private void deleteMarkedProducts() {
         String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword())) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             // Disable foreign key checks
             Statement stmt = conn.createStatement();
             stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
@@ -472,7 +472,7 @@ public class InventoryController {
     // Update product information in the database
     private void updateProductInDatabase(Product product) {
         String updateQuery = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ? WHERE SrNo = ? AND OwnerID = ?";
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
 
             stmt.setString(1, product.getProductName());
@@ -507,7 +507,7 @@ public class InventoryController {
     private void insertLog(String activity) {
         String logQuery = "INSERT INTO logs (date, time, User, activity,OwnerID) VALUES (CURDATE(), CURTIME(), ?, ?,?)";
 
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(logQuery)) {
 
             stmt.setString(1, getCurrentUser());  // User performing the action
