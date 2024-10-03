@@ -2,7 +2,7 @@ package com.example.billnbox;
 
 public class SessionManager {
     private static SessionManager instance;
-    private static String username;
+    static String username;
     private String shopname;
     private String shopaddress;
     private static int ownerID;

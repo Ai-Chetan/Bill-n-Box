@@ -15,6 +15,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import static com.example.billnbox.SessionManager.username;
+
 
 public class RegistrationController {
 
@@ -84,7 +86,6 @@ public class RegistrationController {
         }
     }
 
-    // Move to Page 2 (Shop Details)
     // Move to Page 2 (Shop Details)
     @FXML
     private void RegistrationNext1(ActionEvent event) {
@@ -160,8 +161,10 @@ public class RegistrationController {
             showError("Password must be at least 8 characters long");
         } else if (!Password.matches(passwordPattern)) {
             showError("Password must contain at least one uppercase letter, one digit, and one special symbol");
-        }else if (Username.isEmpty() || Password.isEmpty()) {
+        } else if (Username.isEmpty() || Password.isEmpty()) {
             showError("Username and Password Fields cannot be Empty");
+        } else if (isUsernameTaken(Username)) {  // Check if the username is already taken
+            showError("Username already exists. Please choose another.");
         } else {
             // Set username in SessionManager
             SessionManager.getInstance().setUsername(Username);
@@ -170,6 +173,21 @@ public class RegistrationController {
         }
     }
 
+    // Check if the username already exists in the database
+    private boolean isUsernameTaken(String username) {
+        String query = "SELECT * FROM Owner WHERE Username = ?";
+        try (Connection conn = DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUser(), DatabaseConfig.getPassword());
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();  // If a record is found, the username exists
+        } catch (SQLException e) {
+            System.out.println("Database connection failed: " + e.getMessage());
+        }
+        return false;
+    }
 
     // Validation for empty fields
     private boolean validateFields(String... fields) {
@@ -188,11 +206,12 @@ public class RegistrationController {
             emptyFields.setVisible(true);
             emptyFields.setText(message);
 
+            // Hide the label after 3 seconds
             Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.millis(3000), // 3 seconds delay
-                    event -> emptyFields.setVisible(false) // Hide the label after the delay
+                    Duration.millis(3000),
+                    event -> emptyFields.setVisible(false)
             ));
-            timeline.setCycleCount(1); // Execute only once
+            timeline.setCycleCount(1);
             timeline.play();
         }
     }
