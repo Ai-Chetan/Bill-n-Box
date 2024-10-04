@@ -63,11 +63,20 @@ public class AddNewEmployee {
             return;
         }
 
+
+        String gmailPattern = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+        if (!EmailID.matches(gmailPattern)) {
+            showError("Invalid Email-Id.");
+            return;
+        }
+
         // Mobile number constraint - must be exactly 10 digits
         if (!PhoneNo.matches("\\d{10}")) {
             showError("Mobile number must be exactly 10 digits");
             return;
         }
+
+
 
         // Hide the first section and display the next section
         employeeName.setVisible(false);
