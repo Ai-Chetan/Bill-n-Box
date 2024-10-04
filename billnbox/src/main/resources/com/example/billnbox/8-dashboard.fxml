@@ -248,7 +248,7 @@
       </Pane>
       <Pane fx:id="topsoldmonthly" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.95" prefHeight="295.0" prefWidth="404.0" style="-fx-background-color: E4C8AAFF; -fx-border-color: Black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <PieChart fx:id="pieChart" layoutY="23.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="261.0" prefWidth="404.0" />
+            <PieChart fx:id="pieChart" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="247.0" prefWidth="404.0" />
             <Text layoutX="23.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Top Sold Categories">
                <font>
                   <Font name="Arial" size="24.0" />
