@@ -93,10 +93,15 @@ public class RegistrationController {
         EmailID = emailField.getText();
         MobileNumber = mobnoField.getText();
 
+        String gmailPattern = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
         if (Name.isEmpty() || EmailID.isEmpty() || MobileNumber.isEmpty()) {
             showError("Fields cannot be Empty");
         } else if (!MobileNumber.matches("\\d{10}")) {
             showError("Mobile number must consist of exactly 10 digits");
+        } else if (!EmailID.matches(gmailPattern)) {
+
+            showError("Invalid Email-Id.");
+
         } else {
             // Pass data to next controller
             if (validateFields(Name, EmailID, MobileNumber)) {
@@ -121,7 +126,7 @@ public class RegistrationController {
         }
     }
 
-    public String getFilePath () {
+    public String getFilePath() {
         return FilePath;
     }
 
@@ -258,4 +263,6 @@ public class RegistrationController {
         this.ShopName = shopName;
         this.ShopAddress = shopAddress;
     }
-}
+
+
+    }
