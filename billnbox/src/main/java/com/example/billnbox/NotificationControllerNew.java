@@ -90,7 +90,7 @@ public class NotificationControllerNew {
                 );
                 notificationPanel.getChildren().add(notificationPane);
                 addSeparator();
-                notificationCount++;
+                //notificationCount++;
             }
 
             // Handle products that are about to expire
@@ -102,7 +102,7 @@ public class NotificationControllerNew {
                 );
                 notificationPanel.getChildren().add(notificationPane);
                 addSeparator();
-                notificationCount++;
+                //notificationCount++;
             }
 
             // Handle products with low quantity
@@ -114,7 +114,7 @@ public class NotificationControllerNew {
                 );
                 notificationPanel.getChildren().add(notificationPane);
                 addSeparator();
-                notificationCount++;
+                //notificationCount++;
             }
 
         } catch (SQLException e) {
@@ -153,7 +153,47 @@ public class NotificationControllerNew {
         notificationPanel.setPadding(new Insets(10, 20, 10, 10));
     }
 
-    public static int getNotificationCount () {
+    public static int getNotificationCount() {
+        notificationCount = 0;
+        String expiryQuery = "SELECT COUNT(*) FROM Product WHERE ExpDate > CURRENT_DATE() AND ExpDate <= CURRENT_DATE() + INTERVAL 7 DAY AND OwnerID = ?";
+        String expiredQuery = "SELECT COUNT(*) FROM Product WHERE ExpDate <= CURRENT_DATE() AND OwnerID = ?";
+        String lowQuantityQuery = "SELECT COUNT(*) FROM Product WHERE Quantity <= LowQuantityAlert AND OwnerID = ?";
+
+        try (Connection connection = DatabaseConfig.getConnection();
+             PreparedStatement expiryStmt = connection.prepareStatement(expiryQuery);
+             PreparedStatement expiredStmt = connection.prepareStatement(expiredQuery);
+             PreparedStatement lowQuantityStmt = connection.prepareStatement(lowQuantityQuery)) {
+
+            String ownerID = String.valueOf(SessionManager.getInstance().getOwnerID());
+
+            // Set ownerID for all statements
+            expiryStmt.setString(1, ownerID);
+            expiredStmt.setString(1, ownerID);
+            lowQuantityStmt.setString(1, ownerID);
+
+            // Get count of expired products
+            ResultSet expiredResult = expiredStmt.executeQuery();
+            if (expiredResult.next()) {
+                notificationCount += expiredResult.getInt(1);  // Add the count to notificationCount
+            }
+
+            // Get count of products about to expire
+            ResultSet expiryResult = expiryStmt.executeQuery();
+            if (expiryResult.next()) {
+                notificationCount += expiryResult.getInt(1);  // Add the count to notificationCount
+            }
+
+            // Get count of low quantity products
+            ResultSet lowQuantityResult = lowQuantityStmt.executeQuery();
+            if (lowQuantityResult.next()) {
+                notificationCount += lowQuantityResult.getInt(1);  // Add the count to notificationCount
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return notificationCount;
     }
+
 }

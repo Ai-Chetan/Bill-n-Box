@@ -52,7 +52,7 @@ public class Controller {
     private TextField yearInput;
     NotificationControllerNew notificationControllerNew = new NotificationControllerNew();
     @FXML
-    private Text topOne, topTwo, topThree, topFour, topFive, notificationCount;
+    private Text notificationCount=null;
     @FXML
     private ImageView bellIcon;
 
@@ -111,9 +111,6 @@ public class Controller {
             loadBelowMinimumQuantityProducts();
             loadTotalEarningsToday();
             loadExpiredProducts();
-
-
-
         }
 
         if (bellIcon != null && notificationPane != null) {
@@ -373,98 +370,9 @@ public class Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return totalProductsSold;
     }
 
-    /*
-    private void loadTop5SoldProducts() {
-        String selectedRange = comboBox.getSelectionModel().getSelectedItem();
-        String sqlQuery = "";
-
-        switch (selectedRange) {
-            case "Today":
-                sqlQuery = getTodaySalesQuery();
-                break;
-            case "This Week":
-                sqlQuery = getThisWeekSalesQuery();
-                break;
-            case "This Month":
-                sqlQuery = getThisMonthSalesQuery();
-                break;
-            case "This Year":
-                sqlQuery = getThisYearSalesQuery();
-                break;
-        }
-
-        try {
-            Connection conn = getConnection();
-            Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(sqlQuery);
-
-            // List to store product names and their total sold quantities
-            ObservableList<String> topProducts = FXCollections.observableArrayList();
-            int counter = 0;
-            while (rs.next() && topProducts.size() < 5) {
-                counter++;
-                String productName = rs.getString("productName");
-                int totalSold = rs.getInt("total_sold");
-
-                topProducts.add(counter + ".  " + productName + " (Sold: " + totalSold + ")");
-            }
-
-            // Set the labels with product names or blank if there are fewer than 5 products
-            setProductLabels(topProducts);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setProductLabels(ObservableList<String> topProducts) {
-        // Ensure the labels are updated with top product names, or blank if not available
-        topOne.setText(topProducts.size() > 0 ? topProducts.get(0) : "");
-        topTwo.setText(topProducts.size() > 1 ? topProducts.get(1) : "");
-        topThree.setText(topProducts.size() > 2 ? topProducts.get(2) : "");
-        topFour.setText(topProducts.size() > 3 ? topProducts.get(3) : "");
-        topFive.setText(topProducts.size() > 4 ? topProducts.get(4) : "");
-    }
-    private String getTodaySalesQuery() {
-        return "SELECT o.ProductName, SUM(o.Quantity) AS total_sold " +
-                "FROM Orders o " +
-                "JOIN Bill b ON o.BillID = b.BillID " +
-                "WHERE DATE(b.Time) = CURDATE() " +
-                "GROUP BY o.ProductName " +
-                "ORDER BY total_sold DESC LIMIT 5;";
-    }
-
-    private String getThisWeekSalesQuery() {
-        return "SELECT o.ProductName, SUM(o.Quantity) AS total_sold " +
-                "FROM Orders o " +
-                "JOIN Bill b ON o.BillID = b.BillID " +
-                "WHERE WEEK(b.Time) = WEEK(CURDATE()) AND YEAR(b.Time) = YEAR(CURDATE()) " +
-                "GROUP BY o.ProductName " +
-                "ORDER BY total_sold DESC LIMIT 5;";
-    }
-
-    private String getThisMonthSalesQuery() {
-        return "SELECT o.ProductName, SUM(o.Quantity) AS total_sold " +
-                "FROM Orders o " +
-                "JOIN Bill b ON o.BillID = b.BillID " +
-                "WHERE MONTH(b.Time) = MONTH(CURDATE()) AND YEAR(b.Time) = YEAR(CURDATE()) " +
-                "GROUP BY o.ProductName " +
-                "ORDER BY total_sold DESC LIMIT 5;";
-    }
-
-    private String getThisYearSalesQuery() {
-        return "SELECT o.ProductName, SUM(o.Quantity) AS total_sold " +
-                "FROM Orders o " +
-                "JOIN Bill b ON o.BillID = b.BillID " +
-                "WHERE YEAR(b.Time) = YEAR(CURDATE()) " +
-                "GROUP BY o.ProductName " +
-                "ORDER BY total_sold DESC LIMIT 5;";
-    }
-*/
     // Load monthly earnings based on input or default to the current year
     private void loadMonthlyEarningsFromInput() {
         try {
