@@ -68,7 +68,7 @@ public class Controller {
             notificationCount.setText(String.valueOf(NotificationControllerNew.getNotificationCount()));
         }
         if (comboBox != null) {
-            ObservableList<String> items = FXCollections.observableArrayList("Today", "This Week", "This Month", "This Year", "All Time");
+            ObservableList<String> items = FXCollections.observableArrayList("Today", "This Week", "This Month", "This Year");
             comboBox.setItems(items);
 
 

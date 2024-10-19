@@ -302,7 +302,7 @@
             <Insets bottom="610.0" left="1175.0" />
          </StackPane.margin>
       </ImageView>
-      <Text fx:id="notificationCount" strokeType="OUTSIDE" strokeWidth="0.0" text="00">
+      <Text fx:id="notificationCount" strokeType="OUTSIDE" strokeWidth="0.0" text="6">
          <StackPane.margin>
             <Insets bottom="615.0" left="1180.0" />
          </StackPane.margin>
