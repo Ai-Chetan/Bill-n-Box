@@ -243,6 +243,11 @@ VALUES
 ('Walnuts 100g', 'Dry Fruits', 60, 500.00, '2023-11-01', '2024-11-01', 20, 1);  -- 1 year
 
 
+select * from Employee;
 
-select * from Product;
-truncate table Product;
+select * from Owner;
+truncate table Owner;
+alter table Owner add column FilePath varchar(225);
+update Owner set FilePath='C:\Users\aarya\Desktop\Mini Project Sem3\Bill-n-Box\billnbox\Generated PDFs' where OwnerID=1;
+update Owner set EmailID='aarya.khatate29@gmail.com' where OwnerID=1;
+select FilePath from Owner where OwnerID=1;
