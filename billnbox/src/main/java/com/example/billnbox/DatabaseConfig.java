@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConfig {
-    private static final String DB_URL = "jdbc:mysql://mysql-service-for-billnbox-bill-n-box.i.aivencloud.com:11492/defaultdb?sslMode=REQUIRED";
-    private static final String DB_USER = "avnadmin";
-    private static final String DB_PASSWORD = "AVNS_1k_4ghIDpnv5PydV72W";
+    private static final String DB_URL = "jdbc:mysql://your-url";
+    private static final String DB_USER = "your-username";
+    private static final String DB_PASSWORD = "your-password";
 
     public static Connection getConnection() {
         try {
