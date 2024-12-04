@@ -379,12 +379,8 @@ public class BillController {
             insertBillAndOrders();
 
 
-            String PDF_FILEPATH = RegistrationController.FilePath;
+            String PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
             String PDF_NAME = "Bill - " + billID + ".pdf";
-            if (PDF_FILEPATH == null) {
-                PDF_FILEPATH = "C:/Users/Kishor/IdeaProjects/billnbox/Generated PDFs/";
-            }
-
 
             // Create the PDF writer instance
             PdfWriter.getInstance(document, new FileOutputStream(new File(PDF_FILEPATH + PDF_NAME)));

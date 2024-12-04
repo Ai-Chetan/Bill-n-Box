@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.sql.*;
 import java.io.IOException;
 
@@ -22,30 +23,33 @@ public class RegistrationController {
 
     public static boolean isOwner = true;
 
-    public static String FilePath;
+
     private String Name;
     private String EmailID;
     private String MobileNumber;
     private String ShopName;
     private String ShopAddress;
+    private String FilePath;
     private String Username;
     private String Password;
     private String ConfirmPassword;
 
     @FXML
-    private TextField nameField, emailField, mobnoField, shopnameField, usernameField, passwordField, confirmpasswordField, filePath;
-
+    private TextField nameField, emailField, mobnoField, shopnameField, usernameField, visiblePasswordField, visiblePasswordField1, filePath;
+    @FXML
+    private TextField passwordField, confirmpasswordField;
+    @FXML
+    private CheckBox showpasswordCheckbox, showpasswordCheckbox1; // CheckBox for toggling visibility
     @FXML
     private TextArea shopaddressField;
-
     @FXML
     private Label emptyFields;
 
     // Database connection details
     public static class DatabaseConnector {
 
-        public static void storeUser(String username, String password, String name, String email, String mobno, String shopname, String shopaddress) {
-            String insertSQL = "INSERT INTO Owner (Username, Password, Name, EmailID, PhoneNo, ShopName, ShopAddress) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        public static void storeUser(String username, String password, String name, String email, String mobno, String shopname, String shopaddress, String filepath) {
+            String insertSQL = "INSERT INTO Owner (Username, Password, Name, EmailID, PhoneNo, ShopName, ShopAddress, FilePath) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseConfig.getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(insertSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pstmt.setString(1, username);
@@ -55,6 +59,7 @@ public class RegistrationController {
                 pstmt.setString(5, mobno);
                 pstmt.setString(6, shopname);
                 pstmt.setString(7, shopaddress);
+                pstmt.setString(8, filepath);
                 int rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
                     System.out.println("User registered successfully.");
@@ -80,9 +85,43 @@ public class RegistrationController {
     // Initialize controller
     @FXML
     public void initialize() {
-        LoginController.setIsOwner(isOwner);
         if (emptyFields != null) {
             emptyFields.setVisible(false);  // Hide the emptyFields label initially
+        }
+        if (visiblePasswordField != null) {
+            visiblePasswordField.setVisible(false); // Initially hidden since password is masked
+            visiblePasswordField.managedProperty().bind(visiblePasswordField.visibleProperty());
+            visiblePasswordField1.setVisible(false); // Initially hidden since password is masked
+            visiblePasswordField1.managedProperty().bind(visiblePasswordField1.visibleProperty());
+        }
+    }
+
+    @FXML
+    private void togglePasswordVisibility(ActionEvent event) {
+        if (showpasswordCheckbox.isSelected()) {
+            // Show the plain text password and hide the PasswordField
+            visiblePasswordField.setText(passwordField.getText());
+            visiblePasswordField.setVisible(true);
+            passwordField.setVisible(false);
+        } else {
+            // Hide the plain text password and show the PasswordField
+            passwordField.setText(visiblePasswordField.getText());
+            passwordField.setVisible(true);
+            visiblePasswordField.setVisible(false);
+        }
+    }
+    @FXML
+    private void togglePasswordVisibility1(ActionEvent event) {
+        if (showpasswordCheckbox1.isSelected()) {
+            // Show the plain text password and hide the PasswordField
+            visiblePasswordField1.setText(confirmpasswordField.getText());
+            visiblePasswordField1.setVisible(true);
+            confirmpasswordField.setVisible(false);
+        } else {
+            // Hide the plain text password and show the PasswordField
+            confirmpasswordField.setText(visiblePasswordField1.getText());
+            confirmpasswordField.setVisible(true);
+            visiblePasswordField1.setVisible(false);
         }
     }
 
@@ -99,9 +138,7 @@ public class RegistrationController {
         } else if (!MobileNumber.matches("\\d{10}")) {
             showError("Mobile number must consist of exactly 10 digits");
         } else if (!EmailID.matches(gmailPattern)) {
-
             showError("Invalid Email-Id.");
-
         } else {
             // Pass data to next controller
             if (validateFields(Name, EmailID, MobileNumber)) {
@@ -121,13 +158,9 @@ public class RegistrationController {
             showError("Fields cannot be Empty");
         }
 
-        if (validateFields(ShopName, ShopAddress)) {
+        if (validateFields(ShopName, ShopAddress, FilePath)) {
             navigateToPageWithData(event, "4-registration-page-3.fxml");
         }
-    }
-
-    public String getFilePath() {
-        return FilePath;
     }
 
     // Navigate to previous pages
@@ -173,7 +206,7 @@ public class RegistrationController {
         } else {
             // Set username in SessionManager
             SessionManager.getInstance().setUsername(Username);
-            DatabaseConnector.storeUser(Username, Password, Name, EmailID, MobileNumber, ShopName, ShopAddress);
+            DatabaseConnector.storeUser(Username, Password, Name, EmailID, MobileNumber, ShopName, ShopAddress, FilePath);
             navigateToPage(event, "5-registration-successful.fxml");
         }
     }
@@ -197,7 +230,7 @@ public class RegistrationController {
     // Validation for empty fields
     private boolean validateFields(String... fields) {
         for (String field : fields) {
-            if (field == null || field.trim().isEmpty()) {
+            if (field != FilePath && (field == null || field.trim().isEmpty())) {
                 showError("All fields must be filled");
                 return false;
             }
@@ -229,7 +262,7 @@ public class RegistrationController {
 
             // Get the next controller and pass the current data
             RegistrationController nextController = loader.getController();
-            nextController.setData(Name, EmailID, MobileNumber, ShopName, ShopAddress);
+            nextController.setData(Name, EmailID, MobileNumber, ShopName, ShopAddress, FilePath);
 
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
@@ -256,13 +289,12 @@ public class RegistrationController {
     }
 
     // Setter method for passing data to next page
-    public void setData(String name, String email, String mobileNumber, String shopName, String shopAddress) {
+    public void setData(String name, String email, String mobileNumber, String shopName, String shopAddress, String FilePath) {
         this.Name = name;
         this.EmailID = email;
         this.MobileNumber = mobileNumber;
         this.ShopName = shopName;
         this.ShopAddress = shopAddress;
+        this.FilePath = FilePath;
     }
-
-
-    }
+}

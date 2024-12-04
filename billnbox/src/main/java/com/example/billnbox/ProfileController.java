@@ -64,11 +64,10 @@ public class ProfileController {
         } catch (SQLException e) {
             showError("Error loading profile: " + e.getMessage());
         }
-        filePath.setText(RegistrationController.FilePath);
     }
 
     private void loadOwnerDetails(Connection conn) throws SQLException {
-        String ownerSql = "SELECT Name, EmailID, PhoneNo, ShopName, ShopAddress FROM Owner WHERE Username = ?";
+        String ownerSql = "SELECT Name, EmailID, PhoneNo, ShopName, ShopAddress, FilePath FROM Owner WHERE Username = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(ownerSql)) {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
@@ -78,6 +77,7 @@ public class ProfileController {
                 mobnoField.setText(rs.getString("PhoneNo"));
                 shopnameField.setText(rs.getString("ShopName"));
                 shopaddressField.setText(rs.getString("ShopAddress"));
+                filePath.setText(rs.getString("FilePath"));
             } else {
                 showError("Owner profile not found.");
             }
@@ -116,10 +116,12 @@ public class ProfileController {
             if (rs.next()) {
                 shopnameField.setText(rs.getString("ShopName"));
                 shopaddressField.setText(rs.getString("ShopAddress"));
+                filePath.setText(rs.getString("FilePath"));
             } else {
                 // If the shop details are not found, display a meaningful message
                 shopnameField.setText("Shop details not found");
                 shopaddressField.setText("Shop details not found");
+                filePath.setText("No file path added yet!");
             }
         }
     }
@@ -132,7 +134,6 @@ public class ProfileController {
             // Validate inputs before saving
             if (isValidInput()) {
                 // Save changes to the database
-                RegistrationController.FilePath = filePath.getText();
                 saveProfile();
 
                 // Only make fields non-editable and change the button text if the save is successful
@@ -180,6 +181,7 @@ public class ProfileController {
         mobnoField.setEditable(false);
         shopnameField.setEditable(false); // Shop name is non-editable by default
         shopaddressField.setEditable(false); // Shop address is non-editable by default
+        filePath.setEditable(false);
     }
 
     // Method to make only employee fields editable
@@ -190,6 +192,7 @@ public class ProfileController {
         // Employee cannot edit shop details
         shopnameField.setEditable(false);
         shopaddressField.setEditable(false);
+        filePath.setEditable(true);
     }
 
     // Method to make owner fields editable
@@ -199,6 +202,7 @@ public class ProfileController {
         mobnoField.setEditable(true);
         shopnameField.setEditable(true);
         shopaddressField.setEditable(true);
+        filePath.setEditable(true);
     }
 
     // Save profile information to the database
@@ -213,6 +217,7 @@ public class ProfileController {
         String mobno = mobnoField.getText();
         String shopname = shopnameField.getText();
         String shopaddress = shopaddressField.getText();
+        String filepath = filePath.getText();
 
         // Validate mobile number length (should be exactly 10 digits)
         if (mobno.length() != 10 || !mobno.matches("\\d+")) {
@@ -225,9 +230,9 @@ public class ProfileController {
             return;
         }
 
-        String updateOwnerSQL = isOwner ? "UPDATE Owner SET ShopName = ?, ShopAddress = ?, Name = ?, EmailID = ?, PhoneNo = ? WHERE Username = ?" : null;
+        String updateOwnerSQL = isOwner ? "UPDATE Owner SET ShopName = ?, ShopAddress = ?, Name = ?, EmailID = ?, PhoneNo = ?, FilePath = ? WHERE Username = ?" : null;
         // Update employee details
-        String updateEmployeeSQL = "UPDATE Employee SET Name = ?, EmailID = ?, PhoneNo = ? WHERE Username = ?";
+        String updateEmployeeSQL = "UPDATE Employee SET Name = ?, EmailID = ?, PhoneNo = ?, FilePath = ? WHERE Username = ?";
 
         try (Connection conn = DatabaseConfig.getConnection()) {
 
@@ -239,7 +244,8 @@ public class ProfileController {
                     pstmt.setString(3, name);
                     pstmt.setString(4, email);
                     pstmt.setString(5, mobno);
-                    pstmt.setString(6, username);
+                    pstmt.setString(6, filepath);
+                    pstmt.setString(7, username);
                     pstmt.executeUpdate();
                 }
             } else {
@@ -247,7 +253,8 @@ public class ProfileController {
                     pstmt.setString(1, name);
                     pstmt.setString(2, email);
                     pstmt.setString(3, mobno);
-                    pstmt.setString(4, username);
+                    pstmt.setString(4, filepath);
+                    pstmt.setString(5, username);
                     pstmt.executeUpdate();
                 }
             }

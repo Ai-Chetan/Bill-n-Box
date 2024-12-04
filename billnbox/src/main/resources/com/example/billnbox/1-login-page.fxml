@@ -127,7 +127,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <PasswordField fx:id="passwordField" layoutX="117.0" layoutY="232.0" prefHeight="40.0" prefWidth="225.0" promptText="Enter Passsword" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+            <PasswordField fx:id="passwordField" layoutX="117.0" layoutY="232.0" prefHeight="40.0" prefWidth="225.0" promptText="Enter Password" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
                <font>
                   <Font size="18.0" />
                </font>

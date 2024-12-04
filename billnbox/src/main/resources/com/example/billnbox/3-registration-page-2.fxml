@@ -31,14 +31,6 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="486.0" prefWidth="921.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TextArea fx:id="shopaddressField" layoutX="370.0" layoutY="190.0" prefHeight="81.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="TEXT" />
-               </cursor>
-            </TextArea>
             <Text layoutX="370.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shop Details">
                <font>
                   <Font name="Segoe UI Bold" size="30.0" />
@@ -50,14 +42,6 @@
                </font>
             </Text>
             <Button layoutX="170.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#RegistrationBack2" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Back" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Segoe UI Bold" size="18.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button layoutX="503.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#RegistrationNext2" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Next" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Segoe UI Bold" size="18.0" />
                </font>
@@ -104,6 +88,14 @@
                </image>
             </ImageView>
             <Text layoutX="782.0" layoutY="-46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" />
+            <TextArea fx:id="shopaddressField" layoutX="370.0" layoutY="190.0" prefHeight="81.0" prefWidth="360.0" promptText="Enter the Address of Shop" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: Black;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextArea>
             <Label fx:id="emptyFields" alignment="CENTER" layoutX="170.0" layoutY="361.0" prefHeight="17.0" prefWidth="558.0" text="Fields cannot be Empty" textFill="RED" />
             <Label layoutX="187.0" layoutY="308.0" text="File Path :">
                <font>
@@ -118,6 +110,14 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
+            <Button layoutX="503.0" layoutY="400.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#RegistrationNext2" prefHeight="40.0" prefWidth="225.0" style="-fx-background-color: #0C1820; -fx-border-color: Black; -fx-background-radius: 5; -fx-border-radius: 5;" text="Next" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="18.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
          <StackPane.margin>
             <Insets bottom="50.0" left="300.0" right="300.0" top="150.0" />

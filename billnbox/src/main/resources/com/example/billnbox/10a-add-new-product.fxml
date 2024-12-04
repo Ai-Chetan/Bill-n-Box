@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -134,6 +135,7 @@
                   </TextField>
                   <DatePicker fx:id="mfgDate" layoutX="593.0" layoutY="17.0" prefHeight="32.0" prefWidth="181.0" promptText="Enter Mfg. Date" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" stylesheets="@style.css" />
                   <DatePicker fx:id="expDate" layoutX="593.0" layoutY="66.0" prefHeight="32.0" prefWidth="181.0" promptText="Enter Exp. Date" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" stylesheets="@style.css" />
+                  <ListView fx:id="categorySuggestion" layoutX="185.0" layoutY="101.0" prefHeight="99.0" prefWidth="181.0" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: black;" stylesheets="@style.css" />
                </children>
             </AnchorPane>
             <Label fx:id="statusLabel" alignment="CENTER" layoutX="226.0" layoutY="474.0" prefHeight="17.0" prefWidth="446.0" AnchorPane.bottomAnchor="50.0" />

@@ -132,8 +132,8 @@ public class ForgotPasswordController {
     public class EmailSender {
 
         public static void sendEmail(String recipientEmail, String newPassword) {
-            String senderEmail = "@gmail.com"; // your email address
-            String senderPassword = ""; // your email password
+            String senderEmail = "billnboxibms@gmail.com"; // your email address
+            String senderPassword = "irpf iawh jlau uujx"; // your email password
 
             // SMTP server properties
             Properties properties = new Properties();
