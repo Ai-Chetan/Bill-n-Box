@@ -1,6 +1,6 @@
 package com.example.billnbox;
 
-import javafx.event.ActionEvent;
+import  javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +23,6 @@ public class RegistrationController {
 
     public static boolean isOwner = true;
 
-
     private String Name;
     private String EmailID;
     private String MobileNumber;
@@ -35,7 +34,7 @@ public class RegistrationController {
     private String ConfirmPassword;
 
     @FXML
-    private TextField nameField, emailField, mobnoField, shopnameField, usernameField, visiblePasswordField, visiblePasswordField1, filePath;
+    private TextField nameField, emailField, mobnoField, shopnameField, usernameField, visiblePasswordField, visiblePasswordField1, filePathField;
     @FXML
     private TextField passwordField, confirmpasswordField;
     @FXML
@@ -85,6 +84,7 @@ public class RegistrationController {
     // Initialize controller
     @FXML
     public void initialize() {
+        LoginController.setIsOwner(isOwner);
         if (emptyFields != null) {
             emptyFields.setVisible(false);  // Hide the emptyFields label initially
         }
@@ -110,6 +110,7 @@ public class RegistrationController {
             visiblePasswordField.setVisible(false);
         }
     }
+
     @FXML
     private void togglePasswordVisibility1(ActionEvent event) {
         if (showpasswordCheckbox1.isSelected()) {
@@ -125,6 +126,7 @@ public class RegistrationController {
         }
     }
 
+
     // Move to Page 2 (Shop Details)
     @FXML
     private void RegistrationNext1(ActionEvent event) {
@@ -132,12 +134,13 @@ public class RegistrationController {
         EmailID = emailField.getText();
         MobileNumber = mobnoField.getText();
 
-        String gmailPattern = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+        String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
         if (Name.isEmpty() || EmailID.isEmpty() || MobileNumber.isEmpty()) {
             showError("Fields cannot be Empty");
         } else if (!MobileNumber.matches("\\d{10}")) {
             showError("Mobile number must consist of exactly 10 digits");
-        } else if (!EmailID.matches(gmailPattern)) {
+        } else if (!EmailID.matches(emailPattern)) {
             showError("Invalid Email-Id.");
         } else {
             // Pass data to next controller
@@ -152,7 +155,7 @@ public class RegistrationController {
     private void RegistrationNext2(ActionEvent event) {
         ShopName = shopnameField.getText();
         ShopAddress = shopaddressField.getText();
-        FilePath = filePath.getText();
+        FilePath = filePathField.getText();
 
         if (ShopName.isEmpty() || ShopAddress.isEmpty()) {
             showError("Fields cannot be Empty");
@@ -262,7 +265,7 @@ public class RegistrationController {
 
             // Get the next controller and pass the current data
             RegistrationController nextController = loader.getController();
-            nextController.setData(Name, EmailID, MobileNumber, ShopName, ShopAddress, FilePath);
+            nextController.setData(Name, EmailID, MobileNumber, ShopName, ShopAddress, FilePath, Username);
 
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
@@ -289,12 +292,37 @@ public class RegistrationController {
     }
 
     // Setter method for passing data to next page
-    public void setData(String name, String email, String mobileNumber, String shopName, String shopAddress, String FilePath) {
+    // Setter method for passing data to the next page
+    public void setData(String name, String email, String mobileNumber, String shopName, String shopAddress, String filePath, String username) {
         this.Name = name;
         this.EmailID = email;
         this.MobileNumber = mobileNumber;
         this.ShopName = shopName;
         this.ShopAddress = shopAddress;
-        this.FilePath = FilePath;
+        this.FilePath = filePath;
+        this.Username = username;
+
+        // Update the fields with the passed data
+        if (nameField != null) {
+            nameField.setText(name);
+        }
+        if (emailField != null) {
+            emailField.setText(email);
+        }
+        if (mobnoField != null) {
+            mobnoField.setText(mobileNumber);
+        }
+        if (shopnameField != null) {
+            shopnameField.setText(shopName);
+        }
+        if (shopaddressField != null) {
+            shopaddressField.setText(shopAddress);
+        }
+        if (filePathField != null) {
+            filePathField.setText(filePath);
+        }
+        if (usernameField != null) {
+            usernameField.setText(username);
+        }
     }
 }
