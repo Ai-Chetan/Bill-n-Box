@@ -111,6 +111,38 @@ public class AddNewProduct {
                 populateFields(newValue);
             }
         });
+        // Add a listener to the category text field
+        ContextMenu suggestionMenu = new ContextMenu();
+
+        category.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.trim().isEmpty()) {
+                suggestionMenu.hide();
+                return;
+            }
+
+            // Fetch matching suggestions from the database
+            ObservableList<String> suggestions = fetchCategorySuggestions(newValue);
+
+            // Populate the ContextMenu
+            suggestionMenu.getItems().clear();
+            for (String suggestion : suggestions) {
+                MenuItem item = new MenuItem(suggestion);
+                item.setOnAction(event -> {
+                    category.setText(suggestion); // Set the selected suggestion in the TextField
+                    suggestionMenu.hide();
+                });
+                suggestionMenu.getItems().add(item);
+            }
+
+            // Show or hide the ContextMenu based on suggestions
+            if (!suggestionMenu.getItems().isEmpty()) {
+                double x = category.localToScreen(category.getBoundsInLocal()).getMinX();
+                double y = category.localToScreen(category.getBoundsInLocal()).getMaxY();
+                suggestionMenu.show(category, x, y);
+            } else {
+                suggestionMenu.hide();
+            }
+        });
     }
 
     public static void addProductsToInventory(ObservableList<Product> products) throws SQLException {
@@ -363,5 +395,24 @@ public class AddNewProduct {
         }
     }
 
+    private ObservableList<String> fetchCategorySuggestions(String query) {
+        ObservableList<String> suggestions = FXCollections.observableArrayList();
+        String sql = "SELECT DISTINCT Category FROM Product WHERE Category LIKE ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, query + "%"); // Use the LIKE operator with the input query
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                suggestions.add(rs.getString("Category"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return suggestions;
+    }
 
 }
