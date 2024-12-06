@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -30,7 +31,7 @@
       </ImageView>
       <AnchorPane opacity="0.9" prefHeight="500.0" prefWidth="795.0" style="-fx-background-color: #e4c8aa; -fx-border-color: black; -fx-background-radius: 20; -fx-border-radius: 20;">
          <children>
-            <TableView fx:id="tableView" layoutX="34.0" layoutY="34.0" prefHeight="410.0" prefWidth="829.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
+            <TableView fx:id="tableView" layoutX="34.0" layoutY="70.0" prefHeight="374.0" prefWidth="830.0" style="-fx-background-color: #e4c8aa;" stylesheets="@style.css">
               <columns>
                 <TableColumn fx:id="srNoColumn" prefWidth="64.0" style="-fx-border-color: black; -fx-font-size: 15; -fx-padding: 0;" text="ProdID" />
                   <TableColumn fx:id="productNameColumn" prefWidth="143.0" style="-fx-border-color: black; -fx-font-size: 15;" text="Product Name" />
@@ -99,5 +100,16 @@
             <Insets bottom="625.0" />
          </StackPane.margin>
       </Text>
+      <TextField fx:id="searchBar" alignment="TOP_CENTER" maxHeight="30.0" maxWidth="750.0" prefHeight="26.0" prefWidth="1183.0" promptText="Search" style="-fx-background-radius: 10;" StackPane.alignment="TOP_CENTER">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+         <StackPane.margin>
+            <Insets top="60.0" />
+         </StackPane.margin>
+      </TextField>
    </children>
 </StackPane>

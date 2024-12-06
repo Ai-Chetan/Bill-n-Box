@@ -15,6 +15,7 @@ import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
+import javafx.collections.transformation.SortedList;
 
 import java.io.IOException;
 import java.sql.*;
@@ -94,12 +95,17 @@ public class InventoryController {
     private Button inventoryBtn, deleteButton, backToDashboard, addNewProductButton, discardButton;
 
     @FXML
+    private TextField searchBar;
+
+    @FXML
     private Label statusLabel;
 
     private ObservableList<Product> deletedProducts = FXCollections.observableArrayList();
 
     private boolean isEditing = false;
     private boolean isOwner; // To determine if the user is an owner
+
+    private ObservableList<Product> originalProductList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -122,6 +128,11 @@ public class InventoryController {
         // Load product data from the database
         loadProductData();
 
+        // Use SortedList for sorting
+        SortedList<Product> sortedList = new SortedList<>(tableView.getItems());
+        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setItems(sortedList);
+
         // Disable the delete button initially
         deleteButton.setDisable(true);
         deleteButton.setVisible(false);
@@ -140,6 +151,9 @@ public class InventoryController {
             addNewProductButton.setVisible(false);
             inventoryBtn.setVisible(false); // Disable the edit button as well
         }
+        // Add a listener to the search bar for filtering the table
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {filterTable(newValue);
+        });
     }
 
     private void makeTableEditable() {
@@ -207,24 +221,18 @@ public class InventoryController {
     }
 
     private void loadProductData() {
-        // Clear existing items in the TableView to prevent duplicates
-        tableView.getItems().clear();
+        originalProductList.clear(); // Clear any existing data
 
-        ObservableList<Product> productList = FXCollections.observableArrayList();
-
-        // Use the OwnerID from the session manager
         String sql = "SELECT SrNo, ProductName, Category, Quantity, Price, MfgDate, ExpDate, LowQuantityAlert FROM Product WHERE OwnerID=?";
-
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Set the OwnerID parameter
             pstmt.setInt(1, SessionManager.getInstance().getOwnerID());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Product product = new Product(
-                            rs.getInt("SrNo"), // Use actual SrNo from database
+                            rs.getInt("SrNo"),
                             rs.getString("ProductName"),
                             rs.getString("Category"),
                             rs.getInt("Quantity"),
@@ -233,11 +241,12 @@ public class InventoryController {
                             rs.getString("ExpDate"),
                             rs.getInt("LowQuantityAlert")
                     );
-                    productList.add(product);
+                    originalProductList.add(product);
                 }
             }
 
-            tableView.setItems(productList);
+            // Display all products initially
+            tableView.setItems(originalProductList);
 
         } catch (SQLException e) {
             showError("Error loading product data: " + e.getMessage());
@@ -351,27 +360,6 @@ public class InventoryController {
         }
     }
 
-    private void deleteProductFromDatabase(Product product) {
-        String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";
-
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            // Disable foreign key checks
-            Statement stmt = conn.createStatement();
-            stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
-
-            // Delete product from database
-            PreparedStatement pstmt = conn.prepareStatement(deleteSql);
-            pstmt.setInt(1, product.getSrNo());
-            pstmt.setInt(2, getOwnerID());  // Use OwnerID from SessionManager
-            pstmt.executeUpdate();
-
-            // Re-enable foreign key checks
-            stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     @FXML
     private void BackToDashboard(ActionEvent event) {
         navigateToPage(event, "8-dashboard.fxml");
@@ -423,73 +411,6 @@ public class InventoryController {
         }
     }
 
-
-    private void deleteMarkedProducts() {
-        String deleteSql = "DELETE FROM Product WHERE SrNo = ? AND OwnerID = ?";
-
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            // Disable foreign key checks
-            Statement stmt = conn.createStatement();
-            stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
-
-            // Delete marked products from database
-            PreparedStatement pstmt = conn.prepareStatement(deleteSql);
-            for (Product product : deletedProducts) {
-                pstmt.setInt(1, product.getSrNo());
-                pstmt.setInt(2, getOwnerID());  // Use OwnerID from SessionManager
-                pstmt.executeUpdate();
-            }
-
-            // Re-enable foreign key checks
-            stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // Clear the products marked for deletion
-        deletedProducts.clear();
-    }
-
-    @FXML
-    private void saveInventoryChanges(ActionEvent event) {
-        if (isEditing) {
-            // Delete marked products from database
-            deleteMarkedProducts();
-
-            // Save other changes to the database
-            saveProductData();
-
-            // Log entry for inventory edit
-            insertLog("Inventory edited by " + getCurrentUser());
-
-            // Disable editing mode and refresh the product table
-            isEditing = false;
-            makeTableNonEditable();
-            loadProductData();
-        }
-    }
-
-    // Update product information in the database
-    private void updateProductInDatabase(Product product) {
-        String updateQuery = "UPDATE Product SET ProductName = ?, Category = ?, Quantity = ?, Price = ?, MfgDate = ?, ExpDate = ? WHERE SrNo = ? AND OwnerID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
-
-            stmt.setString(1, product.getProductName());
-            stmt.setString(2, product.getCategory());
-            stmt.setInt(3, product.getQuantity());
-            stmt.setDouble(4, product.getPrice());
-            stmt.setDate(5, Date.valueOf(product.getMfgDate()));
-            stmt.setDate(6, Date.valueOf(product.getExpDate()));
-            stmt.setInt(7, product.getSrNo());
-            stmt.setInt(8, getOwnerID());  // Use OwnerID from SessionManager
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Get the current logged-in user from SessionManager
     private String getCurrentUser() {
         return SessionManager.getInstance().getUsername();  // Fetch current user from SessionManager
@@ -517,6 +438,32 @@ public class InventoryController {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    private void filterTable(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            // If search bar is empty, display all products
+            tableView.setItems(originalProductList);
+        } else {
+            ObservableList<Product> filteredProducts = FXCollections.observableArrayList();
+
+            String lowerCaseQuery = query.toLowerCase();
+
+            for (Product product : originalProductList) {
+                if (product.getProductName().toLowerCase().contains(lowerCaseQuery) ||
+                        product.getCategory().toLowerCase().contains(lowerCaseQuery) ||
+                        String.valueOf(product.getQuantity()).contains(lowerCaseQuery) ||
+                        String.valueOf(product.getPrice()).contains(lowerCaseQuery)) {
+                    filteredProducts.add(product);
+                }
+            }
+
+            // Wrap the filtered products in a SortedList for sorting
+            SortedList<Product> sortedList = new SortedList<>(filteredProducts);
+            sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+
+            // Display the filtered list
+            tableView.setItems(sortedList);
         }
     }
 }
