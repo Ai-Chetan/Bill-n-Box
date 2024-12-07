@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddNewProduct {
 
@@ -42,6 +44,8 @@ public class AddNewProduct {
 
     @FXML
     private TableColumn<Product, Integer> lowQuantityAlertColumn;
+    @FXML
+    private ListView<String> suggestionList;
 
     @FXML
     private TextField productName;
@@ -89,6 +93,40 @@ public class AddNewProduct {
         // Set table data
         tableView.setItems(data);
 
+        // Create a placeholder label
+        Label placeholder = new Label("No Category Found");
+        suggestionList.setPlaceholder(placeholder);
+        suggestionList.setVisible(false);
+
+        // Event handler for the category TextField
+        category.setOnKeyReleased(event -> {
+            String text = category.getText().trim();
+            if (!text.isEmpty()) {
+                List<String> suggestions = getSuggestions(text);
+                if (!suggestions.isEmpty()) {
+                    updateSuggestionList(suggestions);
+                    suggestionList.setVisible(true); // Show the ListView when there are suggestions
+                } else {
+                    suggestionList.setVisible(false); // Hide if no suggestions
+                }
+            } else {
+                suggestionList.setVisible(false); // Hide if the input is empty
+            }
+        });
+
+        // Handle clicks on the suggestion list
+        suggestionList.setOnMouseClicked(event -> {
+            String selectedCategory = suggestionList.getSelectionModel().getSelectedItem();
+            if (selectedCategory != null) {
+                category.setText(selectedCategory); // Populate category field
+                suggestionList.setVisible(false);  // Hide the suggestions
+            }
+        });
+
+        // Set placeholder for the ListView
+        suggestionList.setPlaceholder(new Label("No Category Found"));
+        suggestionList.setVisible(false); // Initially hide the ListView
+
         // Set initial state of buttons
         updateAddButtonState();
         updateAddToInventoryButtonState();
@@ -111,6 +149,7 @@ public class AddNewProduct {
                 populateFields(newValue);
             }
         });
+
         // Add a listener to the category text field
         ContextMenu suggestionMenu = new ContextMenu();
 
@@ -118,20 +157,6 @@ public class AddNewProduct {
             if (newValue.trim().isEmpty()) {
                 suggestionMenu.hide();
                 return;
-            }
-
-            // Fetch matching suggestions from the database
-            ObservableList<String> suggestions = fetchCategorySuggestions(newValue);
-
-            // Populate the ContextMenu
-            suggestionMenu.getItems().clear();
-            for (String suggestion : suggestions) {
-                MenuItem item = new MenuItem(suggestion);
-                item.setOnAction(event -> {
-                    category.setText(suggestion); // Set the selected suggestion in the TextField
-                    suggestionMenu.hide();
-                });
-                suggestionMenu.getItems().add(item);
             }
 
             // Show or hide the ContextMenu based on suggestions
@@ -143,6 +168,34 @@ public class AddNewProduct {
                 suggestionMenu.hide();
             }
         });
+    }
+
+    // Method to fetch category suggestions from the database
+    private List<String> getSuggestions(String input) {
+        List<String> suggestions = new ArrayList<>();
+        String query = "SELECT DISTINCT Category FROM Product WHERE Category LIKE ? AND OwnerID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, "%" + input + "%");
+            stmt.setInt(2, SessionManager.getOwnerID()); // Assuming you have an OwnerID in session
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                suggestions.add(rs.getString("Category"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return suggestions;
+    }
+
+    // Method to update the suggestion list based on fetched categories
+    private void updateSuggestionList(List<String> suggestions) {
+        ObservableList<String> items = FXCollections.observableArrayList(suggestions);
+        suggestionList.setItems(items);
     }
 
     public static void addProductsToInventory(ObservableList<Product> products) throws SQLException {
@@ -394,25 +447,4 @@ public class AddNewProduct {
             e.printStackTrace();
         }
     }
-
-    private ObservableList<String> fetchCategorySuggestions(String query) {
-        ObservableList<String> suggestions = FXCollections.observableArrayList();
-        String sql = "SELECT DISTINCT Category FROM Product WHERE Category LIKE ?";
-
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, query + "%"); // Use the LIKE operator with the input query
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                suggestions.add(rs.getString("Category"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return suggestions;
-    }
-
 }

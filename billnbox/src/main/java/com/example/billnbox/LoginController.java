@@ -10,6 +10,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -32,7 +34,7 @@ public class LoginController {
     private TextField visiblePasswordField; // TextField to show plain text password
 
     @FXML
-    private CheckBox showpasswordCheckbox; // CheckBox for toggling visibility
+    private ImageView eyeIcon; // CheckBox for toggling visibility
 
     @FXML
     private Label loginErrorLabel;
@@ -51,24 +53,30 @@ public class LoginController {
 
     public void initialize() {
         loginErrorLabel.setVisible(false);
+        // Ensure only one password field is visible at a time
         visiblePasswordField.setVisible(false); // Initially hidden since password is masked
         visiblePasswordField.managedProperty().bind(visiblePasswordField.visibleProperty());
+        passwordField.managedProperty().bind(passwordField.visibleProperty());
+
+        // Keep password fields in sync
+        visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
 
     }
 
     @FXML
-    private void togglePasswordVisibility(ActionEvent event) {
-        if (showpasswordCheckbox.isSelected()) {
+    private void showPassword(MouseEvent event) {
             // Show the plain text password and hide the PasswordField
             visiblePasswordField.setText(passwordField.getText());
             visiblePasswordField.setVisible(true);
             passwordField.setVisible(false);
-        } else {
+    }
+
+    @FXML
+    private void hidePassword(MouseEvent event) {
             // Hide the plain text password and show the PasswordField
             passwordField.setText(visiblePasswordField.getText());
             passwordField.setVisible(true);
             visiblePasswordField.setVisible(false);
-        }
     }
 
     @FXML
@@ -76,9 +84,7 @@ public class LoginController {
 
         // Get the username and password from the fields
         username = usernameField.getText();
-        //String password = passwordField.getText();
-
-        String password = showpasswordCheckbox.isSelected() ? visiblePasswordField.getText() : passwordField.getText();
+        String password = passwordField.getText();
 
         // Check if fields are empty
         if (username.isEmpty() || password.isEmpty()) {
